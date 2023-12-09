@@ -18,38 +18,41 @@ public class Category {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Long categoryId;
   @NotEmpty(message = "O nome da categoria não pode estar vazio")
   @Size(min = 1, max = 500, message = "O nome da categoria deve conter entre 1 e 500 caracteres")
-  private String name;
+  private String categoryName;
 
   @JsonCreator
   public Category() {
   }
 
-  public Category(@JsonProperty("id") Long id, @JsonProperty("name") String name) {
-    this.id = id;
-    this.name = name;
+  public Category(
+      @JsonProperty("categoryId") Long categoryId,
+      @JsonProperty("categoryName") String categoryName
+  ) {
+    this.categoryId = categoryId;
+    this.categoryName = categoryName;
   }
 
-  public Long getId() {
-    return id;
+  public Long getCategoryId() {
+    return categoryId;
   }
 
-  public void setId(Long id) {
-    this.id = id;
+  public void setCategoryId(Long categoryId) {
+    this.categoryId = categoryId;
   }
 
-  public String getName() {
-    return name;
+  public String getCategoryName() {
+    return categoryName;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setCategoryName(String categoryName) {
+    this.categoryName = categoryName;
   }
 
   @Override
   public String toString() {
-    return "Book category: " + name;
+    return "Book category: " + categoryName;
   }
 }

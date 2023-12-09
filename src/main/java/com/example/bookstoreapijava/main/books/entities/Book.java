@@ -1,7 +1,9 @@
 package com.example.bookstoreapijava.main.books.entities;
 
 import com.example.bookstoreapijava.main.category.entities.Category;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,11 +15,12 @@ import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "book")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Book {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Long bookId;
   @NotEmpty(message = "O título do livro não pode estar vazio")
   @Size(min = 1, max = 500, message = "O título do livro deve conter entre 1 e 500 caracteres")
   private String title;
@@ -27,7 +30,7 @@ public class Book {
   private String author;
 
 //  @NotEmpty(message = "A categoria do livro não pode estar vazia")
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "category_id")
   private Category category;
 
@@ -41,12 +44,12 @@ public class Book {
     this.category = category;
   }
 
-  public Long getId() {
-    return id;
+  public Long getBookId() {
+    return bookId;
   }
 
-  public void setId(Long id) {
-    this.id = id;
+  public void setBookId(Long bookId) {
+    this.bookId = bookId;
   }
 
   public String getTitle() {
@@ -73,6 +76,6 @@ public class Book {
   public String toString() {
     return "Book information: \n"
         + "Name: " + title
-        + "\n Category: " + category.getName();
+        + "\n Category: " + category.getCategoryName();
   }
 }

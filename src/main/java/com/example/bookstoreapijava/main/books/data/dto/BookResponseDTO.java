@@ -1,23 +1,24 @@
 package com.example.bookstoreapijava.main.books.data.dto;
 
-import com.example.bookstoreapijava.main.books.entities.Book;
 import com.example.bookstoreapijava.main.category.entities.Category;
 
 public class BookResponseDTO {
-  private Book book;
+  private String title;
+  private String author;
   private Category category;
 
-  public BookResponseDTO(Book book, Category category) {
-    this.book = book;
+  public BookResponseDTO(String title, String author, Category category) {
+    this.title = title;
+    this.author = author;
     this.category = category;
   }
 
-  public Book getBook() {
-    return book;
+  public String getTitle() {
+    return title;
   }
 
-  public void setBook(Book book) {
-    this.book = book;
+  public void setTitle(String title) {
+    this.title = title;
   }
 
   public Category getCategory() {
@@ -26,5 +27,13 @@ public class BookResponseDTO {
 
   public void setCategory(Category category) {
     this.category = category;
+  }
+
+  public String getAuthor() {
+    return author;
+  }
+
+  public void setAuthor(String author) {
+    this.author = author;
   }
 }
