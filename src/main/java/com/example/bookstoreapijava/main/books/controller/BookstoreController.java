@@ -28,7 +28,7 @@ public class BookstoreController {
   public ResponseEntity<List<Book>> findAllBooks() {
     List<Book> response = bookstoreService.findAllBooks();
 
-    return ResponseEntity.ok().body(response);
+    return ResponseEntity.ok(response);
   }
 
   @GetMapping("/{id}")
@@ -42,7 +42,7 @@ public class BookstoreController {
   public ResponseEntity<BookResponseDTO> insertBook(@RequestBody Book book) {
     BookResponseDTO response = bookstoreService.insertBook(book);
 
-    return ResponseEntity.ok().body(response);
+    return ResponseEntity.ok(response);
   }
 
 }
