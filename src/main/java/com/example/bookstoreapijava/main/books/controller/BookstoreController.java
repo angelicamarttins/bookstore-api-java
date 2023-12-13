@@ -44,8 +44,8 @@ public class BookstoreController {
   @PostMapping
   public <T> ResponseEntity<BookResponseDTO> insertBook(@RequestBody Book book) throws URISyntaxException {
     Map<String, T> newBook = bookstoreService.insertBook(book);
-    URI uri = (URI) newBook.get("uri");
     BookResponseDTO response = (BookResponseDTO) newBook.get("bookResponseDTO");
+    URI uri = (URI) newBook.get("uri");
 
     return ResponseEntity.created(uri).body(response);
   }

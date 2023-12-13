@@ -12,6 +12,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BookstoreService {
@@ -29,13 +30,16 @@ public class BookstoreService {
     return bookRepository.getReferenceById(id);
   }
 
-  public <T> HashMap<String, T> insertBook(Book book) throws URISyntaxException {
-    Book newBook = bookRepository.save(book);
-    Category category = categoryRepository.getReferenceById(newBook.getCategory().getCategoryId());
-    URI uri = new URI("http://localhost:8080/bookstore/" + newBook.getBookId().toString());
+  public <T> Map<String, T> insertBook(Book book) throws URISyntaxException {
+    Book savedBook = bookRepository.save(book);
+    Category category = categoryRepository.getReferenceById(savedBook.getCategory().getCategoryId());
+    URI uri = new URI("http://localhost:8080/bookstore/" + savedBook.getBookId().toString());
 
     HashMap<String, T> response = new HashMap<>();
-    response.put("bookResponseDTO", (T) new BookResponseDTO(newBook.getTitle(), newBook.getAuthor(), category));
+    response.put(
+        "bookResponseDTO",
+        (T) new BookResponseDTO(savedBook.getTitle(), savedBook.getAuthor(), category
+        ));
     response.put("uri", (T) uri);
 
     return response;
