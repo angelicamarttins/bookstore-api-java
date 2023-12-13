@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/bookstore")
@@ -39,10 +42,12 @@ public class BookstoreController {
   }
 
   @PostMapping
-  public ResponseEntity<BookResponseDTO> insertBook(@RequestBody Book book) {
-    BookResponseDTO response = bookstoreService.insertBook(book);
+  public <T> ResponseEntity<BookResponseDTO> insertBook(@RequestBody Book book) throws URISyntaxException {
+    Map<String, T> newBook = bookstoreService.insertBook(book);
+    URI uri = (URI) newBook.get("uri");
+    BookResponseDTO response = (BookResponseDTO) newBook.get("bookResponseDTO");
 
-    return ResponseEntity.ok(response);
+    return ResponseEntity.created(uri).body(response);
   }
 
 }
