@@ -2,6 +2,7 @@ package com.example.bookstoreapijava.main.books.entities;
 
 import com.example.bookstoreapijava.main.category.entities.Category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +30,12 @@ public class Book {
   @Size(min = 1, max = 500, message = "O nome do autor deve conter entre 1 e 500 caracteres")
   private String author;
 
-//  @NotEmpty(message = "A categoria do livro não pode estar vazia")
+  @Column(unique = true)
+  @NotEmpty
+  @Size(max = 13)
+  private String isbn;
+
+  //  @NotEmpty(message = "A categoria do livro não pode estar vazia")
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "category_id")
   private Category category;
@@ -38,9 +44,10 @@ public class Book {
 
   }
 
-  public Book(String title, String author, Category category) {
+  public Book(String title, String author, String isbn, Category category) {
     this.title = title;
     this.author = author;
+    this.isbn = isbn;
     this.category = category;
   }
 
@@ -58,6 +65,14 @@ public class Book {
 
   public void setTitle(String title) {
     this.title = title;
+  }
+
+  public String getIsbn() {
+    return isbn;
+  }
+
+  public void setIsbn(String isbn) {
+    this.isbn = isbn;
   }
 
   public Category getCategory() {
