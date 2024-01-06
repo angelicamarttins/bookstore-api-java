@@ -1,23 +1,24 @@
 package com.example.bookstoreapijava.main.category.data.vo;
 
+import com.example.bookstoreapijava.main.category.data.dto.CategoryResponseDTO;
 import com.example.bookstoreapijava.main.category.entities.Category;
 
 import java.net.URI;
 
 public class CategoryCreatedVO {
-  private Category category;
+  private CategoryResponseDTO category;
   private URI uri;
 
-  public CategoryCreatedVO(Category category, URI uri) {
+  public CategoryCreatedVO(CategoryResponseDTO category, URI uri) {
     this.category = category;
     this.uri = uri;
   }
 
-  public Category getCategory() {
+  public CategoryResponseDTO getCategory() {
     return category;
   }
 
-  public void setCategory(Category category) {
+  public void setCategory(CategoryResponseDTO category) {
     this.category = category;
   }
 
