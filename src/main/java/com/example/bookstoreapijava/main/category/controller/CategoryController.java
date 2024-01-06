@@ -1,5 +1,6 @@
 package com.example.bookstoreapijava.main.category.controller;
 
+import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.category.services.CategoryService;
@@ -42,11 +43,11 @@ public class CategoryController {
   }
 
   @PostMapping()
-  public <T> ResponseEntity<Category> insertCategory(@RequestBody Category category) throws URISyntaxException {
-    Map<String, T> savedCategory = categoryService.insertCategory(category);
+  public ResponseEntity<Category> insertCategory(@RequestBody Category category) throws URISyntaxException {
+    CategoryCreatedVO savedCategory = categoryService.insertCategory(category);
 
-    Category response = (Category) savedCategory.get("category");
-    URI uri = (URI) savedCategory.get("uri");
+    Category response = savedCategory.getCategory();
+    URI uri = savedCategory.getUri();
 
     return ResponseEntity.created(uri).body(response);
   }

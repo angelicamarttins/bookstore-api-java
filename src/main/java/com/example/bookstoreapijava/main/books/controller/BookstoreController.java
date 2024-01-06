@@ -1,6 +1,7 @@
 package com.example.bookstoreapijava.main.books.controller;
 
 import com.example.bookstoreapijava.main.books.data.dto.BookResponseDTO;
+import com.example.bookstoreapijava.main.books.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.books.entities.Book;
 import com.example.bookstoreapijava.main.books.services.BookstoreService;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
@@ -42,10 +43,10 @@ public class BookstoreController {
   }
 
   @PostMapping
-  public <T> ResponseEntity<BookResponseDTO> insertBook(@RequestBody Book book) throws URISyntaxException {
-    Map<String, T> newBook = bookstoreService.insertBook(book);
-    BookResponseDTO response = (BookResponseDTO) newBook.get("bookResponseDTO");
-    URI uri = (URI) newBook.get("uri");
+  public ResponseEntity<BookResponseDTO> insertBook(@RequestBody Book book) throws URISyntaxException {
+    BookCreatedVO newBook = bookstoreService.insertBook(book);
+    BookResponseDTO response = newBook.getBookResponseDTO();
+    URI uri = newBook.getUri();
 
     return ResponseEntity.created(uri).body(response);
   }

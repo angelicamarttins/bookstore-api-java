@@ -1,6 +1,7 @@
 package com.example.bookstoreapijava.main.books.services;
 
 import com.example.bookstoreapijava.main.books.data.dto.BookResponseDTO;
+import com.example.bookstoreapijava.main.books.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.books.entities.Book;
 import com.example.bookstoreapijava.main.books.repositories.BookRepository;
 import com.example.bookstoreapijava.main.category.entities.Category;
@@ -30,19 +31,16 @@ public class BookstoreService {
     return bookRepository.getReferenceById(id);
   }
 
-  public <T> Map<String, T> insertBook(Book book) throws URISyntaxException {
+  public BookCreatedVO insertBook(Book book) throws URISyntaxException {
     Book savedBook = bookRepository.save(book);
     Category category = categoryRepository.getReferenceById(savedBook.getCategory().getCategoryId());
     URI uri = new URI("http://localhost:8080/bookstore/" + savedBook.getBookId().toString());
+    BookResponseDTO responseDTO =
+        new BookResponseDTO(savedBook.getTitle(), savedBook.getAuthor(), category);
 
-    HashMap<String, T> response = new HashMap<>();
-    response.put(
-        "bookResponseDTO",
-        (T) new BookResponseDTO(savedBook.getTitle(), savedBook.getAuthor(), category
-        ));
-    response.put("uri", (T) uri);
+    BookCreatedVO bookCreatedVO = new BookCreatedVO(responseDTO, uri);
 
-    return response;
+    return bookCreatedVO;
   }
 
 }

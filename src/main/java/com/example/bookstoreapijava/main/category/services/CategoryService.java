@@ -1,5 +1,6 @@
 package com.example.bookstoreapijava.main.category.services;
 
+import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +26,14 @@ public class CategoryService {
     return categoryRepository.getReferenceById(id);
   }
 
-  public <T> Map<String, T>  insertCategory(Category category) throws URISyntaxException {
-    Map<String, T> response = new HashMap<>();
+  public CategoryCreatedVO insertCategory(Category category) throws URISyntaxException {
 
     Category newCategory = categoryRepository.save(category);
     URI uri =
         new URI("http://localhost:8080/category/" + newCategory.getCategoryId().toString());
 
-    response.put("category", (T) newCategory);
-    response.put("uri", (T) uri);
+    CategoryCreatedVO categoryCreatedVO = new CategoryCreatedVO(newCategory, uri);
 
-    return response;
+    return categoryCreatedVO;
   }
 }
