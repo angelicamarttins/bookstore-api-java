@@ -1,6 +1,7 @@
 package com.example.bookstoreapijava.main.category.controller;
 
 import com.example.bookstoreapijava.main.category.data.dto.CategoryResponseDTO;
+import com.example.bookstoreapijava.main.category.data.dto.CategoryUpdateDTO;
 import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
@@ -8,6 +9,7 @@ import com.example.bookstoreapijava.main.category.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,9 +37,9 @@ public class CategoryController {
     return ResponseEntity.ok(response);
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<CategoryResponseDTO> getCategory(@PathVariable Long id) {
-    CategoryResponseDTO response = categoryService.getCategory(id);
+  @GetMapping("/{categoryId}")
+  public ResponseEntity<CategoryResponseDTO> getCategory(@PathVariable Long categoryId) {
+    CategoryResponseDTO response = categoryService.getCategory(categoryId);
 
     return ResponseEntity.ok(response);
   }
@@ -50,6 +52,18 @@ public class CategoryController {
     URI uri = savedCategory.getUri();
 
     return ResponseEntity.created(uri).body(response);
+  }
+
+  @PatchMapping("/{categoryId}")
+  public ResponseEntity<CategoryResponseDTO> updateCategory(
+      @RequestBody CategoryUpdateDTO categoryUpdateDTO,
+      @PathVariable Long categoryId
+  ) {
+    Category updatedCategory = categoryService.updateCategory(categoryUpdateDTO.getCategoryName(), categoryId);
+
+    CategoryResponseDTO response = new CategoryResponseDTO(categoryId, updatedCategory.getCategoryName());
+
+    return ResponseEntity.ok(response);
   }
 
 }

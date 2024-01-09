@@ -6,6 +6,7 @@ import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -47,5 +48,11 @@ public class CategoryService {
         new URI("http://localhost:8080/category/" + newCategory.getCategoryId().toString());
 
     return new CategoryCreatedVO(categoryResponseDTO, uri);
+  }
+
+  public Category updateCategory(String categoryName, Long categoryId) {
+    categoryRepository.updateCategoryById(categoryName, categoryId);
+
+    return categoryRepository.getReferenceById(categoryId);
   }
 }
