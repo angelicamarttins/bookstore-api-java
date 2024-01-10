@@ -1,6 +1,7 @@
 package com.example.bookstoreapijava.main.books.services;
 
 import com.example.bookstoreapijava.main.books.data.dto.BookResponseDTO;
+import com.example.bookstoreapijava.main.books.data.dto.BookUpdateDTORequest;
 import com.example.bookstoreapijava.main.books.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.books.entities.Book;
 import com.example.bookstoreapijava.main.books.repositories.BookRepository;
@@ -41,6 +42,20 @@ public class BookstoreService {
     BookCreatedVO bookCreatedVO = new BookCreatedVO(responseDTO, uri);
 
     return bookCreatedVO;
+  }
+
+  public Book updateBook(Long id, BookUpdateDTORequest updateDTO) {
+    Long categoryId = updateDTO.getCategoryId().orElse(null);
+    Category updatedCategory = categoryRepository.getReferenceById(categoryId);
+
+    bookRepository.updateBookById(
+        id,
+        updateDTO.getTitle(),
+        updateDTO.getAuthor(),
+        updateDTO.getIsbn(),
+        updatedCategory);
+
+    return bookRepository.getReferenceById(id);
   }
 
 }
