@@ -20,10 +20,10 @@ public interface BookRepository extends JpaRepository<Book, Long> {
           "SET b.title = :title, b.author = :author,  b.isbn = :isbn, category = :category " +
           "WHERE b.bookId = :bookId"
   )
-  public void updateBookById(
+  void updateBookById(
       Long bookId,
-      Optional<String> title,
-      Optional<String> author,
-      Optional<String> isbn,
+      String title,
+      String author,
+      String isbn,
       Category category);
 }

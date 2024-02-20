@@ -52,7 +52,7 @@ public class BookstoreController {
     return ResponseEntity.created(uri).body(response);
   }
 
-  @PatchMapping("{bookId}")
+  @PatchMapping("/{bookId}")
   public ResponseEntity<Book> updateBook(
       @PathVariable Long bookId,
       @RequestBody BookUpdateDTORequest updateDTO

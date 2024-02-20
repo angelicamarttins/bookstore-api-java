@@ -1,17 +1,18 @@
 package com.example.bookstoreapijava.main.books.data.dto;
 
 import java.util.Optional;
+import java.util.OptionalLong;
 
 public class BookUpdateDTORequest {
   private Optional<String> title;
   private Optional<String> author;
   private Optional<String> isbn;
-  private Optional<Long> categoryId;
+  private OptionalLong categoryId;
 
   public BookUpdateDTORequest() {
   }
 
-  public BookUpdateDTORequest(Optional<String> title, Optional<String> author, Optional<String> isbn, Optional<Long> categoryId) {
+  public BookUpdateDTORequest(Optional<String> title, Optional<String> author, Optional<String> isbn, OptionalLong categoryId) {
     this.title = title;
     this.author = author;
     this.isbn = isbn;
@@ -42,11 +43,11 @@ public class BookUpdateDTORequest {
     this.isbn = isbn;
   }
 
-  public Optional<Long> getCategoryId() {
+  public OptionalLong  getCategoryId() {
     return categoryId;
   }
 
-  public void setCategoryId(Optional<Long> categoryId) {
+  public void setCategoryId(OptionalLong  categoryId) {
     this.categoryId = categoryId;
   }
 }
