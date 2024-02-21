@@ -52,17 +52,19 @@ public class BookstoreService {
             ? savedBook.getCategory()
             : categoryRepository.getReferenceById(bookUpdateDTO.getCategoryId().getAsLong());
 
+    String author = bookUpdateDTO.getAuthor() == null
+        ? savedBook.getAuthor()
+        : bookUpdateDTO.getAuthor().get();
 
-    String author = bookUpdateDTO.getAuthor() == null ?
-        savedBook.getAuthor() : String.valueOf(bookUpdateDTO.getAuthor());
+    String title = bookUpdateDTO.getTitle() == null
+        ? savedBook.getTitle()
+        : bookUpdateDTO.getTitle().get();
 
-    String title = bookUpdateDTO.getTitle() == null ?
-        savedBook.getTitle() : String.valueOf(bookUpdateDTO.getTitle());
+    String isbn = bookUpdateDTO.getIsbn() == null
+        ? savedBook.getIsbn()
+        : bookUpdateDTO.getIsbn().get();
 
-    String isbn = bookUpdateDTO.getIsbn() == null ?
-        savedBook.getIsbn() : String.valueOf(bookUpdateDTO.getIsbn()) ;
-
-    bookRepository.updateBookById(id, title, author, isbn, updatedCategory);
+    bookRepository.updateBookById(title, author, isbn, updatedCategory, id);
 
     return bookRepository.getReferenceById(id);
   }
