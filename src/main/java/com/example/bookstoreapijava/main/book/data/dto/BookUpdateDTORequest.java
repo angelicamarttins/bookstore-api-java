@@ -1,4 +1,4 @@
-package com.example.bookstoreapijava.main.books.data.dto;
+package com.example.bookstoreapijava.main.book.data.dto;
 
 import java.util.Optional;
 import java.util.OptionalLong;

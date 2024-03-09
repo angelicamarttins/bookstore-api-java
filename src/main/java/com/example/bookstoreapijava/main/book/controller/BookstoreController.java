@@ -1,10 +1,9 @@
-package com.example.bookstoreapijava.main.books.controller;
+package com.example.bookstoreapijava.main.book.controller;
 
-import com.example.bookstoreapijava.main.books.data.dto.BookResponseDTO;
-import com.example.bookstoreapijava.main.books.data.dto.BookUpdateDTORequest;
-import com.example.bookstoreapijava.main.books.data.vo.BookCreatedVO;
-import com.example.bookstoreapijava.main.books.entities.Book;
-import com.example.bookstoreapijava.main.books.services.BookstoreService;
+import com.example.bookstoreapijava.main.book.data.dto.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.book.data.vo.BookCreatedVO;
+import com.example.bookstoreapijava.main.book.entities.Book;
+import com.example.bookstoreapijava.main.book.services.BookstoreService;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -44,9 +43,10 @@ public class BookstoreController {
   }
 
   @PostMapping
-  public ResponseEntity<BookResponseDTO> insertBook(@RequestBody Book book) throws URISyntaxException {
+  public ResponseEntity<Book> insertBook(@RequestBody Book book) throws URISyntaxException {
     BookCreatedVO newBook = bookstoreService.insertBook(book);
-    BookResponseDTO response = newBook.getBookResponseDTO();
+
+    Book response = newBook.getBook();
     URI uri = newBook.getUri();
 
     return ResponseEntity.created(uri).body(response);
