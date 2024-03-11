@@ -55,9 +55,9 @@ public class BookstoreController {
   @PatchMapping("/{bookId}")
   public ResponseEntity<Book> updateBook(
       @PathVariable Long bookId,
-      @RequestBody BookUpdateDTORequest updateDTO
+      @RequestBody BookUpdateDTORequest updatedBook
   ) {
-    Book response = bookstoreService.updateBook(bookId, updateDTO);
+    Book response = bookstoreService.updateBook(bookId, updatedBook);
 
     return ResponseEntity.ok(response);
   }

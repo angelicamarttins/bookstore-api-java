@@ -1,53 +1,56 @@
 package com.example.bookstoreapijava.main.book.data.dto;
 
+import com.example.bookstoreapijava.main.category.entities.Category;
+
 import java.util.Optional;
 import java.util.OptionalLong;
 
 public class BookUpdateDTORequest {
-  private Optional<String> title;
-  private Optional<String> author;
-  private Optional<String> isbn;
-  private OptionalLong categoryId;
+
+  private String title;
+  private String author;
+  private String isbn;
+  private Category category;
 
   public BookUpdateDTORequest() {
   }
 
-  public BookUpdateDTORequest(Optional<String> title, Optional<String> author, Optional<String> isbn, OptionalLong categoryId) {
+  public BookUpdateDTORequest(String title, String author, String isbn, Category category) {
     this.title = title;
     this.author = author;
     this.isbn = isbn;
-    this.categoryId = categoryId;
+    this.category = category;
   }
 
-  public Optional<String> getTitle() {
+  public String getTitle() {
     return title;
   }
 
-  public void setTitle(Optional<String> title) {
+  public void setTitle(String title) {
     this.title = title;
   }
 
-  public Optional<String> getAuthor() {
+  public String getAuthor() {
     return author;
   }
 
-  public void setAuthor(Optional<String> author) {
+  public void setAuthor(String author) {
     this.author = author;
   }
 
-  public Optional<String> getIsbn() {
+  public String getIsbn() {
     return isbn;
   }
 
-  public void setIsbn(Optional<String> isbn) {
+  public void setIsbn(String isbn) {
     this.isbn = isbn;
   }
 
-  public OptionalLong  getCategoryId() {
-    return categoryId;
+  public Category getCategory() {
+    return category;
   }
 
-  public void setCategoryId(OptionalLong  categoryId) {
-    this.categoryId = categoryId;
+  public void setCategory(Category category) {
+    this.category = category;
   }
 }

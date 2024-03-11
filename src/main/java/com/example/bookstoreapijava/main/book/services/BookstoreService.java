@@ -38,24 +38,27 @@ public class BookstoreService {
 
     URI uri = new URI("http://localhost:8080/bookstore/" + savedBook.getBookId().toString());
 
-//    BookResponseDTO responseDTO =
-//        new BookResponseDTO(savedBook.getTitle(), savedBook.getAuthor(), savedBook.getIsbn(), categoryDTO);
-
     return new BookCreatedVO(book, uri);
   }
 
-  public Book updateBook(Long id, BookUpdateDTORequest bookUpdateDTO) {
+  public Book updateBook(Long id, BookUpdateDTORequest updatedBook) {
     Book savedBook = bookRepository.getReferenceById(id);
 
-    Category updatedCategory =
-        bookUpdateDTO.getCategoryId() == null
-            ? savedBook.getCategory()
-            : categoryRepository.getReferenceById(bookUpdateDTO.getCategoryId().getAsLong());
+    if(updatedBook.getAuthor() != null) {
+      savedBook.setAuthor(updatedBook.getAuthor());
+    }
 
-    savedBook.setTitle(bookUpdateDTO.getTitle().orElse(savedBook.getTitle()));
-    savedBook.setAuthor(bookUpdateDTO.getAuthor().orElse(savedBook.getAuthor()));
-    savedBook.setIsbn(bookUpdateDTO.getIsbn().orElse(savedBook.getIsbn()));
-    savedBook.setCategory(updatedCategory);
+    if(updatedBook.getTitle() != null) {
+      savedBook.setTitle(updatedBook.getTitle());
+    }
+
+    if(updatedBook.getIsbn() != null) {
+      savedBook.setIsbn(updatedBook.getIsbn());
+    }
+
+    if(updatedBook.getCategory() != null) {
+      savedBook.setCategory(updatedBook.getCategory()); // TODO: Não permitir que os dados da categoria sejam alterados. Deixar apenas alterar o relacionamento entre categoria e livro
+    }
 
     return bookRepository.save(savedBook);
   }
