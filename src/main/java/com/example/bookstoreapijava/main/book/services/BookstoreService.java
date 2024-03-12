@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -61,6 +62,15 @@ public class BookstoreService {
     }
 
     return bookRepository.save(savedBook);
+  }
+
+  public void deleteBook(Long bookId) {
+    Book deletedBook = bookRepository.getReferenceById(bookId);
+
+    deletedBook.setInactivatedAt(LocalDateTime.now());
+
+    bookRepository.save(deletedBook);
+
   }
 
 }

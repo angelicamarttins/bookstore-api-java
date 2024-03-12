@@ -4,6 +4,8 @@ import co.novu.api.common.SubscriberRequest;
 import co.novu.api.events.requests.Topic;
 import co.novu.api.events.requests.TriggerEventRequest;
 import co.novu.api.events.responses.TriggerEventResponse;
+import co.novu.api.notifications.requests.NotificationRequest;
+import co.novu.api.notifications.responses.NotificationsResponse;
 import co.novu.api.subscribers.requests.UpdateSubscriberRequest;
 import co.novu.api.subscribers.responses.SingleSubscriberResponse;
 import co.novu.api.topics.requests.SubscriberAdditionRequest;
@@ -23,7 +25,9 @@ public class NovuClass {
 
 //    subscribe(novu);
     //update(novu);
-    //trigger(novu, subscriberRequest);
+    SubscriberRequest subscriberRequest = new SubscriberRequest();
+    subscriberRequest.setSubscriberId(UUID.randomUUID().toString());
+    trigger(novu, subscriberRequest);
 //    SingleSubscriberResponse sub =
 //        novu.getSubscriber("e9b613b6-5ecd-4943-bb85-306c5534e46d");
 
@@ -50,7 +54,7 @@ public class NovuClass {
 //    novu.addSubscriberToTopic(subscriberAdditionRequestA, "testA");
 //    novu.addSubscriberToTopic(subscriberAdditionRequestB, "testB");
 
-    triggerA(novu);
+//    triggerA(novu);
 //    triggerB(novu);
   }
 
@@ -96,7 +100,15 @@ public class NovuClass {
     triggerEventRequest.setPayload(Collections.singletonMap("customVariables", "Hello"));
 
     try {
-      return novu.triggerEvent(triggerEventRequest);
+      TriggerEventResponse triggerEventResponse = novu.triggerEvent(triggerEventRequest);
+      System.out.println("GETERROR = " + triggerEventResponse.getData());
+      NotificationRequest notificationRequest = new NotificationRequest();
+      notificationRequest.setTransactionId(triggerEventResponse.getData().getTransactionId());
+      Thread.sleep(5000);
+
+      NotificationsResponse notifications = novu.getNotifications(notificationRequest);
+      System.out.println("NOTIFICATIONS = " + notifications);
+      return triggerEventResponse;
     } catch (Exception e) {
       System.out.println("Error Creating Subscriber" + e);
     }

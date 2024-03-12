@@ -7,13 +7,7 @@ import com.example.bookstoreapijava.main.book.services.BookstoreService;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -62,4 +56,17 @@ public class BookstoreController {
     return ResponseEntity.ok(response);
   }
 
+  @DeleteMapping("/{bookId}")
+  public ResponseEntity<Void> deleteBook(@PathVariable Long bookId) {
+    bookstoreService.deleteBook(bookId);
+
+    return ResponseEntity.noContent().build();
+  }
+
+  // Response: 204 No content
+  // Faremos um soft delete com inactivatedAt. Caso o isbn feito em um POST for o mesmo de
+  // um "deletado", apenas restauraremos esse registro, removendo o inactivatedAt. Isso é possível,
+  // pois cada edição tem seu próprio isbn e, se o usuário está reinserindo este livro, significa
+  // que ele quer retomar o registro dessa obra em específico. Apenas devemos tomar cuidado no caso
+  // de um DELETE e um PATCH com o mesmo isbn.
 }

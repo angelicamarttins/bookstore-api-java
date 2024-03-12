@@ -38,6 +38,9 @@ public class Book {
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
+  @Column(name = "inactivated_at")
+  private LocalDateTime inactivatedAt;
+
   //  @NotEmpty(message = "A categoria do livro não pode estar vazia")
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "category_id")
@@ -110,6 +113,14 @@ public class Book {
     this.updatedAt = updatedAt;
   }
 
+  public LocalDateTime getInactivatedAt() {
+    return inactivatedAt;
+  }
+
+  public void setInactivatedAt(LocalDateTime inactivatedAt) {
+    this.inactivatedAt = inactivatedAt;
+  }
+
   @PrePersist
   private void onCreate() {
     this.setCreatedAt(LocalDateTime.now());
@@ -129,6 +140,7 @@ public class Book {
         ", isbn='" + isbn + '\'' +
         ", createdAt=" + createdAt +
         ", updatedAt=" + updatedAt +
+        ", inactivatedAt=" + inactivatedAt +
         ", category=" + category +
         '}';
   }
