@@ -1,5 +1,6 @@
 package com.example.bookstoreapijava.main.category.services;
 
+import com.example.bookstoreapijava.main.category.data.dto.CategoryUpdateDTO;
 import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
@@ -38,10 +39,10 @@ public class CategoryService {
     return new CategoryCreatedVO(newCategory, uri);
   }
 
-  public Category updateCategory(String categoryName, Long categoryId) {
+  public Category updateCategory(CategoryUpdateDTO updatedCategory, Long categoryId) {
     Category savedCategory = categoryRepository.getReferenceById(categoryId);
 
-    savedCategory.setCategoryName(categoryName);
+    savedCategory.setCategoryName(updatedCategory.getCategoryName());
 
     categoryRepository.save(savedCategory);
 

@@ -52,7 +52,7 @@ public class CategoryController {
       @PathVariable Long categoryId,
       @RequestBody CategoryUpdateDTO categoryUpdateDTO
   ) {
-    Category updatedCategory = categoryService.updateCategory(categoryUpdateDTO.getCategoryName(), categoryId);
+    Category updatedCategory = categoryService.updateCategory(categoryUpdateDTO, categoryId);
 
     return ResponseEntity.ok(updatedCategory);
   }
