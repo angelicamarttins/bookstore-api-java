@@ -29,6 +29,9 @@ public class Category {
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
+  @Column(name = "inactivated_at")
+  private LocalDateTime inactivatedAt;
+
   @JsonCreator
   public Category() {
   }
@@ -57,8 +60,48 @@ public class Category {
     this.categoryName = categoryName;
   }
 
+  public LocalDateTime getCreatedAt() {
+    return createdAt;
+  }
+
+  public void setCreatedAt(LocalDateTime createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public LocalDateTime getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(LocalDateTime updatedAt) {
+    this.updatedAt = updatedAt;
+  }
+
+  public LocalDateTime getInactivatedAt() {
+    return inactivatedAt;
+  }
+
+  public void setInactivatedAt(LocalDateTime inactivatedAt) {
+    this.inactivatedAt = inactivatedAt;
+  }
+
+  @PrePersist
+  public void onCreate() {
+    this.createdAt = LocalDateTime.now();
+  }
+
+  @PreUpdate
+  public void onUpdate() {
+    this.updatedAt = LocalDateTime.now();
+  }
+
   @Override
   public String toString() {
-    return "Book category: " + categoryName;
+    return "Category{" +
+        "categoryId=" + categoryId +
+        ", categoryName='" + categoryName + '\'' +
+        ", createdAt=" + createdAt +
+        ", updatedAt=" + updatedAt +
+        ", inactivatedAt=" + inactivatedAt +
+        '}';
   }
 }
