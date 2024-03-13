@@ -48,4 +48,12 @@ public class CategoryService {
     return savedCategory;
   }
 
+  public void deleteCategory(Long categoryId) {
+    Category deletedCategory = categoryRepository.getReferenceById(categoryId);
+
+    deletedCategory.setInactivatedAt(LocalDateTime.now());
+
+    categoryRepository.save(deletedCategory);
+  }
+
 }
