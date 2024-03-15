@@ -40,8 +40,8 @@ public class BookstoreController {
   public ResponseEntity<Book> insertBook(@RequestBody Book book) throws URISyntaxException {
     BookCreatedVO newBook = bookstoreService.insertBook(book);
 
-    Book response = newBook.getBook();
-    URI uri = newBook.getUri();
+    Book response = newBook.book();
+    URI uri = newBook.uri();
 
     return ResponseEntity.created(uri).body(response);
   }
@@ -63,10 +63,12 @@ public class BookstoreController {
     return ResponseEntity.noContent().build();
   }
 
-  // Response: 204 No content
-  // Faremos um soft delete com inactivatedAt. Caso o isbn feito em um POST for o mesmo de
-  // um "deletado", apenas restauraremos esse registro, removendo o inactivatedAt. Isso é possível,
-  // pois cada edição tem seu próprio isbn e, se o usuário está reinserindo este livro, significa
-  // que ele quer retomar o registro dessa obra em específico. Apenas devemos tomar cuidado no caso
-  // de um DELETE e um PATCH com o mesmo isbn.
+  /*
+  TODO: Response: 204 No content
+    Faremos um soft delete com inactivatedAt. Caso o isbn feito em um POST for o mesmo de
+    um "deletado", apenas restauraremos esse registro, removendo o inactivatedAt. Isso é possível,
+    pois cada edição tem seu próprio isbn e, se o usuário está reinserindo este livro, significa
+    que ele quer retomar o registro dessa obra em específico. Apenas devemos tomar cuidado no caso
+    de um DELETE e um PATCH com o mesmo isbn.
+   */
 }

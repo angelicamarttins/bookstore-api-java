@@ -41,8 +41,8 @@ public class CategoryController {
   public ResponseEntity<Category> insertCategory(@RequestBody Category category) throws URISyntaxException {
     CategoryCreatedVO savedCategory = categoryService.insertCategory(category);
 
-    Category response = savedCategory.getCategory();
-    URI uri = savedCategory.getUri();
+    Category response = savedCategory.category();
+    URI uri = savedCategory.uri();
 
     return ResponseEntity.created(uri).body(response);
   }

@@ -45,20 +45,20 @@ public class BookstoreService {
   public Book updateBook(Long id, BookUpdateDTORequest updatedBook) {
     Book savedBook = bookRepository.getReferenceById(id);
 
-    if(updatedBook.getAuthor() != null) {
-      savedBook.setAuthor(updatedBook.getAuthor());
+    if(updatedBook.author() != null) {
+      savedBook.setAuthor(updatedBook.author());
     }
 
-    if(updatedBook.getTitle() != null) {
-      savedBook.setTitle(updatedBook.getTitle());
+    if(updatedBook.title() != null) {
+      savedBook.setTitle(updatedBook.title());
     }
 
-    if(updatedBook.getIsbn() != null) {
-      savedBook.setIsbn(updatedBook.getIsbn());
+    if(updatedBook.isbn() != null) {
+      savedBook.setIsbn(updatedBook.isbn());
     }
 
-    if(updatedBook.getCategory() != null) {
-      savedBook.setCategory(updatedBook.getCategory()); // TODO: Não permitir que os dados da categoria sejam alterados. Deixar apenas alterar o relacionamento entre categoria e livro
+    if(updatedBook.category() != null) {
+      savedBook.setCategory(updatedBook.category()); // TODO: Não permitir que os dados da categoria sejam alterados. Deixar apenas alterar o relacionamento entre categoria e livro
     }
 
     return bookRepository.save(savedBook);

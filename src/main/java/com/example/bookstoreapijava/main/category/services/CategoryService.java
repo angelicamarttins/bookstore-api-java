@@ -42,7 +42,7 @@ public class CategoryService {
   public Category updateCategory(CategoryUpdateDTO updatedCategory, Long categoryId) {
     Category savedCategory = categoryRepository.getReferenceById(categoryId);
 
-    savedCategory.setCategoryName(updatedCategory.getCategoryName());
+    savedCategory.setCategoryName(updatedCategory.categoryName());
 
     categoryRepository.save(savedCategory);
 
