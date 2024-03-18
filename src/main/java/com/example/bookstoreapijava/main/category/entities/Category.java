@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "category")
@@ -15,9 +17,9 @@ import java.time.LocalDateTime;
 public class Category {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "category_id")
-  private Long categoryId;
+  @UuidGenerator
+  private UUID categoryId;
   @NotEmpty(message = "O nome da categoria não pode estar vazio")
   @Size(min = 1, max = 500, message = "O nome da categoria deve conter entre 1 e 500 caracteres")
   @Column(name = "category_name")
@@ -37,18 +39,18 @@ public class Category {
   }
 
   public Category(
-      @JsonProperty("categoryId") Long categoryId,
+      @JsonProperty("categoryId") UUID categoryId,
       @JsonProperty("categoryName") String categoryName
   ) {
     this.categoryId = categoryId;
     this.categoryName = categoryName;
   }
 
-  public Long getCategoryId() {
+  public UUID getCategoryId() {
     return categoryId;
   }
 
-  public void setCategoryId(Long categoryId) {
+  public void setCategoryId(UUID categoryId) {
     this.categoryId = categoryId;
   }
 

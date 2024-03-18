@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/bookstore")
@@ -30,7 +31,7 @@ public class BookstoreController {
   }
 
   @GetMapping("/{bookId}")
-  public ResponseEntity<Book> getBook(@PathVariable Long bookId) {
+  public ResponseEntity<Book> getBook(@PathVariable UUID bookId) {
     Book response = bookstoreService.getBook(bookId);
 
     return ResponseEntity.ok(response);
@@ -48,7 +49,7 @@ public class BookstoreController {
 
   @PatchMapping("/{bookId}")
   public ResponseEntity<Book> updateBook(
-      @PathVariable Long bookId,
+      @PathVariable UUID bookId,
       @RequestBody BookUpdateDTORequest updatedBook
   ) {
     Book response = bookstoreService.updateBook(bookId, updatedBook);
@@ -57,7 +58,7 @@ public class BookstoreController {
   }
 
   @DeleteMapping("/{bookId}")
-  public ResponseEntity<Void> deleteBook(@PathVariable Long bookId) {
+  public ResponseEntity<Void> deleteBook(@PathVariable UUID bookId) {
     bookstoreService.deleteBook(bookId);
 
     return ResponseEntity.noContent().build();

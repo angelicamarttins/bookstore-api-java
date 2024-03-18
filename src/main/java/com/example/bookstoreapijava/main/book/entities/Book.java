@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "book")
@@ -14,9 +16,9 @@ import java.time.LocalDateTime;
 public class Book {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "book_id")
-  private Long bookId;
+  @UuidGenerator
+  private UUID bookId;
   @NotEmpty(message = "O título do livro não pode estar vazio")
   @Size(min = 1, max = 500, message = "O título do livro deve conter entre 1 e 500 caracteres")
   @Column(name = "title")
@@ -57,11 +59,11 @@ public class Book {
     this.createdAt = createdAt;
   }
 
-  public Long getBookId() {
+  public UUID getBookId() {
     return bookId;
   }
 
-  public void setBookId(Long bookId) {
+  public void setBookId(UUID bookId) {
     this.bookId = bookId;
   }
 

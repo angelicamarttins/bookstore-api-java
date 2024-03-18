@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/category")
@@ -31,7 +32,7 @@ public class CategoryController {
   }
 
   @GetMapping("/{categoryId}")
-  public ResponseEntity<Category> getCategory(@PathVariable Long categoryId) {
+  public ResponseEntity<Category> getCategory(@PathVariable UUID categoryId) {
     Category response = categoryService.getCategory(categoryId);
 
     return ResponseEntity.ok(response);
@@ -49,7 +50,7 @@ public class CategoryController {
 
   @PatchMapping("/{categoryId}")
   public ResponseEntity<Category> updateCategory(
-      @PathVariable Long categoryId,
+      @PathVariable UUID categoryId,
       @RequestBody CategoryUpdateDTO categoryUpdateDTO
   ) {
     Category updatedCategory = categoryService.updateCategory(categoryUpdateDTO, categoryId);
@@ -58,7 +59,7 @@ public class CategoryController {
   }
 
   @DeleteMapping("/{categoryId}")
-  public ResponseEntity<Void> deleteCategory(@PathVariable Long categoryId) {
+  public ResponseEntity<Void> deleteCategory(@PathVariable UUID categoryId) {
     categoryService.deleteCategory(categoryId);
 
     return ResponseEntity.noContent().build();

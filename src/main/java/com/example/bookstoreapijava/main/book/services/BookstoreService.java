@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class BookstoreService {
@@ -26,8 +27,8 @@ public class BookstoreService {
     return bookRepository.findAll();
   }
 
-  public Book getBook(Long id) {
-    return bookRepository.getReferenceById(id);
+  public Book getBook(UUID bookId) {
+    return bookRepository.getReferenceById(bookId);
   }
 
   public BookCreatedVO insertBook(Book book) throws URISyntaxException {
@@ -42,8 +43,8 @@ public class BookstoreService {
     return new BookCreatedVO(book, uri);
   }
 
-  public Book updateBook(Long id, BookUpdateDTORequest updatedBook) {
-    Book savedBook = bookRepository.getReferenceById(id);
+  public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) {
+    Book savedBook = bookRepository.getReferenceById(bookId);
 
     if(updatedBook.author() != null) {
       savedBook.setAuthor(updatedBook.author());
@@ -58,13 +59,15 @@ public class BookstoreService {
     }
 
     if(updatedBook.category() != null) {
-      savedBook.setCategory(updatedBook.category()); // TODO: Não permitir que os dados da categoria sejam alterados. Deixar apenas alterar o relacionamento entre categoria e livro
+      savedBook.setCategory(updatedBook.category());
+      // TODO: Não permitir que os dados da categoria sejam alterados.
+      //  Deixar apenas alterar o relacionamento entre categoria e livro
     }
 
     return bookRepository.save(savedBook);
   }
 
-  public void deleteBook(Long bookId) {
+  public void deleteBook(UUID bookId) {
     Book deletedBook = bookRepository.getReferenceById(bookId);
 
     deletedBook.setInactivatedAt(LocalDateTime.now());

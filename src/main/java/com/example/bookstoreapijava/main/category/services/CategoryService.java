@@ -11,6 +11,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CategoryService {
@@ -24,8 +25,8 @@ public class CategoryService {
     return categoryList;
   }
 
-  public Category getCategory(Long id) {
-    Category category = categoryRepository.getReferenceById(id);
+  public Category getCategory(UUID categoryId) {
+    Category category = categoryRepository.getReferenceById(categoryId);
 
     return category;
   }
@@ -39,7 +40,7 @@ public class CategoryService {
     return new CategoryCreatedVO(newCategory, uri);
   }
 
-  public Category updateCategory(CategoryUpdateDTO updatedCategory, Long categoryId) {
+  public Category updateCategory(CategoryUpdateDTO updatedCategory, UUID categoryId) {
     Category savedCategory = categoryRepository.getReferenceById(categoryId);
 
     savedCategory.setCategoryName(updatedCategory.categoryName());
@@ -49,7 +50,7 @@ public class CategoryService {
     return savedCategory;
   }
 
-  public void deleteCategory(Long categoryId) {
+  public void deleteCategory(UUID categoryId) {
     Category deletedCategory = categoryRepository.getReferenceById(categoryId);
 
     deletedCategory.setInactivatedAt(LocalDateTime.now());

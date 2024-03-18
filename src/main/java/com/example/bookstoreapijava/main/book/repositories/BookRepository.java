@@ -9,5 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface BookRepository extends JpaRepository<Book, Long> {
+import java.util.UUID;
+
+public interface BookRepository extends JpaRepository<Book, UUID> {
 }
