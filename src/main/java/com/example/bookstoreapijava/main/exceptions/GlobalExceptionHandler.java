@@ -1,4 +1,4 @@
-package com.example.bookstoreapijava.main.globalExceptions;
+package com.example.bookstoreapijava.main.exceptions;
 
 import com.example.bookstoreapijava.main.book.exceptions.BookAlreadyExistsException;
 import com.example.bookstoreapijava.main.book.exceptions.BookNotFoundException;
