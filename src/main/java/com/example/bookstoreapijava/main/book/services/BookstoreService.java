@@ -15,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -37,6 +38,14 @@ public class BookstoreService {
   }
 
   public BookCreatedVO insertBook(Book book) throws URISyntaxException {
+    String bookIsbn = book.getIsbn();
+
+    bookRepository
+        .getBookByIsbn(bookIsbn)
+        .ifPresent(savedBook -> {
+          throw new BookAlreadyExistsException(bookIsbn);
+        });
+
     Category category = categoryRepository.getReferenceById(book.getCategory().getCategoryId());
 
     book.setCategory(category);
