@@ -3,7 +3,7 @@ package com.example.bookstoreapijava.main.utils;
 import java.text.Normalizer;
 import java.util.regex.Pattern;
 
-public final class  Utils {
+public final class Utils {
 
   public static String sanitizeStringField(String field) {
     String accentsRemoved = removeAccents(field);
