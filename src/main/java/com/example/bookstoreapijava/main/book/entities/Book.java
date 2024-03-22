@@ -19,6 +19,7 @@ public class Book {
   @Column(name = "book_id")
   @UuidGenerator
   private UUID bookId;
+
   @NotEmpty(message = "O título do livro não pode estar vazio")
   @Size(min = 1, max = 500, message = "O título do livro deve conter entre 1 e 500 caracteres")
   @Column(name = "title")

@@ -6,28 +6,33 @@ import com.example.bookstoreapijava.main.category.exceptions.CategoryAlreadyExis
 import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+import java.util.HashMap;
+import java.util.Map;
+
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
-  @ExceptionHandler({BookNotFoundException.class})
+  @ExceptionHandler(BookNotFoundException.class)
   public ResponseEntity<Object> handleBookNotFoundException(BookNotFoundException bookNotFoundException) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(bookNotFoundException.getMessage());
   }
 
-  @ExceptionHandler({BookAlreadyExistsException.class})
+  @ExceptionHandler(BookAlreadyExistsException.class)
   public ResponseEntity<Object> handleBookAlreadyExistsException(BookAlreadyExistsException bookAlreadyExistsException) {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(bookAlreadyExistsException.getMessage());
   }
 
-  @ExceptionHandler({CategoryNotFoundException.class})
+  @ExceptionHandler(CategoryNotFoundException.class)
   public ResponseEntity<Object> handleCategoryNotFoundException(CategoryNotFoundException categoryNotFoundException) {
     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(categoryNotFoundException.getMessage());
   }
 
-  @ExceptionHandler({CategoryAlreadyExistsException.class})
+  @ExceptionHandler(CategoryAlreadyExistsException.class)
   public ResponseEntity<Object> handleCategoryAlreadyExistsException(CategoryAlreadyExistsException categoryAlreadyExistsException) {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(categoryAlreadyExistsException.getMessage());
   }
