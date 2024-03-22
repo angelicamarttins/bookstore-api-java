@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -16,13 +17,15 @@ import java.util.UUID;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Category {
 
-  @Id
   @Column(name = "category_id")
+  @Id
   @UuidGenerator
   private UUID categoryId;
+
+  @Column(name = "category_name", unique = true)
+  @NotNull
   @NotEmpty(message = "O nome da categoria não pode estar vazio")
   @Size(min = 1, max = 500, message = "O nome da categoria deve conter entre 1 e 500 caracteres")
-  @Column(name = "category_name", unique = true)
   private String categoryName;
 
   @Column(name = "created_at")

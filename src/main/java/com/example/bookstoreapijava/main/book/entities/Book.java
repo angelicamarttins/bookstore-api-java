@@ -4,6 +4,7 @@ import com.example.bookstoreapijava.main.category.entities.Category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -15,22 +16,25 @@ import java.util.UUID;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Book {
 
-  @Id
   @Column(name = "book_id")
+  @Id
   @UuidGenerator
   private UUID bookId;
 
+  @Column(name = "title")
+  @NotNull
   @NotEmpty(message = "O título do livro não pode estar vazio")
   @Size(min = 1, max = 500, message = "O título do livro deve conter entre 1 e 500 caracteres")
-  @Column(name = "title")
   private String title;
 
+  @Column(name = "author")
+  @NotNull
   @NotEmpty(message = "O autor do livro não pode estar vazio")
   @Size(min = 1, max = 500, message = "O nome do autor deve conter entre 1 e 500 caracteres")
-  @Column(name = "author")
   private String author;
 
   @Column(unique = true, name = "isbn")
+  @NotNull
   @NotEmpty
   @Size(max = 13)
   private String isbn;
