@@ -23,7 +23,7 @@ public class Category {
   private UUID categoryId;
 
   @Column(name = "category_name", unique = true)
-  @NotNull
+  @NotNull(message = "O nome da categoria não pode ser nulo")
   @NotEmpty(message = "O nome da categoria não pode estar vazio")
   @Size(min = 1, max = 500, message = "O nome da categoria deve conter entre 1 e 500 caracteres")
   private String categoryName;

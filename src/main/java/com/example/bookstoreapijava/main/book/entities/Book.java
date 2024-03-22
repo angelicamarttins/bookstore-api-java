@@ -22,20 +22,20 @@ public class Book {
   private UUID bookId;
 
   @Column(name = "title")
-  @NotNull
+  @NotNull(message = "O título do livro não pode ser nulo")
   @NotEmpty(message = "O título do livro não pode estar vazio")
   @Size(min = 1, max = 500, message = "O título do livro deve conter entre 1 e 500 caracteres")
   private String title;
 
   @Column(name = "author")
-  @NotNull
+  @NotNull(message = "O autor do livro não pode ser nulo")
   @NotEmpty(message = "O autor do livro não pode estar vazio")
   @Size(min = 1, max = 500, message = "O nome do autor deve conter entre 1 e 500 caracteres")
   private String author;
 
   @Column(unique = true, name = "isbn")
-  @NotNull
-  @NotEmpty
+  @NotNull(message = "O isbn do livro não pode ser nulo")
+  @NotEmpty(message = "O isbn do livro não pode estar vazio")
   @Size(max = 13)
   private String isbn;
 

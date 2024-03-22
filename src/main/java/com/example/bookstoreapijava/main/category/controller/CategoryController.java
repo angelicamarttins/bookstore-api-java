@@ -5,6 +5,7 @@ import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.category.services.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,7 @@ public class CategoryController {
   }
 
   @PostMapping()
-  public ResponseEntity<Category> insertCategory(@RequestBody Category category) throws URISyntaxException {
+  public ResponseEntity<Category> insertCategory(@RequestBody @Valid Category category) throws URISyntaxException {
     CategoryCreatedVO savedCategory = categoryService.insertCategory(category);
 
     Category response = savedCategory.category();
@@ -51,7 +52,7 @@ public class CategoryController {
   @PatchMapping("/{categoryId}")
   public ResponseEntity<Category> updateCategory(
       @PathVariable UUID categoryId,
-      @RequestBody CategoryUpdateDTO categoryUpdateDTO
+      @RequestBody @Valid CategoryUpdateDTO categoryUpdateDTO
   ) {
     Category updatedCategory = categoryService.updateCategory(categoryUpdateDTO, categoryId);
 

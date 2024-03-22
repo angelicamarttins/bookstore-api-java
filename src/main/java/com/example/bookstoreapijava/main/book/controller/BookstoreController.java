@@ -5,6 +5,7 @@ import com.example.bookstoreapijava.main.book.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.book.entities.Book;
 import com.example.bookstoreapijava.main.book.services.BookstoreService;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class BookstoreController {
   }
 
   @PostMapping
-  public ResponseEntity<Book> insertBook(@RequestBody Book book) throws URISyntaxException {
+  public ResponseEntity<Book> insertBook(@RequestBody @Valid Book book) throws URISyntaxException {
     BookCreatedVO newBook = bookstoreService.insertBook(book);
 
     Book response = newBook.book();
@@ -50,7 +51,7 @@ public class BookstoreController {
   @PatchMapping("/{bookId}")
   public ResponseEntity<Book> updateBook(
       @PathVariable UUID bookId,
-      @RequestBody BookUpdateDTORequest updatedBook
+      @RequestBody @Valid BookUpdateDTORequest updatedBook
   ) {
     Book response = bookstoreService.updateBook(bookId, updatedBook);
 
