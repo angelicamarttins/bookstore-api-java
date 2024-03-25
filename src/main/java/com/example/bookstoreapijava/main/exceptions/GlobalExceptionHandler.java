@@ -51,4 +51,9 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.CONFLICT).body(categoryAlreadyExistsException.getMessage());
   }
 
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<Object> handleCategoryAlreadyExistsException(RuntimeException runtimeException) {
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred. Try again later. " + runtimeException.getMessage());
+  }
+
 }
