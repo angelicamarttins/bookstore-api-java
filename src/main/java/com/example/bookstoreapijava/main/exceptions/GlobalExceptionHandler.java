@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
         .getAllErrors()
         .forEach(error -> {
           ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
-              badRequest,
+              badRequest.value(),
               MethodArgumentNotValidException.class.getSimpleName(),
               error.getDefaultMessage()
           );
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
     HttpStatus notFound = HttpStatus.NOT_FOUND;
 
     ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
-        notFound,
+        notFound.value(),
         BookNotFoundException.class.getSimpleName(),
         bookNotFoundException.getMessage()
     );
@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
     HttpStatus conflict = HttpStatus.CONFLICT;
 
     ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
-        conflict,
+        conflict.value(),
         BookAlreadyExistsException.class.getSimpleName(),
         bookAlreadyExistsException.getMessage()
     );
@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
     HttpStatus notFound = HttpStatus.NOT_FOUND;
 
     ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
-        notFound,
+        notFound.value(),
         CategoryNotFoundException.class.getSimpleName(),
         categoryNotFoundException.getMessage()
     );
@@ -100,7 +100,7 @@ public class GlobalExceptionHandler {
     HttpStatus conflict = HttpStatus.CONFLICT;
 
     ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
-        conflict,
+        conflict.value(),
         CategoryAlreadyExistsException.class.getSimpleName(),
         categoryAlreadyExistsException.getMessage()
     );
@@ -117,7 +117,7 @@ public class GlobalExceptionHandler {
     HttpStatus internalServerError = HttpStatus.INTERNAL_SERVER_ERROR;
 
     ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
-        internalServerError,
+        internalServerError.value(),
         RuntimeException.class.getSimpleName(),
         runtimeException.getMessage()
     );
