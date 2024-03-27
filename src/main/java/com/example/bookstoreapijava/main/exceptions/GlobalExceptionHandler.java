@@ -4,56 +4,126 @@ import com.example.bookstoreapijava.main.book.exceptions.BookAlreadyExistsExcept
 import com.example.bookstoreapijava.main.book.exceptions.BookNotFoundException;
 import com.example.bookstoreapijava.main.category.exceptions.CategoryAlreadyExistsException;
 import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
+import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException exception) {
-    Map<String, String> errors = new HashMap<>();
+  public ResponseEntity<List<ExceptionDTOResponse>> handleValidationExceptions(
+      MethodArgumentNotValidException methodArgumentNotValidException
+  ) {
+    HttpStatus badRequest = HttpStatus.BAD_REQUEST;
+    List<ExceptionDTOResponse> invalidArguments = new ArrayList<>();
 
-    exception.getBindingResult().getAllErrors().forEach((error) -> {
-      String fieldName = ((FieldError) error).getField();
-      String errorMessage = error.getDefaultMessage();
+    methodArgumentNotValidException
+        .getBindingResult()
+        .getAllErrors()
+        .forEach(error -> {
+          ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+              badRequest,
+              MethodArgumentNotValidException.class.getSimpleName(),
+              error.getDefaultMessage()
+          );
 
-      errors.put(fieldName, errorMessage);
-    });
+          invalidArguments.add(exceptionResponse);
+        });
 
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    return ResponseEntity
+        .status(badRequest)
+        .body(invalidArguments);
   }
 
   @ExceptionHandler(BookNotFoundException.class)
-  public ResponseEntity<Object> handleBookNotFoundException(BookNotFoundException bookNotFoundException) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(bookNotFoundException.getMessage());
+  public ResponseEntity<ExceptionDTOResponse> handleBookNotFoundException(
+      BookNotFoundException bookNotFoundException
+  ) {
+    HttpStatus notFound = HttpStatus.NOT_FOUND;
+
+    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+        notFound,
+        BookNotFoundException.class.getSimpleName(),
+        bookNotFoundException.getMessage()
+    );
+
+    return ResponseEntity
+        .status(notFound)
+        .body(exceptionResponse);
   }
 
   @ExceptionHandler(BookAlreadyExistsException.class)
-  public ResponseEntity<Object> handleBookAlreadyExistsException(BookAlreadyExistsException bookAlreadyExistsException) {
-    return ResponseEntity.status(HttpStatus.CONFLICT).body(bookAlreadyExistsException.getMessage());
+  public ResponseEntity<ExceptionDTOResponse> handleBookAlreadyExistsException(
+      BookAlreadyExistsException bookAlreadyExistsException
+  ) {
+    HttpStatus conflict = HttpStatus.CONFLICT;
+
+    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+        conflict,
+        BookAlreadyExistsException.class.getSimpleName(),
+        bookAlreadyExistsException.getMessage()
+    );
+
+    return ResponseEntity
+        .status(conflict)
+        .body(exceptionResponse);
   }
 
   @ExceptionHandler(CategoryNotFoundException.class)
-  public ResponseEntity<Object> handleCategoryNotFoundException(CategoryNotFoundException categoryNotFoundException) {
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(categoryNotFoundException.getMessage());
+  public ResponseEntity<ExceptionDTOResponse> handleCategoryNotFoundException(
+      CategoryNotFoundException categoryNotFoundException
+  ) {
+    HttpStatus notFound = HttpStatus.NOT_FOUND;
+
+    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+        notFound,
+        CategoryNotFoundException.class.getSimpleName(),
+        categoryNotFoundException.getMessage()
+    );
+
+    return ResponseEntity
+        .status(notFound)
+        .body(exceptionResponse);
   }
 
   @ExceptionHandler(CategoryAlreadyExistsException.class)
-  public ResponseEntity<Object> handleCategoryAlreadyExistsException(CategoryAlreadyExistsException categoryAlreadyExistsException) {
-    return ResponseEntity.status(HttpStatus.CONFLICT).body(categoryAlreadyExistsException.getMessage());
+  public ResponseEntity<ExceptionDTOResponse> handleCategoryAlreadyExistsException(
+      CategoryAlreadyExistsException categoryAlreadyExistsException
+  ) {
+    HttpStatus conflict = HttpStatus.CONFLICT;
+
+    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+        conflict,
+        CategoryAlreadyExistsException.class.getSimpleName(),
+        categoryAlreadyExistsException.getMessage()
+    );
+
+    return ResponseEntity
+        .status(conflict)
+        .body(exceptionResponse);
   }
 
   @ExceptionHandler(RuntimeException.class)
-  public ResponseEntity<Object> handleCategoryAlreadyExistsException(RuntimeException runtimeException) {
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred. Try again later. " + runtimeException.getMessage());
-  }
+  public ResponseEntity<ExceptionDTOResponse> handleCategoryAlreadyExistsException(
+      RuntimeException runtimeException
+  ) {
+    HttpStatus internalServerError = HttpStatus.INTERNAL_SERVER_ERROR;
 
+    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+        internalServerError,
+        RuntimeException.class.getSimpleName(),
+        runtimeException.getMessage()
+    );
+
+    return ResponseEntity
+        .status(internalServerError)
+        .body(exceptionResponse);
+  }
 }
