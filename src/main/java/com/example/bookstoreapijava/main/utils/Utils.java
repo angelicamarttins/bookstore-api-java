@@ -8,7 +8,9 @@ public final class Utils {
   public static String sanitizeStringField(String field) {
     String accentsRemoved = removeAccents(field);
 
-    return accentsRemoved.trim();
+    String capitalizedField = capitalizeString(accentsRemoved.trim());
+
+    return capitalizedField;
   }
 
   public static String removeAccents(String input) {
@@ -17,6 +19,10 @@ public final class Utils {
     Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
 
     return pattern.matcher(normalized).replaceAll("");
+  }
+
+  public static String capitalizeString(String input) {
+    return input.substring(0, 1).toUpperCase().concat(input.substring(1).toLowerCase());
   }
 
 }
