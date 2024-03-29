@@ -1,0 +1,13 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_DB=local
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+      - TZ=GMT
+    ports:
+      - "5432:5432"
