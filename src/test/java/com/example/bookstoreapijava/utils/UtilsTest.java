@@ -28,4 +28,37 @@ public class UtilsTest {
     Assertions.assertEquals(expectedField, actualField);
   }
 
+  @Test
+  @DisplayName(value = "Should return the capitalized when field is lower case")
+  public void should_returnEquals_when_isLowerCase() {
+    String field = "filosofia";
+    String expectedField = "Filosofia";
+
+    String actualField = Utils.capitalizeString(field);
+
+    Assertions.assertEquals(expectedField, actualField);
+  }
+
+  @Test
+  @DisplayName(value = "Should return the capitalized when field is upper case")
+  public void should_returnEquals_when_isUppercase() {
+    String field = "FILOSOFIA";
+    String expectedField = "Filosofia";
+
+    String actualField = Utils.capitalizeString(field);
+
+    Assertions.assertEquals(expectedField, actualField);
+  }
+
+  @Test
+  @DisplayName(value = "Should remove accents when field has accents")
+  public void should_returnEquals_whenHasAccents() {
+    String field = "Fìlõsôfíä";
+    String expectedField = "Filosofia";
+
+    String actualField = Utils.removeAccents(field);
+
+    Assertions.assertEquals(expectedField, actualField);
+  }
+
 }
