@@ -1,0 +1,35 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    password: secret
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      bootstrap-servers: 127.0.0.1:9092
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: 127.0.0.1:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  mvc:
+    validation:
+      enabled: true
+  sql:
+    init:
+      continue-on-error: true
+      mode: always
+    schema-locations: classpath:/import.sql
