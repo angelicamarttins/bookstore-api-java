@@ -49,6 +49,14 @@ public class Category {
     this.categoryName = categoryName;
   }
 
+  public Category(UUID categoryId, String categoryName, LocalDateTime createdAt, LocalDateTime updatedAt, LocalDateTime inactivatedAt) {
+    this.categoryId = categoryId;
+    this.categoryName = categoryName;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+    this.inactivatedAt = inactivatedAt;
+  }
+
   public UUID getCategoryId() {
     return categoryId;
   }

@@ -1,4 +1,4 @@
-package com.example.bookstoreapijava.utils;
+package com.example.bookstoreapijava.unit.utils;
 
 import com.example.bookstoreapijava.main.utils.Utils;
 import org.junit.jupiter.api.Assertions;
