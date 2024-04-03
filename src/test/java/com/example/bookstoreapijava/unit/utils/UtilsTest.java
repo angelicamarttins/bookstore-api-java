@@ -1,6 +1,9 @@
 package com.example.bookstoreapijava.unit.utils;
 
-import com.example.bookstoreapijava.main.utils.Utils;
+import static com.example.bookstoreapijava.main.utils.Utils.capitalizeString;
+import static com.example.bookstoreapijava.main.utils.Utils.removeAccents;
+import static com.example.bookstoreapijava.main.utils.Utils.sanitizeStringField;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +15,7 @@ public class UtilsTest {
   public void should_returnEquals_when_thereIsNoAccentAndBlankSpaces() {
     String field = "Filosofia";
 
-    String actualField = Utils.sanitizeStringField(field);
+    String actualField = sanitizeStringField(field);
 
     Assertions.assertEquals(field, actualField);
   }
@@ -23,7 +26,7 @@ public class UtilsTest {
     String field = "   Filosofiá   ";
     String expectedField = "Filosofia";
 
-    String actualField = Utils.sanitizeStringField(field);
+    String actualField = sanitizeStringField(field);
 
     Assertions.assertEquals(expectedField, actualField);
   }
@@ -34,7 +37,7 @@ public class UtilsTest {
     String field = "filosofia";
     String expectedField = "Filosofia";
 
-    String actualField = Utils.capitalizeString(field);
+    String actualField = capitalizeString(field);
 
     Assertions.assertEquals(expectedField, actualField);
   }
@@ -45,7 +48,7 @@ public class UtilsTest {
     String field = "FILOSOFIA";
     String expectedField = "Filosofia";
 
-    String actualField = Utils.capitalizeString(field);
+    String actualField = capitalizeString(field);
 
     Assertions.assertEquals(expectedField, actualField);
   }
@@ -56,7 +59,7 @@ public class UtilsTest {
     String field = "Fìlõsôfíä";
     String expectedField = "Filosofia";
 
-    String actualField = Utils.removeAccents(field);
+    String actualField = removeAccents(field);
 
     Assertions.assertEquals(expectedField, actualField);
   }

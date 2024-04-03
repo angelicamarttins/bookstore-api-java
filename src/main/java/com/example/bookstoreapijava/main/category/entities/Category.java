@@ -10,6 +10,7 @@ import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -19,7 +20,6 @@ public class Category {
 
   @Column(name = "category_id")
   @Id
-  @UuidGenerator
   private UUID categoryId;
 
   @Column(name = "category_name", unique = true)
@@ -99,12 +99,39 @@ public class Category {
 
   @PrePersist
   public void onCreate() {
-    this.createdAt = LocalDateTime.now();
+    if (this.categoryId == null) {
+      this.categoryId = UUID.randomUUID();
+    }
+
+    if (this.createdAt == null) {
+      this.createdAt = LocalDateTime.now();
+    }
   }
 
   @PreUpdate
   public void onUpdate() {
     this.updatedAt = LocalDateTime.now();
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof Category category)) return false;
+    return Objects.equals(getCategoryId(), category.getCategoryId()) &&
+        Objects.equals(getCategoryName(), category.getCategoryName()) &&
+        Objects.equals(getCreatedAt(), category.getCreatedAt()) &&
+        Objects.equals(getUpdatedAt(), category.getUpdatedAt()) &&
+        Objects.equals(getInactivatedAt(), category.getInactivatedAt());
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        getCategoryId(),
+        getCategoryName(),
+        getCreatedAt(),
+        getUpdatedAt(),
+        getInactivatedAt());
   }
 
   @Override
