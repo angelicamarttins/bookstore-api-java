@@ -21,7 +21,6 @@ public class Category {
 
   @Column(name = "category_id")
   @Id
-  @NonNull
   private UUID categoryId;
 
   @Column(name = "category_name", unique = true)
@@ -32,7 +31,6 @@ public class Category {
   private String categoryName;
 
   @Column(name = "created_at")
-  @NonNull
   private LocalDateTime createdAt;
 
   @Column(name = "updated_at")
@@ -54,6 +52,8 @@ public class Category {
     if (this.categoryId == null) {
       this.categoryId = UUID.randomUUID();
     }
+
+    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAA" + createdAt);
 
     if (this.createdAt == null) {
       this.createdAt = LocalDateTime.now();
