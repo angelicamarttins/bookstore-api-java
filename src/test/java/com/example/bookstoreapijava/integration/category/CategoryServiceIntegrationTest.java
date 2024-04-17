@@ -1,9 +1,7 @@
 package com.example.bookstoreapijava.integration.category;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.category.entities.Category;
-import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.category.services.CategoryService;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +10,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
-import java.util.UUID;
+
+import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 
 public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
@@ -21,13 +19,11 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   CategoryService categoryService;
 
   @Test
-  @DisplayName(value = "Category")
-  public void test() throws URISyntaxException {
-    UUID categoryId = UUID.randomUUID();
-    Category category =
-        new Category(categoryId, "TestCategory");
+  @DisplayName(value = "Should return correctly, when category is inserted")
+  public void should_returnEquals_when_categoryIsInsertedCorrectly() throws URISyntaxException {
+    Category category = createCategory();
 
-    CategoryCreatedVO savedCategory = categoryService.insertCategory(category);
+    Category savedCategory = categoryService.insertCategory(category).category();
 
     assertNotNull(savedCategory);
     assertEquals(category, savedCategory);
