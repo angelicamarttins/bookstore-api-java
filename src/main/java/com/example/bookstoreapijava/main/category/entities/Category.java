@@ -53,8 +53,6 @@ public class Category {
       this.categoryId = UUID.randomUUID();
     }
 
-    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAA" + createdAt);
-
     if (this.createdAt == null) {
       this.createdAt = LocalDateTime.now();
     }

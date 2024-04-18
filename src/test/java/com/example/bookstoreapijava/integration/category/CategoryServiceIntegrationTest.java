@@ -10,7 +10,10 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
@@ -84,6 +87,25 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
     assertNotNull(savedCategory);
     assertNotEquals(category, savedCategory);
     assertEquals(categoryUpdateDTO.categoryName(), savedCategory.getCategoryName());
+  }
+
+  @Test
+  @DisplayName(value = "When a category is deleted, should soft delete correctly")
+  public void should_deleteCorrectly_when_categoryIsSoftDeleted() {
+    Category category = createCategory();
+    UUID categoryId = category.getCategoryId();
+
+    categoryRepository.save(category);
+
+    categoryService.deleteCategory(categoryId);
+
+    Optional<Category> deletedCategory = categoryRepository.findById(categoryId);
+
+    LocalDateTime updatedAtDeletedCategory = deletedCategory.get().getUpdatedAt();
+
+    assertNotNull(deletedCategory);
+    assertNotNull(updatedAtDeletedCategory);
+    assertNotEquals(category, deletedCategory);
   }
 
 }
