@@ -4,6 +4,7 @@ import com.example.bookstoreapijava.main.category.data.dto.CategoryUpdateDTO;
 import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.exceptions.CategoryAlreadyExistsException;
+import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,9 @@ public class CategoryService {
   }
 
   public Category findCategory(UUID categoryId) {
-    Category category = categoryRepository.getReferenceById(categoryId);
+    Category category = categoryRepository
+        .findById(categoryId)
+        .orElseThrow(() -> new CategoryNotFoundException(categoryId));
 
     return category;
   }
@@ -55,7 +58,9 @@ public class CategoryService {
   }
 
   public Category updateCategory(CategoryUpdateDTO updatedCategory, UUID categoryId) {
-    Category savedCategory = categoryRepository.getReferenceById(categoryId);
+    Category savedCategory = categoryRepository
+        .findById(categoryId)
+        .orElseThrow(() -> new CategoryNotFoundException(categoryId));
 
     savedCategory.setCategoryName(updatedCategory.categoryName());
 
@@ -65,7 +70,9 @@ public class CategoryService {
   }
 
   public void deleteCategory(UUID categoryId) {
-    Category deletedCategory = categoryRepository.getReferenceById(categoryId);
+    Category deletedCategory = categoryRepository
+        .findById(categoryId)
+        .orElseThrow(() -> new CategoryNotFoundException(categoryId));
 
     deletedCategory.setInactivatedAt(LocalDateTime.now());
 
