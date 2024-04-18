@@ -130,6 +130,21 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
+  @DisplayName(value = "When category is updated and is not found, should throw exception correctly")
+  public void should_throwException_when_isUpdatedAndCategoryIsNotFound() {
+    UUID categoryId = UUID.randomUUID();
+    CategoryUpdateDTO categoryUpdateDTO = createCategoryUpdateDTO();
+
+    CategoryNotFoundException categoryNotFoundException = assertThrows(CategoryNotFoundException.class, () -> {
+      categoryService.updateCategory(categoryUpdateDTO, categoryId);
+    });
+
+    String expectedExceptionMessage = "Category not found with id " + categoryId;
+
+    assertTrue(categoryNotFoundException.getMessage().contains(expectedExceptionMessage));
+  }
+
+  @Test
   @DisplayName(value = "When a category is deleted, should soft delete correctly")
   public void should_deleteCorrectly_when_categoryIsSoftDeleted() {
     Category category = createCategory(Optional.empty());
