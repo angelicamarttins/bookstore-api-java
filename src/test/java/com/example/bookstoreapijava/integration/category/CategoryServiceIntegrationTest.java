@@ -102,9 +102,11 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
     Optional<Category> deletedCategory = categoryRepository.findById(categoryId);
 
     LocalDateTime updatedAtDeletedCategory = deletedCategory.get().getUpdatedAt();
+    LocalDateTime inactivatedAtDeletedCategory = deletedCategory.get().getInactivatedAt();
 
     assertNotNull(deletedCategory);
     assertNotNull(updatedAtDeletedCategory);
+    assertNotNull(inactivatedAtDeletedCategory);
     assertNotEquals(category, deletedCategory);
   }
 
