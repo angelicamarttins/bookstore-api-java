@@ -11,11 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.Normalizer;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Pattern;
 
 @Service
 public class CategoryService {
@@ -29,7 +27,7 @@ public class CategoryService {
     return categoryList;
   }
 
-  public Category getCategory(UUID categoryId) {
+  public Category findCategory(UUID categoryId) {
     Category category = categoryRepository.getReferenceById(categoryId);
 
     return category;

@@ -35,7 +35,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "Should return correctly, when category is inserted")
+  @DisplayName(value = "When category is inserted, should return correctly")
   public void should_returnEquals_when_categoryIsInsertedCorrectly() throws URISyntaxException {
     Category category = createCategory();
 
@@ -46,7 +46,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "Should return correctly, when a category list is searched")
+  @DisplayName(value = "When a category list is searched, should return correctly")
   public void should_returnEquals_when_categoryListIsSearched() {
     List<Category> categoryList = createCategoryList();
 
@@ -56,6 +56,19 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
     assertNotNull(savedCategoryList);
     assertEquals(categoryList, savedCategoryList);
+  }
+
+  @Test
+  @DisplayName(value = "When a category is searched, should return correctly")
+  public void should_returnEquals_when_categoryIsSearched() {
+    Category category = createCategory();
+
+    categoryRepository.save(category);
+
+    Category savedCategory = categoryService.findCategory(category.getCategoryId());
+
+    assertNotNull(savedCategory);
+    assertEquals(category, savedCategory);
   }
 
 }
