@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 
 public class CategoryCreatedVOProvider {
 
-  public CategoryCreatedVO createCategoryCreatedVO(Category category) throws URISyntaxException {
+  public static CategoryCreatedVO createCategoryCreatedVO(Category category) throws URISyntaxException {
     URI uri =
         new URI("http://localhost:8080/category/" + category.getCategoryId());
 

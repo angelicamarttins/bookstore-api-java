@@ -3,7 +3,9 @@ package com.example.bookstoreapijava.integration.category;
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
 import com.example.bookstoreapijava.main.book.repositories.BookRepository;
 import com.example.bookstoreapijava.main.category.data.dto.CategoryUpdateDTO;
+import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.category.entities.Category;
+import com.example.bookstoreapijava.main.category.exceptions.CategoryAlreadyExistsException;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.category.services.CategoryService;
 import org.junit.jupiter.api.*;
@@ -18,6 +20,7 @@ import java.util.UUID;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
 import static com.example.bookstoreapijava.providers.CategoryUpdateDTOProvider.createCategoryUpdateDTO;
+import static com.example.bookstoreapijava.providers.CategoryCreatedVOProvider.createCategoryCreatedVO;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
@@ -40,12 +43,33 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When category is inserted, should return correctly")
   public void should_returnEquals_when_categoryIsInsertedCorrectly() throws URISyntaxException {
-    Category category = createCategory();
+    Category category = createCategory(Optional.empty());
+    CategoryCreatedVO categoryCreatedVO = createCategoryCreatedVO(category);
 
-    Category savedCategory = categoryService.insertCategory(category).category();
+    CategoryCreatedVO savedCategoryCreatedVO = categoryService.insertCategory(category);
 
-    assertNotNull(savedCategory);
-    assertEquals(category, savedCategory);
+    assertNotNull(savedCategoryCreatedVO);
+    assertEquals(categoryCreatedVO, savedCategoryCreatedVO);
+    assertEquals(category, savedCategoryCreatedVO.category());
+  }
+
+  @Test
+  @DisplayName(value = "When a category already exists, should throw exception correctly")
+  public void should_throwException_when_categoryAlreadyExists() {
+    Category firstCategory = createCategory(Optional.of("Test"));
+    Category secondCategory = createCategory(Optional.of("Test"));
+
+    categoryRepository.save(firstCategory);
+
+    CategoryAlreadyExistsException categoryAlreadyExistsException =
+        assertThrows(CategoryAlreadyExistsException.class, () -> {
+          categoryService.insertCategory(secondCategory);
+        });
+
+    String expectedExceptionMessage =
+        "Category already exists with name " + secondCategory.getCategoryName();
+
+    assertTrue(categoryAlreadyExistsException.getMessage().contains(expectedExceptionMessage));
   }
 
   @Test
@@ -64,7 +88,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When a category is searched, should return correctly")
   public void should_returnEquals_when_categoryIsSearched() {
-    Category category = createCategory();
+    Category category = createCategory(Optional.empty());
 
     categoryRepository.save(category);
 
@@ -77,7 +101,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When a category is updated, should return correctly")
   public void should_returnEquals_when_categoryIsUpdated() {
-    Category category = createCategory();
+    Category category = createCategory(Optional.empty());
     CategoryUpdateDTO categoryUpdateDTO = createCategoryUpdateDTO();
 
     categoryRepository.save(category);
@@ -93,7 +117,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When a category is deleted, should soft delete correctly")
   public void should_deleteCorrectly_when_categoryIsSoftDeleted() {
-    Category category = createCategory();
+    Category category = createCategory(Optional.empty());
     UUID categoryId = category.getCategoryId();
 
     categoryRepository.save(category);
