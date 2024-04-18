@@ -7,13 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.example.bookstoreapijava.utils.TestUtils.localDateTimeFormat;
+
 public class CategoryProvider {
 
   public static Category createCategory() {
     return new Category(
         UUID.randomUUID(),
         UUID.randomUUID().toString().replace("-", ""),
-        LocalDateTime.now(),
+        localDateTimeFormat(LocalDateTime.now()),
         null,
         null
     );
