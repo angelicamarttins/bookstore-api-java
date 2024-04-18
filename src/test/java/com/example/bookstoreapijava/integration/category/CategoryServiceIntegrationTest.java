@@ -162,7 +162,21 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
     assertNotNull(deletedCategory);
     assertNotNull(updatedAtDeletedCategory);
     assertNotNull(inactivatedAtDeletedCategory);
-    assertNotEquals(category, deletedCategory);
+    assertNotEquals(Optional.of(category), deletedCategory);
+  }
+
+  @Test
+  @DisplayName(value = "When category is deleted and is not found, should throw exception correctly")
+  public void should_throwException_when_isDeletedAndCategoryIsNotFound() {
+    UUID categoryId = UUID.randomUUID();
+
+    CategoryNotFoundException categoryNotFoundException = assertThrows(CategoryNotFoundException.class, () -> {
+      categoryService.deleteCategory(categoryId);
+    });
+
+    String expectedExceptionMessage = "Category not found with id " + categoryId;
+
+    assertTrue(categoryNotFoundException.getMessage().contains(expectedExceptionMessage));
   }
 
 }
