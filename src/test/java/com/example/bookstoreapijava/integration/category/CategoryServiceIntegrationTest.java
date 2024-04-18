@@ -6,6 +6,7 @@ import com.example.bookstoreapijava.main.category.data.dto.CategoryUpdateDTO;
 import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.exceptions.CategoryAlreadyExistsException;
+import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.category.services.CategoryService;
 import org.junit.jupiter.api.*;
@@ -54,8 +55,8 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When a category already exists, should throw exception correctly")
-  public void should_throwException_when_categoryAlreadyExists() {
+  @DisplayName(value = "When a category already exists and try to insert again, should throw exception correctly")
+  public void should_throwException_when_categoryAlreadyExistsAndIsInsertAgain() {
     Category firstCategory = createCategory(Optional.of("Test"));
     Category secondCategory = createCategory(Optional.of("Test"));
 
@@ -96,6 +97,20 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
     assertNotNull(savedCategory);
     assertEquals(category, savedCategory);
+  }
+
+  @Test
+  @DisplayName(value = "When category is searched and is not found, should throw exception correctly")
+  public void should_throwException_when_isSearchedAndCategoryIsNotFound() {
+    UUID categoryId = UUID.randomUUID();
+
+    CategoryNotFoundException categoryNotFoundException = assertThrows(CategoryNotFoundException.class, () -> {
+      categoryService.findCategory(categoryId);
+    });
+
+    String expectedExceptionMessage = "Category not found with id " + categoryId;
+
+    assertTrue(categoryNotFoundException.getMessage().contains(expectedExceptionMessage));
   }
 
   @Test
