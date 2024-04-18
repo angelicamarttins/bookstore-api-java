@@ -50,17 +50,17 @@ public class Category {
   @PrePersist
   public void onCreate() {
     if (this.categoryId == null) {
-      this.categoryId = UUID.randomUUID();
+      this.setCategoryId(UUID.randomUUID());
     }
 
     if (this.createdAt == null) {
-      this.createdAt = LocalDateTime.now();
+      this.setCreatedAt(LocalDateTime.now());
     }
   }
 
   @PreUpdate
   public void onUpdate() {
-    this.updatedAt = LocalDateTime.now();
+    this.setUpdatedAt(LocalDateTime.now());
   }
 
 }

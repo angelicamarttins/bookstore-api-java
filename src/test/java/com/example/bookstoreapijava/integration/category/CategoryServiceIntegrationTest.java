@@ -85,8 +85,9 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
     Category savedCategory = categoryService.updateCategory(categoryUpdateDTO, category.getCategoryId());
 
     assertNotNull(savedCategory);
-    assertNotEquals(category, savedCategory);
+    assertNotNull(savedCategory.getUpdatedAt());
     assertEquals(categoryUpdateDTO.categoryName(), savedCategory.getCategoryName());
+    assertNotEquals(category, savedCategory);
   }
 
   @Test

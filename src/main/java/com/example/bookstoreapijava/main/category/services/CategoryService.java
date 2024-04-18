@@ -23,17 +23,13 @@ public class CategoryService {
   private CategoryRepository categoryRepository;
 
   public List<Category> findAllCategories() {
-    List<Category> categoryList = categoryRepository.findAll();
-
-    return categoryList;
+    return categoryRepository.findAll();
   }
 
   public Category findCategory(UUID categoryId) {
-    Category category = categoryRepository
+    return categoryRepository
         .findById(categoryId)
         .orElseThrow(() -> new CategoryNotFoundException(categoryId));
-
-    return category;
   }
 
   public CategoryCreatedVO insertCategory(Category category) throws URISyntaxException {
@@ -57,16 +53,14 @@ public class CategoryService {
     return new CategoryCreatedVO(newCategory, uri);
   }
 
-  public Category updateCategory(CategoryUpdateDTO updatedCategory, UUID categoryId) {
+  public Category updateCategory(CategoryUpdateDTO updateCategory, UUID categoryId) {
     Category savedCategory = categoryRepository
         .findById(categoryId)
         .orElseThrow(() -> new CategoryNotFoundException(categoryId));
 
-    savedCategory.setCategoryName(updatedCategory.categoryName());
+    savedCategory.setCategoryName(updateCategory.categoryName());
 
-    categoryRepository.save(savedCategory);
-
-    return savedCategory;
+    return categoryRepository.save(savedCategory);
   }
 
   public void deleteCategory(UUID categoryId) {
