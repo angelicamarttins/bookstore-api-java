@@ -33,7 +33,7 @@ public class BookService {
 
     return bookRepository
         .findById(bookId)
-        .orElseThrow(() -> new BookNotFoundException(bookId.toString()));
+        .orElseThrow(() -> new BookNotFoundException(bookId));
   }
 
   public BookCreatedVO insertBook(Book book) throws URISyntaxException {
@@ -59,7 +59,7 @@ public class BookService {
   public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) {
     Book savedBook = bookRepository
         .findById(bookId)
-        .orElseThrow(() -> new BookNotFoundException(bookId.toString()));
+        .orElseThrow(() -> new BookNotFoundException(bookId));
 
     if (updatedBook.author() != null) {
       savedBook.setAuthor(updatedBook.author());
@@ -85,7 +85,7 @@ public class BookService {
   public void deleteBook(UUID bookId) {
     Book deletedBook = bookRepository
         .findById(bookId)
-        .orElseThrow(() -> new BookNotFoundException(bookId.toString()));
+        .orElseThrow(() -> new BookNotFoundException(bookId));
 
     deletedBook.setInactivatedAt(LocalDateTime.now());
 
