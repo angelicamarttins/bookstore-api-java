@@ -7,15 +7,9 @@ import co.novu.api.events.responses.TriggerEventResponse;
 import co.novu.api.notifications.requests.NotificationRequest;
 import co.novu.api.notifications.responses.NotificationsResponse;
 import co.novu.api.subscribers.requests.UpdateSubscriberRequest;
-import co.novu.api.subscribers.responses.SingleSubscriberResponse;
-import co.novu.api.topics.requests.SubscriberAdditionRequest;
-import co.novu.api.topics.requests.TopicRequest;
-import co.novu.api.topics.responses.TopicResponse;
 import co.novu.common.base.Novu;
 
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 public class NovuClass {

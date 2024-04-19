@@ -1,12 +1,10 @@
 package com.example.bookstoreapijava.unit.utils;
 
-import static com.example.bookstoreapijava.main.utils.Utils.capitalizeString;
-import static com.example.bookstoreapijava.main.utils.Utils.removeAccents;
-import static com.example.bookstoreapijava.main.utils.Utils.sanitizeStringField;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static com.example.bookstoreapijava.main.utils.Utils.*;
 
 public class UtilsTest {
 
