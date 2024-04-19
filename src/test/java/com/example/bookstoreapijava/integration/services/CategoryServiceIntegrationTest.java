@@ -1,4 +1,4 @@
-package com.example.bookstoreapijava.integration.category;
+package com.example.bookstoreapijava.integration.services;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
 import com.example.bookstoreapijava.main.book.repositories.BookRepository;
