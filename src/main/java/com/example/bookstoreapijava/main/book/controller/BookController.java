@@ -3,7 +3,7 @@ package com.example.bookstoreapijava.main.book.controller;
 import com.example.bookstoreapijava.main.book.data.dto.BookUpdateDTORequest;
 import com.example.bookstoreapijava.main.book.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.book.entities.Book;
-import com.example.bookstoreapijava.main.book.services.BookstoreService;
+import com.example.bookstoreapijava.main.book.services.BookService;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,30 +17,30 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/bookstore")
-public class BookstoreController {
+public class BookController {
   @Autowired
-  private BookstoreService bookstoreService = new BookstoreService();
+  private BookService bookService = new BookService();
 
   @Autowired
   private CategoryRepository categoryRepository;
 
   @GetMapping
   public ResponseEntity<List<Book>> findAllBooks() {
-    List<Book> response = bookstoreService.findAllBooks();
+    List<Book> response = bookService.findAllBooks();
 
     return ResponseEntity.ok(response);
   }
 
   @GetMapping("/{bookId}")
   public ResponseEntity<Book> getBook(@PathVariable UUID bookId) {
-    Book response = bookstoreService.getBook(bookId);
+    Book response = bookService.getBook(bookId);
 
     return ResponseEntity.ok(response);
   }
 
   @PostMapping
   public ResponseEntity<Book> insertBook(@RequestBody @Valid Book book) throws URISyntaxException {
-    BookCreatedVO newBook = bookstoreService.insertBook(book);
+    BookCreatedVO newBook = bookService.insertBook(book);
 
     Book response = newBook.book();
     URI uri = newBook.uri();
@@ -53,14 +53,14 @@ public class BookstoreController {
       @PathVariable UUID bookId,
       @RequestBody @Valid BookUpdateDTORequest updatedBook
   ) {
-    Book response = bookstoreService.updateBook(bookId, updatedBook);
+    Book response = bookService.updateBook(bookId, updatedBook);
 
     return ResponseEntity.ok(response);
   }
 
   @DeleteMapping("/{bookId}")
   public ResponseEntity<Void> deleteBook(@PathVariable UUID bookId) {
-    bookstoreService.deleteBook(bookId);
+    bookService.deleteBook(bookId);
 
     return ResponseEntity.noContent().build();
   }

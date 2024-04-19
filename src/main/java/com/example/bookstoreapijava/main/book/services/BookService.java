@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class BookstoreService {
+public class BookService {
   @Autowired
   private BookRepository bookRepository;
 
