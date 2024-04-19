@@ -1,4 +1,4 @@
-package com.example.bookstoreapijava.main.book.controller;
+package com.example.bookstoreapijava.main.book.controllers;
 
 import com.example.bookstoreapijava.main.book.data.dto.BookUpdateDTORequest;
 import com.example.bookstoreapijava.main.book.data.vo.BookCreatedVO;
