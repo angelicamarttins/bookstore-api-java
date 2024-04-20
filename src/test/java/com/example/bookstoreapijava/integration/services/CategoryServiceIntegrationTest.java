@@ -45,7 +45,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When category is inserted, should return correctly")
-  public void should_returnEquals_when_categoryIsInsertedCorrectly() throws URISyntaxException {
+  void should_returnEquals_when_categoryIsInsertedCorrectly() throws URISyntaxException {
     Category category = createCategory(Optional.empty());
     CategoryCreatedVO categoryCreatedVO = createCategoryCreatedVO(category);
 
@@ -58,7 +58,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When a category already exists and try to insert again, should throw exception correctly")
-  public void should_throwException_when_categoryAlreadyExistsAndIsInsertAgain() {
+  void should_throwException_when_categoryAlreadyExistsAndIsInsertAgain() {
     Category firstCategory = createCategory(Optional.of("Test"));
     Category secondCategory = createCategory(Optional.of("Test"));
 
@@ -77,7 +77,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When a category list is searched, should return correctly")
-  public void should_returnEquals_when_categoryListIsSearched() {
+  void should_returnEquals_when_categoryListIsSearched() {
     List<Category> categoryList = createCategoryList();
 
     categoryRepository.saveAll(categoryList);
@@ -90,7 +90,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When a category is searched, should return correctly")
-  public void should_returnEquals_when_categoryIsSearched() {
+  void should_returnEquals_when_categoryIsSearched() {
     Category category = createCategory(Optional.empty());
 
     categoryRepository.save(category);
@@ -103,7 +103,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When category is searched and is not found, should throw exception correctly")
-  public void should_throwException_when_isSearchedAndCategoryIsNotFound() {
+  void should_throwException_when_isSearchedAndCategoryIsNotFound() {
     UUID categoryId = UUID.randomUUID();
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
@@ -118,7 +118,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When a category is updated, should return correctly")
-  public void should_returnEquals_when_categoryIsUpdated() {
+  void should_returnEquals_when_categoryIsUpdated() {
     Category category = createCategory(Optional.empty());
     CategoryUpdateDTO categoryUpdateDTO = createCategoryUpdateDTO();
 
@@ -134,7 +134,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When category is updated and is not found, should throw exception correctly")
-  public void should_throwException_when_isUpdatedAndCategoryIsNotFound() {
+  void should_throwException_when_isUpdatedAndCategoryIsNotFound() {
     UUID categoryId = UUID.randomUUID();
     CategoryUpdateDTO categoryUpdateDTO = createCategoryUpdateDTO();
 
@@ -150,7 +150,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When a category is deleted, should soft delete correctly")
-  public void should_deleteCorrectly_when_categoryIsSoftDeleted() {
+  void should_deleteCorrectly_when_categoryIsSoftDeleted() {
     Category category = createCategory(Optional.empty());
     UUID categoryId = category.getCategoryId();
 
@@ -171,7 +171,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When category is deleted and is not found, should throw exception correctly")
-  public void should_throwException_when_isDeletedAndCategoryIsNotFound() {
+  void should_throwException_when_isDeletedAndCategoryIsNotFound() {
     UUID categoryId = UUID.randomUUID();
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
