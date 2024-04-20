@@ -64,10 +64,10 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
     categoryRepository.save(firstCategory);
 
-    CategoryAlreadyExistsException categoryAlreadyExistsException =
-        assertThrows(CategoryAlreadyExistsException.class, () -> {
-          categoryService.insertCategory(secondCategory);
-        });
+    CategoryAlreadyExistsException categoryAlreadyExistsException = assertThrows(
+        CategoryAlreadyExistsException.class,
+        () -> categoryService.insertCategory(secondCategory)
+    );
 
     String expectedExceptionMessage =
         "Category already exists with name " + secondCategory.getCategoryName();
@@ -106,9 +106,10 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   public void should_throwException_when_isSearchedAndCategoryIsNotFound() {
     UUID categoryId = UUID.randomUUID();
 
-    CategoryNotFoundException categoryNotFoundException = assertThrows(CategoryNotFoundException.class, () -> {
-      categoryService.findCategory(categoryId);
-    });
+    CategoryNotFoundException categoryNotFoundException = assertThrows(
+        CategoryNotFoundException.class,
+        () -> categoryService.findCategory(categoryId)
+    );
 
     String expectedExceptionMessage = "Category not found with id " + categoryId;
 
@@ -137,9 +138,10 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
     UUID categoryId = UUID.randomUUID();
     CategoryUpdateDTO categoryUpdateDTO = createCategoryUpdateDTO();
 
-    CategoryNotFoundException categoryNotFoundException = assertThrows(CategoryNotFoundException.class, () -> {
-      categoryService.updateCategory(categoryUpdateDTO, categoryId);
-    });
+    CategoryNotFoundException categoryNotFoundException = assertThrows(
+        CategoryNotFoundException.class,
+        () -> categoryService.updateCategory(categoryUpdateDTO, categoryId)
+    );
 
     String expectedExceptionMessage = "Category not found with id " + categoryId;
 
@@ -172,9 +174,10 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   public void should_throwException_when_isDeletedAndCategoryIsNotFound() {
     UUID categoryId = UUID.randomUUID();
 
-    CategoryNotFoundException categoryNotFoundException = assertThrows(CategoryNotFoundException.class, () -> {
-      categoryService.deleteCategory(categoryId);
-    });
+    CategoryNotFoundException categoryNotFoundException = assertThrows(
+        CategoryNotFoundException.class,
+        () -> categoryService.deleteCategory(categoryId)
+    );
 
     String expectedExceptionMessage = "Category not found with id " + categoryId;
 
