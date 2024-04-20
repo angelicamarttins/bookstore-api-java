@@ -15,9 +15,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URISyntaxException;
+import java.util.List;
+import java.util.Optional;
 
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
+import static com.example.bookstoreapijava.providers.BookProvider.createBookList;
 import static com.example.bookstoreapijava.providers.BookCreatedVOProvider.createBookCreatedVO;
+import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BookServiceIntegrationTest extends PostgresTestContainersBase {
@@ -39,7 +43,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book is inserted, should returns correctly")
   void should_returnCorrectly_when_bookIsInserted() throws URISyntaxException {
-    Book book = createBook();
+    Book book = createBook(Optional.empty(), Optional.empty());
     BookCreatedVO bookCreatedMock = createBookCreatedVO(book);
 
     categoryRepository.save(book.getCategory());
@@ -53,7 +57,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book is inserted and already exists, should throw exception correctly")
   void should_throwException_when_bookIsInsertedAndAlreadyExists() {
-    Book book = createBook();
+    Book book = createBook(Optional.empty(), Optional.empty());
 
     categoryRepository.save(book.getCategory());
     bookRepository.save(book);
@@ -71,7 +75,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book is inserted and category is not found, should throw exception correctly")
   void should_throwException_when_bookIsInsertedAndCategoryIsNotFound() {
-    Book book = createBook();
+    Book book = createBook(Optional.empty(), Optional.empty());
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
       CategoryNotFoundException.class,
@@ -82,6 +86,21 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
         "Category not found with id " + book.getCategory().getCategoryId();
 
     assertTrue(categoryNotFoundException.getMessage().contains(expectedExceptionMessage));
+  }
+
+  @Test
+  @DisplayName(value = "When book list is searched, should return correctly")
+  void should_returnEquals_when_bookListIsSearched() {
+    Category category = createCategory(Optional.of("Book List Test"));
+    List<Book> bookList = createBookList(Optional.of(category));
+
+    categoryRepository.save(category);
+    bookRepository.saveAll(bookList);
+
+    List<Book> savedBookList = bookService.findAllBooks();
+
+    assertNotNull(savedBookList);
+    assertEquals(bookList, savedBookList);
   }
 
 }
