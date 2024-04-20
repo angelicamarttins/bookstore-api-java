@@ -33,7 +33,7 @@ public class BookController {
 
   @GetMapping("/{bookId}")
   public ResponseEntity<Book> getBook(@PathVariable UUID bookId) {
-    Book response = bookService.getBook(bookId);
+    Book response = bookService.findBook(bookId);
 
     return ResponseEntity.ok(response);
   }

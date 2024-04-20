@@ -103,4 +103,19 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     assertEquals(bookList, savedBookList);
   }
 
+  @Test
+  @DisplayName(value = "When book is searched, should return correctly")
+  void should_returnEquals_when_bookIsSearched() {
+    Category category = createCategory(Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.of(category));
+
+    categoryRepository.save(category);
+    bookRepository.save(book);
+
+    Book savedBook = bookService.findBook(book.getBookId());
+
+    assertNotNull(savedBook);
+    assertEquals(book, savedBook);
+  }
+
 }
