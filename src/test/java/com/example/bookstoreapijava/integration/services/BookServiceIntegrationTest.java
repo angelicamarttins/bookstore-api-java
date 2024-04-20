@@ -3,6 +3,7 @@ package com.example.bookstoreapijava.integration.services;
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
 import com.example.bookstoreapijava.main.book.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.book.entities.Book;
+import com.example.bookstoreapijava.main.book.exceptions.BookAlreadyExistsException;
 import com.example.bookstoreapijava.main.book.repositories.BookRepository;
 import com.example.bookstoreapijava.main.book.services.BookService;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
@@ -37,7 +38,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book is inserted, should returns correctly")
   public void should_returnCorrectly_when_bookIsInserted() throws URISyntaxException {
-    Book book = createBook(Optional.empty());
+    Book book = createBook();
     BookCreatedVO bookCreatedMock = createBookCreatedVO(book);
 
     categoryRepository.save(book.getCategory());
@@ -51,8 +52,19 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book is inserted and already exists, should throw exception correctly")
   public void should_throwException_when_bookIsInsertedAndAlreadyExists() {
-    String isbn = "0123456788";
-    Book book = createBook(Optional.of(isbn));
+    Book book = createBook();
+
+    categoryRepository.save(book.getCategory());
+    bookRepository.save(book);
+
+    BookAlreadyExistsException bookAlreadyExistsException = assertThrows(
+        BookAlreadyExistsException.class,
+        () -> bookService.insertBook(book)
+    );
+
+    String expectedExceptionMessage = "Book already exists with isbn " + book.getIsbn();
+
+    assertTrue(bookAlreadyExistsException.getMessage().contains(expectedExceptionMessage));
   }
 
 }
