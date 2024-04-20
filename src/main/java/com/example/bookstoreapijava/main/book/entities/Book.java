@@ -25,7 +25,6 @@ public class Book {
 
   @Column(name = "book_id")
   @Id
-  @UuidGenerator
   private UUID bookId;
 
   @Column(name = "title")
@@ -45,7 +44,7 @@ public class Book {
   @Column(unique = true, name = "isbn")
   @NotNull(message = "O isbn do livro não pode ser nulo")
   @NotEmpty(message = "O isbn do livro não pode estar vazio")
-  @Size(max = 13)
+  @Size(min = 10, max = 13, message = "Isbn must be between 10 and 13 characters")
   @NonNull
   private String isbn;
 
@@ -65,7 +64,13 @@ public class Book {
 
   @PrePersist
   private void onCreate() {
-    this.setCreatedAt(LocalDateTime.now());
+    if (this.bookId == null) {
+      this.setBookId(UUID.randomUUID());
+    }
+
+    if (this.createdAt == null) {
+      this.setCreatedAt(LocalDateTime.now());
+    }
   }
 
   @PreUpdate

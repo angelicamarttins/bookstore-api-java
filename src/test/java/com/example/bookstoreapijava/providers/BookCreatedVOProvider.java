@@ -10,6 +10,7 @@ public class BookCreatedVOProvider {
 
   public static BookCreatedVO createBookCreatedVO(Book book) throws URISyntaxException {
     URI uri = new URI("http://localhost:8080/bookstore/" + book.getBookId());
+    System.out.println("DENTRO DO PROVIDER " + book);
 
     return new BookCreatedVO(book, uri);
   }

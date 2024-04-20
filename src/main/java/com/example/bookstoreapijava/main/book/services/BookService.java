@@ -7,6 +7,7 @@ import com.example.bookstoreapijava.main.book.exceptions.BookAlreadyExistsExcept
 import com.example.bookstoreapijava.main.book.exceptions.BookNotFoundException;
 import com.example.bookstoreapijava.main.book.repositories.BookRepository;
 import com.example.bookstoreapijava.main.category.entities.Category;
+import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,14 +39,17 @@ public class BookService {
 
   public BookCreatedVO insertBook(Book book) throws URISyntaxException {
     String bookIsbn = book.getIsbn();
+    UUID categoryId = book.getCategory().getCategoryId();
 
     bookRepository
-        .getBookByIsbn(bookIsbn)
+        .findBookByIsbn(bookIsbn)
         .ifPresent(savedBook -> {
           throw new BookAlreadyExistsException(bookIsbn);
         });
 
-    Category category = categoryRepository.getReferenceById(book.getCategory().getCategoryId());
+    Category category = categoryRepository
+        .findById(categoryId)
+        .orElseThrow(() -> new CategoryNotFoundException(categoryId));
 
     book.setCategory(category);
 
@@ -53,7 +57,7 @@ public class BookService {
 
     URI uri = new URI("http://localhost:8080/bookstore/" + savedBook.getBookId().toString());
 
-    return new BookCreatedVO(book, uri);
+    return new BookCreatedVO(savedBook, uri);
   }
 
   public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) {

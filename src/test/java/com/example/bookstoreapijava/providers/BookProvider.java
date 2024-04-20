@@ -11,12 +11,12 @@ import static com.example.bookstoreapijava.providers.CategoryProvider.createCate
 
 public class BookProvider {
 
-  public static Book createBook() {
+  public static Book createBook(Optional<String> isbn) {
     return new Book(
         UUID.randomUUID(),
         UUID.randomUUID().toString().replace("-", ""),
         UUID.randomUUID().toString().replace("-", ""),
-        UUID.randomUUID().toString().replace("-", ""),
+        isbn.orElse("0123456789"),
         localDateTimeFormat(LocalDateTime.now()),
         null,
         null,
