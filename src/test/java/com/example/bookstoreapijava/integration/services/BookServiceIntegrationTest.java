@@ -6,6 +6,8 @@ import com.example.bookstoreapijava.main.book.entities.Book;
 import com.example.bookstoreapijava.main.book.exceptions.BookAlreadyExistsException;
 import com.example.bookstoreapijava.main.book.repositories.BookRepository;
 import com.example.bookstoreapijava.main.book.services.BookService;
+import com.example.bookstoreapijava.main.category.entities.Category;
+import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URISyntaxException;
-import java.util.Optional;
 
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
 import static com.example.bookstoreapijava.providers.BookCreatedVOProvider.createBookCreatedVO;
@@ -37,7 +38,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When book is inserted, should returns correctly")
-  public void should_returnCorrectly_when_bookIsInserted() throws URISyntaxException {
+  void should_returnCorrectly_when_bookIsInserted() throws URISyntaxException {
     Book book = createBook();
     BookCreatedVO bookCreatedMock = createBookCreatedVO(book);
 
@@ -51,7 +52,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When book is inserted and already exists, should throw exception correctly")
-  public void should_throwException_when_bookIsInsertedAndAlreadyExists() {
+  void should_throwException_when_bookIsInsertedAndAlreadyExists() {
     Book book = createBook();
 
     categoryRepository.save(book.getCategory());
@@ -65,6 +66,22 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     String expectedExceptionMessage = "Book already exists with isbn " + book.getIsbn();
 
     assertTrue(bookAlreadyExistsException.getMessage().contains(expectedExceptionMessage));
+  }
+
+  @Test
+  @DisplayName(value = "When book is inserted and category is not found, should throw exception correctly")
+  void should_throwException_when_bookIsInsertedAndCategoryIsNotFound() {
+    Book book = createBook();
+
+    CategoryNotFoundException categoryNotFoundException = assertThrows(
+      CategoryNotFoundException.class,
+        () -> bookService.insertBook(book)
+    );
+
+    String expectedExceptionMessage =
+        "Category not found with id " + book.getCategory().getCategoryId();
+
+    assertTrue(categoryNotFoundException.getMessage().contains(expectedExceptionMessage));
   }
 
 }
