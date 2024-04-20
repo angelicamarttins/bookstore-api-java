@@ -4,6 +4,7 @@ import com.example.bookstoreapijava.config.PostgresTestContainersBase;
 import com.example.bookstoreapijava.main.book.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.book.entities.Book;
 import com.example.bookstoreapijava.main.book.exceptions.BookAlreadyExistsException;
+import com.example.bookstoreapijava.main.book.exceptions.BookNotFoundException;
 import com.example.bookstoreapijava.main.book.repositories.BookRepository;
 import com.example.bookstoreapijava.main.book.services.BookService;
 import com.example.bookstoreapijava.main.category.entities.Category;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
 import static com.example.bookstoreapijava.providers.BookProvider.createBookList;
@@ -116,6 +118,21 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
 
     assertNotNull(savedBook);
     assertEquals(book, savedBook);
+  }
+
+  @Test
+  @DisplayName(value = "When book is searched and is not found, should throw exception correctly")
+  void should_throwException_when_bookIsSearchedAndIsNotFound() {
+    UUID bookId = UUID.randomUUID();
+
+    BookNotFoundException bookNotFoundException = assertThrows(
+        BookNotFoundException.class,
+        () -> bookService.findBook(bookId)
+    );
+
+    String expectedExceptionMessage = "Book not found with id " + bookId;
+
+    assertTrue(bookNotFoundException.getMessage().contains(expectedExceptionMessage));
   }
 
 }
