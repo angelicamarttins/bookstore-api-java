@@ -265,4 +265,35 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     assertNotNull(updatedBook.getUpdatedAt());
   }
 
+  @Test
+  @DisplayName(value = "When book category is updated and is not found, should throw exception correctly")
+  void should_throwException_when_bookCategoryIsNotFound() {
+    Book book = createBook(Optional.empty(), Optional.empty());
+
+    Category newCategory = createCategory(Optional.of("New Category Name"));
+
+    Map<String, Optional<String>> bookInfo = new HashMap<>() {{
+      put("title", Optional.of("New Book Title"));
+      put("author", Optional.of("New Book Author"));
+      put("isbn", Optional.of("9876543210"));
+    }};
+
+    BookUpdateDTORequest bookUpdateDTORequest =
+        createBookUpdateDTORequest(bookInfo, Optional.of(newCategory));
+
+    categoryRepository.save(book.getCategory());
+    bookRepository.save(book);
+
+    CategoryNotFoundException categoryNotFoundException = assertThrows(
+        CategoryNotFoundException.class,
+        () -> bookService.updateBook(book.getBookId(), bookUpdateDTORequest)
+    );
+
+    String expectedExceptionMessage =
+        "Category not found with id " + newCategory.getCategoryId();
+
+    assertTrue(categoryNotFoundException.getMessage().contains(expectedExceptionMessage));
+
+  }
+
 }

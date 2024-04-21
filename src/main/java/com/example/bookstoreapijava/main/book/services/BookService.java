@@ -78,9 +78,14 @@ public class BookService {
     }
 
     if (updatedBook.category() != null) {
+      categoryRepository
+        .findById(updatedBook.category().getCategoryId())
+          .orElseThrow(() -> new CategoryNotFoundException(updatedBook.category().getCategoryId()));
+
       savedBook.setCategory(updatedBook.category());
       // TODO: Não permitir que os dados da categoria sejam alterados.
       //  Deixar apenas alterar o relacionamento entre categoria e livro
+      //  Pedir para enviar apenas o ID é uma boa para solucionar essa possibilidade!
     }
 
     return bookRepository.save(savedBook);
