@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
@@ -139,13 +140,14 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @DisplayName(value = "When book is updated and is not found, should throw exception")
   void should_throwException_when_bookIsUpdatedAndIsNotFound() {
     Book book = createBook(Optional.empty(), Optional.empty());
+
     Map<String, Optional<String>> bookInfo = new HashMap<>() {{
       put("title", Optional.empty());
       put("author", Optional.empty());
       put("isbn", Optional.empty());
     }};
-    BookUpdateDTORequest bookUpdateDTORequest = createBookUpdateDTORequest(bookInfo, Optional.empty());
 
+    BookUpdateDTORequest bookUpdateDTORequest = createBookUpdateDTORequest(bookInfo, Optional.empty());
 
     BookNotFoundException bookNotFoundException = assertThrows(
         BookNotFoundException.class,
@@ -155,6 +157,32 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     String expectedExceptionMessage = "Book not found with id " + book.getBookId();
 
     assertTrue(bookNotFoundException.getMessage().contains(expectedExceptionMessage));
+  }
+
+  @Test
+  @DisplayName(value = "When book title is updated, should return correctly")
+  void should_returnEquals_when_bookTitleIsUpdated() {
+    Book book = createBook(Optional.empty(), Optional.empty());
+
+    String newBookTitle = "New Book Title";
+
+    Map<String, Optional<String>> bookInfo = new HashMap<>() {{
+      put("title", Optional.of(newBookTitle));
+      put("author", Optional.empty());
+      put("isbn", Optional.empty());
+    }};
+
+    BookUpdateDTORequest bookUpdateDTORequest = createBookUpdateDTORequest(bookInfo, Optional.empty());
+
+    categoryRepository.save(book.getCategory());
+    bookRepository.save(book);
+
+    Book updatedBook = bookService.updateBook(book.getBookId(), bookUpdateDTORequest);
+
+    assertNotNull(updatedBook);
+    assertNotEquals(book, updatedBook);
+    assertEquals(newBookTitle, updatedBook.getTitle());
+    assertNotNull(updatedBook.getUpdatedAt());
   }
 
 }
