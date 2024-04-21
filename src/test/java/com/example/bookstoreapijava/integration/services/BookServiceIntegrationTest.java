@@ -1,6 +1,7 @@
 package com.example.bookstoreapijava.integration.services;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
+import com.example.bookstoreapijava.main.book.data.dto.BookUpdateDTORequest;
 import com.example.bookstoreapijava.main.book.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.book.entities.Book;
 import com.example.bookstoreapijava.main.book.exceptions.BookAlreadyExistsException;
@@ -16,14 +17,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
 import static com.example.bookstoreapijava.providers.BookProvider.createBookList;
 import static com.example.bookstoreapijava.providers.BookCreatedVOProvider.createBookCreatedVO;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
+import static com.example.bookstoreapijava.providers.BookUpdateDTORequestProvider.createBookUpdateDTORequest;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BookServiceIntegrationTest extends PostgresTestContainersBase {
@@ -80,7 +80,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     Book book = createBook(Optional.empty(), Optional.empty());
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
-      CategoryNotFoundException.class,
+        CategoryNotFoundException.class,
         () -> bookService.insertBook(book)
     );
 
@@ -131,6 +131,28 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     );
 
     String expectedExceptionMessage = "Book not found with id " + bookId;
+
+    assertTrue(bookNotFoundException.getMessage().contains(expectedExceptionMessage));
+  }
+
+  @Test
+  @DisplayName(value = "When book is updated and is not found, should throw exception")
+  void should_throwException_when_bookIsUpdatedAndIsNotFound() {
+    Book book = createBook(Optional.empty(), Optional.empty());
+    Map<String, Optional<String>> bookInfo = new HashMap<>() {{
+      put("title", Optional.empty());
+      put("author", Optional.empty());
+      put("isbn", Optional.empty());
+    }};
+    BookUpdateDTORequest bookUpdateDTORequest = createBookUpdateDTORequest(bookInfo, Optional.empty());
+
+
+    BookNotFoundException bookNotFoundException = assertThrows(
+        BookNotFoundException.class,
+        () -> bookService.updateBook(book.getBookId(), bookUpdateDTORequest)
+    );
+
+    String expectedExceptionMessage = "Book not found with id " + book.getBookId();
 
     assertTrue(bookNotFoundException.getMessage().contains(expectedExceptionMessage));
   }
