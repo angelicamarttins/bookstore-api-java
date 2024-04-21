@@ -207,7 +207,33 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
 
     assertNotNull(updatedBook);
     assertNotEquals(book, updatedBook);
-    assertEquals(newBookAuthor, updatedBook.getTitle());
+    assertEquals(newBookAuthor, updatedBook.getAuthor());
+    assertNotNull(updatedBook.getUpdatedAt());
+  }
+
+  @Test
+  @DisplayName(value = "When book isbn is updated, should return correctly")
+  void should_returnEquals_when_bookIsbnIsUpdated() {
+    Book book = createBook(Optional.empty(), Optional.empty());
+
+    String newBookIsbn = "9876543210";
+
+    Map<String, Optional<String>> bookInfo = new HashMap<>() {{
+      put("title", Optional.empty());
+      put("author", Optional.empty());
+      put("isbn", Optional.of(newBookIsbn));
+    }};
+
+    BookUpdateDTORequest bookUpdateDTORequest = createBookUpdateDTORequest(bookInfo, Optional.empty());
+
+    categoryRepository.save(book.getCategory());
+    bookRepository.save(book);
+
+    Book updatedBook = bookService.updateBook(book.getBookId(), bookUpdateDTORequest);
+
+    assertNotNull(updatedBook);
+    assertNotEquals(book, updatedBook);
+    assertEquals(newBookIsbn, updatedBook.getIsbn());
     assertNotNull(updatedBook.getUpdatedAt());
   }
 
