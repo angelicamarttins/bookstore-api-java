@@ -293,7 +293,24 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
         "Category not found with id " + newCategory.getCategoryId();
 
     assertTrue(categoryNotFoundException.getMessage().contains(expectedExceptionMessage));
-
   }
 
+  @Test
+  @DisplayName(value = "When book is deleted, should soft delete correctly")
+  void should_softDelete_when_bookIsDeleted() {
+    Category category = createCategory(Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.of(category));
+
+    categoryRepository.save(category);
+    bookRepository.save(book);
+
+    bookService.deleteBook(book.getBookId());
+
+    Book deletedBook = bookRepository.findById(book.getBookId()).get();
+
+    assertNotNull(deletedBook);
+    assertNotNull(deletedBook.getInactivatedAt());
+    assertNotNull(deletedBook.getUpdatedAt());
+    assertNotEquals(book, deletedBook);
+  }
 }

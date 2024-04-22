@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,7 +38,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @AfterEach
   public void cleanUpDb() {
-    bookRepository.deleteAll();
+    bookRepository.deleteAll(); // TODO: Remover quando não mais inserir dados no banco automaticamente
     categoryRepository.deleteAll();
   }
 
@@ -158,15 +157,12 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
     categoryService.deleteCategory(categoryId);
 
-    Optional<Category> deletedCategory = categoryRepository.findById(categoryId);
-
-    LocalDateTime updatedAtDeletedCategory = deletedCategory.get().getUpdatedAt();
-    LocalDateTime inactivatedAtDeletedCategory = deletedCategory.get().getInactivatedAt();
+    Category deletedCategory = categoryRepository.findById(categoryId).get();
 
     assertNotNull(deletedCategory);
-    assertNotNull(updatedAtDeletedCategory);
-    assertNotNull(inactivatedAtDeletedCategory);
-    assertNotEquals(Optional.of(category), deletedCategory);
+    assertNotNull(deletedCategory.getUpdatedAt());
+    assertNotNull(deletedCategory.getInactivatedAt());
+    assertNotEquals(category, deletedCategory);
   }
 
   @Test
