@@ -313,4 +313,19 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     assertNotNull(deletedBook.getUpdatedAt());
     assertNotEquals(book, deletedBook);
   }
+
+  @Test
+  @DisplayName(value = "When book is deleted and is not found, should throw exception")
+  void should_throwException_when_bookIsDeletedAndIsNotFound() {
+    UUID bookId = UUID.randomUUID();
+
+    BookNotFoundException bookNotFoundException = assertThrows(
+        BookNotFoundException.class,
+        () -> bookService.deleteBook(bookId)
+    );
+
+    String expectedExceptionMessage = "Book not found with id " + bookId;
+
+    assertTrue(bookNotFoundException.getMessage().contains(expectedExceptionMessage));
+  }
 }
