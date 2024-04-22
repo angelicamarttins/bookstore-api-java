@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.example.bookstoreapijava.utils.TestUtils.localDateTimeFormat;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
+import static com.example.bookstoreapijava.utils.TestUtils.localDateTimeFormat;
 
 public class BookProvider {
 

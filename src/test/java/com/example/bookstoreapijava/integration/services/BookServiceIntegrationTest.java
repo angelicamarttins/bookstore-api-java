@@ -17,14 +17,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URISyntaxException;
-import java.time.LocalDateTime;
 import java.util.*;
 
+import static com.example.bookstoreapijava.providers.BookCreatedVOProvider.createBookCreatedVO;
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
 import static com.example.bookstoreapijava.providers.BookProvider.createBookList;
-import static com.example.bookstoreapijava.providers.BookCreatedVOProvider.createBookCreatedVO;
-import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.BookUpdateDTORequestProvider.createBookUpdateDTORequest;
+import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BookServiceIntegrationTest extends PostgresTestContainersBase {
