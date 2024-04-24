@@ -10,6 +10,8 @@ import co.novu.api.subscribers.requests.UpdateSubscriberRequest;
 import co.novu.common.base.Novu;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class NovuClass {
@@ -20,7 +22,7 @@ public class NovuClass {
 //    subscribe(novu);
     //update(novu);
     SubscriberRequest subscriberRequest = new SubscriberRequest();
-    subscriberRequest.setSubscriberId(UUID.randomUUID().toString());
+    subscriberRequest.setSubscriberId("65d5eec934a25e4f83a5fb18");
     trigger(novu, subscriberRequest);
 //    SingleSubscriberResponse sub =
 //        novu.getSubscriber("e9b613b6-5ecd-4943-bb85-306c5534e46d");
@@ -89,10 +91,14 @@ public class NovuClass {
 
   private static TriggerEventResponse trigger(Novu novu, SubscriberRequest subscriberRequest) {
     TriggerEventRequest triggerEventRequest = new TriggerEventRequest();
-    triggerEventRequest.setName("account-activation");
+    triggerEventRequest.setName("payment.created.payer");
     triggerEventRequest.setTo(subscriberRequest);
-    triggerEventRequest.setPayload(Collections.singletonMap("customVariables", "Hello"));
+    Map<String, Object> emailOverride = new HashMap<>();
+    emailOverride.put("subject", "Pamonha amarela");
+    emailOverride.put("senderName", "Angélica Biruleibe");
 
+    triggerEventRequest.setPayload(Collections.singletonMap("customVariables", "Hello"));
+    triggerEventRequest.setOverrides(Collections.singletonMap("email", emailOverride));
     try {
       TriggerEventResponse triggerEventResponse = novu.triggerEvent(triggerEventRequest);
       System.out.println("GETERROR = " + triggerEventResponse.getData());
