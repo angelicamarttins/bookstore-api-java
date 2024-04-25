@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public class ExceptionDTOResponseProvider {
 
-  public ExceptionDTOResponse createExceptionDTOResponse(Optional<Integer> status, Optional<String> error, Optional<String> message) {
+  public static ExceptionDTOResponse createExceptionDTOResponse(Optional<Integer> status, Optional<String> error, Optional<String> message) {
     return new ExceptionDTOResponse(
         status.orElse(500),
         error.orElse("RuntimeException"),
