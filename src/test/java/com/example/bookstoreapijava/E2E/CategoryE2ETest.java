@@ -12,10 +12,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
+import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
 import static com.example.bookstoreapijava.providers.ExceptionDTOResponseProvider.createExceptionDTOResponse;
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
@@ -77,6 +80,22 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
 
     response.then().statusCode(404);
     assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+  }
+
+  @Test
+  @DisplayName(value = "When category list is searched, returns correctly")
+  void getCategoryListSuccessfully() {
+    List<Category> expectedCategories = createCategoryList();
+    categoryRepository.saveAll(expectedCategories);
+
+    Response response = given()
+        .baseUri(baseURI)
+        .get("/category/");
+
+    List<Category> actualCategories = Collections.singletonList(response.as(Category.class));
+
+    response.then().statusCode(200);
+    assertEquals(expectedCategories, actualCategories);
   }
 
 }
