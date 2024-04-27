@@ -69,13 +69,14 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
             Optional.of("Category not found with id " + categoryId)
         );
 
-    Response response = given()
+    ExceptionDTOResponse actualExceptionDTOResponse = given()
         .baseUri(baseURI)
-        .get("/category/" + categoryId);
+        .get("/category/" + categoryId)
+        .then()
+        .statusCode(404)
+        .extract()
+        .as(ExceptionDTOResponse.class);
 
-    ExceptionDTOResponse actualExceptionDTOResponse = response.as(ExceptionDTOResponse.class);
-
-    response.then().statusCode(404);
     assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
   }
 
