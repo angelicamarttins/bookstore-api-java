@@ -6,16 +6,11 @@ import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
@@ -37,9 +32,8 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     baseURI = "http://localhost:" + port;
   }
 
-  @AfterAll
+  @AfterEach
   void cleanUpDb() {
-    bookRepository.deleteAll(); // TODO: Remover quando não mais inserir dados no banco automaticamente
     categoryRepository.deleteAll();
   }
 
@@ -90,9 +84,9 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
 
     Response response = given()
         .baseUri(baseURI)
-        .get("/category/");
+        .get("/category");
 
-    List<Category> actualCategories = Collections.singletonList(response.as(Category.class));
+    List<Category> actualCategories = Arrays.asList(response.then().extract().as(Category[].class));
 
     response.then().statusCode(200);
     assertEquals(expectedCategories, actualCategories);

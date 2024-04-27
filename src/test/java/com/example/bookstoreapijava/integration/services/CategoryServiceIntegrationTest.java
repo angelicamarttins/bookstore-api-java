@@ -38,7 +38,6 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @AfterEach
   public void cleanUpDb() {
-    bookRepository.deleteAll(); // TODO: Remover quando não mais inserir dados no banco automaticamente
     categoryRepository.deleteAll();
   }
 
