@@ -4,7 +4,6 @@ import com.example.bookstoreapijava.config.PostgresTestContainersBase;
 import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
-import io.restassured.response.Response;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -86,13 +85,14 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     List<Category> expectedCategories = createCategoryList();
     categoryRepository.saveAll(expectedCategories);
 
-    Response response = given()
+    List<Category> actualCategories = Arrays.stream(given()
         .baseUri(baseURI)
-        .get("/category");
+        .get("/category")
+        .then()
+        .statusCode(200)
+        .extract()
+        .as(Category[].class)).toList();
 
-    List<Category> actualCategories = Arrays.asList(response.then().extract().as(Category[].class));
-
-    response.then().statusCode(200);
     assertEquals(expectedCategories, actualCategories);
     assertFalse(actualCategories.isEmpty());
   }
