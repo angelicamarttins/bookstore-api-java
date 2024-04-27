@@ -1,16 +1,20 @@
 package com.example.bookstoreapijava.E2E;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.book.repositories.BookRepository;
 import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
 import io.restassured.response.Response;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
@@ -18,11 +22,9 @@ import static com.example.bookstoreapijava.providers.ExceptionDTOResponseProvide
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class CategoryE2ETest extends PostgresTestContainersBase {
-
-  @Autowired
-  BookRepository bookRepository;
 
   @Autowired
   CategoryRepository categoryRepository;
@@ -44,13 +46,14 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     Category expectedCategory = createCategory(Optional.of(categoryName));
     categoryRepository.save(expectedCategory);
 
-    Response response = given()
+    Category actualCategory = given()
         .baseUri(baseURI)
-        .get("/category/" + expectedCategory.getCategoryId());
+        .get("/category/" + expectedCategory.getCategoryId())
+        .then()
+        .statusCode(200)
+        .extract()
+        .as(Category.class);
 
-    Category actualCategory = response.as(Category.class);
-
-    response.then().statusCode(200);
     assertEquals(expectedCategory, actualCategory);
   }
 
@@ -77,7 +80,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category list is searched, returns correctly")
+  @DisplayName(value = "When category list is searched and there is categories, returns correctly")
   void getCategoryListSuccessfully() {
     List<Category> expectedCategories = createCategoryList();
     categoryRepository.saveAll(expectedCategories);
@@ -90,6 +93,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
 
     response.then().statusCode(200);
     assertEquals(expectedCategories, actualCategories);
+    assertFalse(actualCategories.isEmpty());
   }
 
 }
