@@ -18,7 +18,8 @@ import java.util.UUID;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
 import static com.example.bookstoreapijava.providers.ExceptionDTOResponseProvider.createExceptionDTOResponse;
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.baseURI;
+import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CategoryE2ETest extends PostgresTestContainersBase {
@@ -127,6 +128,30 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     assertEquals(expectedCategory, actualCategory);
   }
 
+  @Test
+  @DisplayName(value = "When category is inserted and already exists, throw exception correctly")
+  void postCategoryAlreadyExists() {
+    Category category = createCategory(Optional.of("Category name"));
 
+    categoryRepository.save(category);
+
+    ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
+        Optional.of(409),
+        Optional.of("CategoryAlreadyExistsException"),
+        Optional.of("Category already exists with name " + category.getCategoryName())
+    );
+
+    ExceptionDTOResponse actualExceptionDTOResponse = given()
+        .baseUri(baseURI)
+        .contentType("application/json")
+        .body(category)
+        .post("/category")
+        .then()
+        .statusCode(409)
+        .extract()
+        .as(ExceptionDTOResponse.class);
+
+    assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+  }
 
 }
