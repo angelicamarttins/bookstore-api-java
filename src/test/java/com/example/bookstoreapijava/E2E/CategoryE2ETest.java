@@ -18,10 +18,8 @@ import java.util.UUID;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
 import static com.example.bookstoreapijava.providers.ExceptionDTOResponseProvider.createExceptionDTOResponse;
-import static io.restassured.RestAssured.baseURI;
-import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static io.restassured.RestAssured.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CategoryE2ETest extends PostgresTestContainersBase {
 
@@ -85,16 +83,30 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     List<Category> expectedCategories = createCategoryList();
     categoryRepository.saveAll(expectedCategories);
 
-    List<Category> actualCategories = Arrays.stream(given()
+    List<Category> actualCategories = Arrays.asList(given()
         .baseUri(baseURI)
         .get("/category")
         .then()
         .statusCode(200)
         .extract()
-        .as(Category[].class)).toList();
+        .as(Category[].class));
 
     assertEquals(expectedCategories, actualCategories);
     assertFalse(actualCategories.isEmpty());
+  }
+
+  @Test
+  @DisplayName(value = "When category list is searched and there is not categories, returns correctly")
+  void getCategoryEmptyListSuccessfully() {
+    List<Category> actualCategories = Arrays.asList(given()
+        .baseUri(baseURI)
+        .get("/category")
+        .then()
+        .statusCode(200)
+        .extract()
+        .as(Category[].class));
+
+    assertTrue(actualCategories.isEmpty());
   }
 
 }
