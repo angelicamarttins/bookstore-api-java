@@ -109,4 +109,24 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     assertTrue(actualCategories.isEmpty());
   }
 
+  @Test
+  @DisplayName(value = "When category is inserted, return correctly")
+  void postCategorySuccessfully() {
+    Category expectedCategory = createCategory(Optional.of("Category name")); //TODO: Ajustar para que nomes compostos, ambos os nomes permaneçam com letra maiúscula
+
+    Category actualCategory = given()
+        .baseUri(baseURI)
+        .contentType("application/json")
+        .body(expectedCategory)
+        .post("/category")
+        .then()
+        .statusCode(201)
+        .extract()
+        .as(Category.class);
+
+    assertEquals(expectedCategory, actualCategory);
+  }
+
+
+
 }
