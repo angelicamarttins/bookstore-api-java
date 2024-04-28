@@ -121,6 +121,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
         .body(expectedCategory)
         .post("/category")
         .then()
+        .header("Location", "http://localhost:8080/category/" + expectedCategory.getCategoryId())
         .statusCode(201)
         .extract()
         .as(Category.class);
