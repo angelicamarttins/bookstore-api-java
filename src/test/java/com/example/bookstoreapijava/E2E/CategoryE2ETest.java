@@ -1,6 +1,7 @@
 package com.example.bookstoreapijava.E2E;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
+import com.example.bookstoreapijava.main.category.data.dto.CategoryUpdateDTO;
 import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
+import static com.example.bookstoreapijava.providers.CategoryUpdateDTOProvider.createCategoryUpdateDTO;
 import static com.example.bookstoreapijava.providers.ExceptionDTOResponseProvider.createExceptionDTOResponse;
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
@@ -56,7 +58,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is searched and is not found, should throw exception correctly")
+  @DisplayName(value = "When category is searched and is not found, should throws exception correctly")
   void getCategoryByIdNotFound() {
     UUID categoryId = UUID.randomUUID();
 
@@ -130,7 +132,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is inserted and already exists, throw exception correctly")
+  @DisplayName(value = "When category is inserted and already exists, throws exception correctly")
   void postCategoryAlreadyExists() {
     Category category = createCategory(Optional.of("Category name"));
 
@@ -156,6 +158,31 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
+  @DisplayName(value = "When category is updated, return correctly")
+  void updateCategorySuccessfully() {
+    Category savedCategory = createCategory(Optional.empty());
+
+    categoryRepository.save(savedCategory);
+
+    CategoryUpdateDTO categoryUpdateDTO = createCategoryUpdateDTO();
+
+    Category updatedCategory = given()
+        .baseUri(baseURI)
+        .contentType("application/json")
+        .body(categoryUpdateDTO)
+        .patch("/category/" + savedCategory.getCategoryId())
+        .then()
+        .statusCode(200)
+        .extract()
+        .as(Category.class);
+
+    assertNotNull(updatedCategory);
+    assertNotEquals(savedCategory, updatedCategory);
+    assertEquals(categoryUpdateDTO.categoryName(), updatedCategory.getCategoryName());
+    assertNotNull(updatedCategory.getUpdatedAt());
+  }
+
+  @Test
   @DisplayName(value = "When category is deleted, returns correctly")
   void deleteCategorySuccessfully() {
     Category savedCategory = createCategory(Optional.empty());
@@ -176,7 +203,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is deleted, returns correctly")
+  @DisplayName(value = "When category is deleted and is not found, throws exception correctly")
   void deleteCategoryNotFound() {
     UUID categoryId = UUID.randomUUID();
 
