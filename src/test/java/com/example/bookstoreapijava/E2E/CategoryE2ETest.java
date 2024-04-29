@@ -155,4 +155,24 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
   }
 
+  @Test
+  @DisplayName(value = "When category is deleted, returns correctly")
+  void deleteCategorySuccessfully() {
+    Category savedCategory = createCategory(Optional.empty());
+
+    categoryRepository.save(savedCategory);
+
+    given()
+        .baseUri(baseURI)
+        .delete("/category/" + savedCategory.getCategoryId())
+        .then()
+        .statusCode(204);
+
+    Category deletedCategory = categoryRepository.findById(savedCategory.getCategoryId()).get();
+
+    assertNotEquals(savedCategory, deletedCategory);
+    assertNotNull(deletedCategory.getUpdatedAt());
+    assertNotNull(deletedCategory.getInactivatedAt());
+  }
+
 }
