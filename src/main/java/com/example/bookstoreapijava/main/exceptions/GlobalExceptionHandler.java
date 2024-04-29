@@ -111,7 +111,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(RuntimeException.class)
-  public ResponseEntity<ExceptionDTOResponse> handleCategoryAlreadyExistsException(
+  public ResponseEntity<ExceptionDTOResponse> handleRuntimeException(
       RuntimeException runtimeException
   ) {
     HttpStatus internalServerError = HttpStatus.INTERNAL_SERVER_ERROR;

@@ -175,4 +175,26 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     assertNotNull(deletedCategory.getInactivatedAt());
   }
 
+  @Test
+  @DisplayName(value = "When category is deleted, returns correctly")
+  void deleteCategoryNotFound() {
+    UUID categoryId = UUID.randomUUID();
+
+    ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
+        Optional.of(404),
+        Optional.of("CategoryNotFoundException"),
+        Optional.of("Category not found with id " + categoryId)
+    );
+
+    ExceptionDTOResponse actualExceptionDTOResponse = given()
+        .baseUri(baseURI)
+        .delete("/category/" + categoryId)
+        .then()
+        .statusCode(404)
+        .extract()
+        .as(ExceptionDTOResponse.class);
+
+    assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+  }
+
 }
