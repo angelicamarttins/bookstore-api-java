@@ -183,6 +183,32 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
+  @DisplayName(value = "When category is updated and is not found, throws exception correctly")
+  void updateCategoryNotFound() {
+    UUID categoryId = UUID.randomUUID();
+
+    CategoryUpdateDTO categoryUpdateDTO = createCategoryUpdateDTO();
+
+    ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
+        Optional.of(404),
+        Optional.of("CategoryNotFoundException"),
+        Optional.of("Category not found with id " + categoryId)
+    );
+
+    ExceptionDTOResponse actualExceptionDTOResponse = given()
+        .baseUri(baseURI)
+        .contentType("application/json")
+        .body(categoryUpdateDTO)
+        .patch("/category/" + categoryId)
+        .then()
+        .statusCode(404)
+        .extract()
+        .as(ExceptionDTOResponse.class);
+
+    assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+  }
+
+  @Test
   @DisplayName(value = "When category is deleted, returns correctly")
   void deleteCategorySuccessfully() {
     Category savedCategory = createCategory(Optional.empty());
