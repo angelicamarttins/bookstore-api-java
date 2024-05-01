@@ -4,6 +4,7 @@ import com.example.bookstoreapijava.config.PostgresTestContainersBase;
 import com.example.bookstoreapijava.main.book.entities.Book;
 import com.example.bookstoreapijava.main.book.repositories.BookRepository;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
+import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -11,8 +12,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
+import static com.example.bookstoreapijava.providers.ExceptionDTOResponseProvider.createExceptionDTOResponse;
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
@@ -52,6 +55,29 @@ public class BookE2ETest extends PostgresTestContainersBase {
         .as(Book.class);
 
     assertEquals(expectedBook, actualBook);
+  }
+
+  @Test
+  @DisplayName(value = "When book is searched by id, returns correctly")
+  void getBookByIdNotFound() {
+    UUID bookId = UUID.randomUUID();
+
+    ExceptionDTOResponse expectedExceptionDTOResponse =
+        createExceptionDTOResponse(
+            Optional.of(404),
+            Optional.of("BookNotFoundException"),
+            Optional.of("Book not found with id " + bookId)
+        );
+
+    ExceptionDTOResponse actualExceptionDTOResponse = given()
+        .baseUri(baseURI)
+        .get("/bookstore/" + bookId)
+        .then()
+        .statusCode(404)
+        .extract()
+        .as(ExceptionDTOResponse.class);
+
+    assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
   }
 
 }
