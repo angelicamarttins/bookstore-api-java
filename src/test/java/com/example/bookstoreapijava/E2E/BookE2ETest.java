@@ -3,6 +3,7 @@ package com.example.bookstoreapijava.E2E;
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
 import com.example.bookstoreapijava.main.book.entities.Book;
 import com.example.bookstoreapijava.main.book.repositories.BookRepository;
+import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -11,10 +12,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
+import static com.example.bookstoreapijava.providers.BookProvider.createBookList;
+import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.ExceptionDTOResponseProvider.createExceptionDTOResponse;
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
@@ -78,6 +83,19 @@ public class BookE2ETest extends PostgresTestContainersBase {
         .as(ExceptionDTOResponse.class);
 
     assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+  }
+
+  @Test
+  @DisplayName(value = "When book list is searched and there is not books, returns correctly")
+  void getBookEmptyListSuccessfully() {
+    List<Book> actualBookList = Arrays.asList(given()
+        .baseUri(baseURI)
+        .get("/bookstore")
+        .then()
+        .extract()
+        .as(Book[].class));
+
+    assertTrue(actualBookList.isEmpty());
   }
 
 }
