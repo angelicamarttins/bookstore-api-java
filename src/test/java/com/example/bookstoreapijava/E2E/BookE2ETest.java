@@ -98,4 +98,24 @@ public class BookE2ETest extends PostgresTestContainersBase {
     assertTrue(actualBookList.isEmpty());
   }
 
+  @Test
+  @DisplayName(value = "When book list is searched and there is categories, returns correctly")
+  void getBookListSuccessfully() {
+    Category category = createCategory(Optional.empty());
+    List<Book> expectedBookList = createBookList(Optional.of(category));
+
+    categoryRepository.save(category);
+    bookRepository.saveAll(expectedBookList);
+
+    List<Book> actualBookList = Arrays.asList(given()
+        .baseUri(baseURI)
+        .get("/bookstore")
+        .then()
+        .extract()
+        .as(Book[].class));
+
+    assertEquals(expectedBookList, actualBookList);
+    assertFalse(actualBookList.isEmpty());
+  }
+
 }
