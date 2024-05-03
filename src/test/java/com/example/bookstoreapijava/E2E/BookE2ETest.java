@@ -206,4 +206,37 @@ public class BookE2ETest extends PostgresTestContainersBase {
     assertNotNull(updatedBook.getUpdatedAt());
   }
 
+  @Test
+  @DisplayName(value = "When book is updated and is not found, throws exception correctly")
+  void updateBookNotFound() {
+    UUID bookId = UUID.randomUUID();
+
+    Map<String, Optional<String>> bookInfo = new HashMap<>() {{
+      put("title", Optional.of("New Title"));
+      put("author", Optional.of("New Author"));
+      put("isbn", Optional.of("0000000000"));
+    }};
+
+    BookUpdateDTORequest bookUpdateDTORequest =
+        createBookUpdateDTORequest(bookInfo, Optional.empty());
+
+    ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
+        Optional.of(404),
+        Optional.of("BookNotFoundException"),
+        Optional.of("Book not found with id " + bookId)
+    );
+
+    ExceptionDTOResponse actualExceptionDTOResponse = given()
+        .contentType("application/json")
+        .baseUri(baseURI)
+        .body(bookUpdateDTORequest)
+        .patch("/bookstore/" + bookId)
+        .then()
+        .statusCode(404)
+        .extract()
+        .as(ExceptionDTOResponse.class);
+
+    assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+  }
+
 }
