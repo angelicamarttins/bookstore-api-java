@@ -239,4 +239,26 @@ public class BookE2ETest extends PostgresTestContainersBase {
     assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
   }
 
+  @Test
+  @DisplayName(value = "When book is deleted, returns correctly")
+  void deleteBookSuccessfully() {
+    Category category = createCategory(Optional.empty());
+    Book savedBook = createBook(Optional.empty(), Optional.of(category));
+
+    categoryRepository.save(category);
+    bookRepository.save(savedBook);
+
+    given()
+        .baseUri(baseURI)
+        .delete("/bookstore/" + savedBook.getBookId())
+        .then()
+        .statusCode(204);
+
+    Book deletedBook = bookRepository.findById(savedBook.getBookId()).get();
+
+    assertNotEquals(savedBook, deletedBook);
+    assertNotNull(deletedBook.getUpdatedAt());
+    assertNotNull(deletedBook.getInactivatedAt());
+  }
+
 }
