@@ -1,6 +1,7 @@
 package com.example.bookstoreapijava.E2E;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
+import com.example.bookstoreapijava.main.book.data.dto.BookUpdateDTORequest;
 import com.example.bookstoreapijava.main.book.entities.Book;
 import com.example.bookstoreapijava.main.book.repositories.BookRepository;
 import com.example.bookstoreapijava.main.category.entities.Category;
@@ -12,13 +13,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
 import static com.example.bookstoreapijava.providers.BookProvider.createBookList;
+import static com.example.bookstoreapijava.providers.BookUpdateDTORequestProvider.createBookUpdateDTORequest;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.ExceptionDTOResponseProvider.createExceptionDTOResponse;
 import static io.restassured.RestAssured.baseURI;
@@ -166,6 +165,45 @@ public class BookE2ETest extends PostgresTestContainersBase {
         .as(ExceptionDTOResponse.class);
 
     assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+  }
+
+  @Test
+  @DisplayName(value = "When book is updated, returns correctly")
+  void updateBookSuccessfully() {
+    String bookIsbn = "1313131313133";
+    Category oldCategory = createCategory(Optional.of("Old Category"));
+    Category newCategory = createCategory(Optional.of("New Category"));
+    Book savedBook = createBook(Optional.of(bookIsbn), Optional.of(oldCategory));
+
+    categoryRepository.save(oldCategory);
+    categoryRepository.save(newCategory);
+    bookRepository.save(savedBook);
+
+    Map<String, Optional<String>> bookInfo = new HashMap<>() {{
+      put("title", Optional.of("New Title"));
+      put("author", Optional.of("New Author"));
+      put("isbn", Optional.of("0000000000"));
+    }};
+
+    BookUpdateDTORequest bookUpdateDTORequest =
+        createBookUpdateDTORequest(bookInfo, Optional.of(newCategory));
+
+    Book updatedBook = given()
+        .baseUri(baseURI)
+        .contentType("application/json")
+        .body(bookUpdateDTORequest)
+        .patch("/bookstore/" + savedBook.getBookId())
+        .then()
+        .statusCode(200)
+        .extract()
+        .as(Book.class);
+
+    assertNotEquals(savedBook, updatedBook);
+    assertEquals(updatedBook.getTitle(), bookInfo.get("title").get());
+    assertEquals(updatedBook.getAuthor(), bookInfo.get("author").get());
+    assertEquals(updatedBook.getIsbn(), bookInfo.get("isbn").get());
+    assertEquals(updatedBook.getCategory(), newCategory);
+    assertNotNull(updatedBook.getUpdatedAt());
   }
 
 }
