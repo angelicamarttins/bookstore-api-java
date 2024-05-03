@@ -261,4 +261,26 @@ public class BookE2ETest extends PostgresTestContainersBase {
     assertNotNull(deletedBook.getInactivatedAt());
   }
 
+  @Test
+  @DisplayName(value = "When book is deleted and is not found, throws exception correctly")
+  void deleteBookNotFound() {
+    UUID bookId = UUID.randomUUID();
+
+    ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
+        Optional.of(404),
+        Optional.of("BookNotFoundException"),
+        Optional.of("Book not found with id " + bookId)
+    );
+
+    ExceptionDTOResponse actualExceptionDTOResponse = given()
+        .baseUri(baseURI)
+        .delete("/bookstore/" + bookId)
+        .then()
+        .statusCode(404)
+        .extract()
+        .as(ExceptionDTOResponse.class);
+
+    assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+  }
+
 }
