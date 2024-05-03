@@ -140,4 +140,32 @@ public class BookE2ETest extends PostgresTestContainersBase {
     assertEquals(expectedBook, actualBook);
   }
 
+  @Test
+  @DisplayName(value = "When book is inserted and already exists, throws exception correctly")
+  void postBookAlreadyExists() {
+    Category category = createCategory(Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.of(category));
+
+    categoryRepository.save(category);
+    bookRepository.save(book);
+
+    ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
+        Optional.of(409),
+        Optional.of("BookAlreadyExistsException"),
+        Optional.of("Book already exists with isbn " + book.getIsbn())
+    );
+
+    ExceptionDTOResponse actualExceptionDTOResponse = given()
+        .contentType("application/json")
+        .baseUri(baseURI)
+        .body(book)
+        .post("/bookstore")
+        .then()
+        .statusCode(409)
+        .extract()
+        .as(ExceptionDTOResponse.class);
+
+    assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+  }
+
 }
