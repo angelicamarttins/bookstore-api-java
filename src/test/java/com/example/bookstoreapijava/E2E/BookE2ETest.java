@@ -118,4 +118,26 @@ public class BookE2ETest extends PostgresTestContainersBase {
     assertFalse(actualBookList.isEmpty());
   }
 
+  @Test
+  @DisplayName(value = "When book is inserted, returns correctly")
+  void postBookSuccessfully() {
+    Category category = createCategory(Optional.empty());
+    Book expectedBook = createBook(Optional.empty(), Optional.of(category));
+
+    categoryRepository.save(category);
+
+    Book actualBook = given()
+        .contentType("application/json")
+        .baseUri(baseURI)
+        .body(expectedBook)
+        .post("/bookstore")
+        .then()
+        .header("Location", "http://localhost:8080/bookstore/" + expectedBook.getBookId())
+        .statusCode(201)
+        .extract()
+        .as(Book.class);
+
+    assertEquals(expectedBook, actualBook);
+  }
+
 }
