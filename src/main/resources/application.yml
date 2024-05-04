@@ -34,3 +34,5 @@ spring:
       continue-on-error: true
       mode: always
     schema-locations: classpath:/import.sql
+app:
+  baseUrl: http://localhost:8081

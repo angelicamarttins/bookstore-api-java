@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Arrays;
 import java.util.List;
@@ -25,6 +26,9 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CategoryE2ETest extends PostgresTestContainersBase {
+
+  @Value("${app.baseUrl}")
+  private static String baseUrl;
 
   @Autowired
   CategoryRepository categoryRepository;
@@ -123,7 +127,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
         .body(expectedCategory)
         .post("/category")
         .then()
-        .header("Location", "http://localhost:8080/category/" + expectedCategory.getCategoryId())
+        .header("Location", baseUrl + "/category/" + expectedCategory.getCategoryId())
         .statusCode(201)
         .extract()
         .as(Category.class);

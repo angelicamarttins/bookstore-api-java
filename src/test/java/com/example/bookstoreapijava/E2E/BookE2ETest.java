@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.*;
 
@@ -25,6 +26,9 @@ import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BookE2ETest extends PostgresTestContainersBase {
+
+  @Value("${app.baseUrl}")
+  private static String baseUrl;
 
   @Autowired
   BookRepository bookRepository;
@@ -131,7 +135,7 @@ public class BookE2ETest extends PostgresTestContainersBase {
         .body(expectedBook)
         .post("/bookstore")
         .then()
-        .header("Location", "http://localhost:8080/bookstore/" + expectedBook.getBookId())
+        .header("Location", baseUrl + "/bookstore/" + expectedBook.getBookId())
         .statusCode(201)
         .extract()
         .as(Book.class);

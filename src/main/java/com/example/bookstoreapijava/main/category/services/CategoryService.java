@@ -8,6 +8,7 @@ import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundExc
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -18,6 +19,9 @@ import java.util.UUID;
 
 @Service
 public class CategoryService {
+
+  @Value("${app.baseUrl}")
+  private static String baseUrl;
 
   @Autowired
   private CategoryRepository categoryRepository;
@@ -48,7 +52,7 @@ public class CategoryService {
 
     Category newCategory = categoryRepository.save(category);
     URI uri =
-        new URI("http://localhost:8080/category/" + newCategory.getCategoryId().toString());
+        new URI(baseUrl + "/category/" + newCategory.getCategoryId().toString());
 
     return new CategoryCreatedVO(newCategory, uri);
   }
