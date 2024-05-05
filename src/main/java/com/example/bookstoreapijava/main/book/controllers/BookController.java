@@ -6,6 +6,7 @@ import com.example.bookstoreapijava.main.book.entities.Book;
 import com.example.bookstoreapijava.main.book.services.BookService;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/bookstore")
 public class BookController {
@@ -26,6 +28,8 @@ public class BookController {
 
   @GetMapping
   public ResponseEntity<List<Book>> findAllBooks() {
+    log.info("Searching all books");
+
     List<Book> response = bookService.findAllBooks();
 
     return ResponseEntity.ok(response);
