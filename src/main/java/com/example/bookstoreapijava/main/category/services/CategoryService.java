@@ -7,6 +7,7 @@ import com.example.bookstoreapijava.main.category.exceptions.CategoryAlreadyExis
 import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.utils.Utils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class CategoryService {
 
@@ -27,13 +29,23 @@ public class CategoryService {
   private CategoryRepository categoryRepository;
 
   public List<Category> findAllCategories() {
+    log.info("All categories were found");
+
     return categoryRepository.findAll();
   }
 
   public Category findCategory(UUID categoryId) {
-    return categoryRepository
+    Category category = categoryRepository
         .findById(categoryId)
-        .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        .orElseThrow(() -> {
+          log.info("Category not found. Aborting... CategoryId: {}", categoryId);
+
+          return new CategoryNotFoundException(categoryId);
+        });
+
+    log.info("Category found. CategoryId: {}", categoryId);
+
+    return category;
   }
 
   public CategoryCreatedVO insertCategory(Category category) throws URISyntaxException {
@@ -42,6 +54,8 @@ public class CategoryService {
     categoryRepository
         .getByCategoryName(sanitizedCategory)
         .ifPresent(savedCategory -> {
+          log.info("Category already exists. CategoryId: {}", category.getCategoryId());
+
           throw new CategoryAlreadyExistsException(sanitizedCategory);
         });
     //TODO: Isso pode dar um problema de sanitização, pois os acentos podem ser fundamentais
@@ -54,13 +68,21 @@ public class CategoryService {
     URI uri =
         new URI(baseUrl + "/category/" + newCategory.getCategoryId().toString());
 
+    log.info("Category saved successfully. CategoryId: {}", category.getCategoryId());
+
     return new CategoryCreatedVO(newCategory, uri);
   }
 
   public Category updateCategory(CategoryUpdateDTO updateCategory, UUID categoryId) {
     Category savedCategory = categoryRepository
         .findById(categoryId)
-        .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        .orElseThrow(() -> {
+          log.info("Category not found. CategoryId: {}", categoryId);
+
+          return new CategoryNotFoundException(categoryId);
+        });
+
+    log.info("All info sent is updated. Will now save category. CategoryId: {}", categoryId);
 
     savedCategory.setCategoryName(updateCategory.categoryName());
 
@@ -70,11 +92,17 @@ public class CategoryService {
   public void deleteCategory(UUID categoryId) {
     Category deletedCategory = categoryRepository
         .findById(categoryId)
-        .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        .orElseThrow(() -> {
+          log.info("Category not found. Aborting... CategoryId: {}", categoryId);
+
+          return new CategoryNotFoundException(categoryId);
+        });
 
     deletedCategory.setInactivatedAt(LocalDateTime.now());
 
     categoryRepository.save(deletedCategory);
+
+    log.info("Category deleted successfully. CategoryId: {}", categoryId);
   }
 
 }
