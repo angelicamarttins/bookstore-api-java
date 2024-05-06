@@ -28,7 +28,7 @@ public class BookController {
 
   @GetMapping
   public ResponseEntity<List<Book>> findAllBooks() {
-    log.info("Searching all books");
+    log.info("Finding all books");
 
     List<Book> response = bookService.findAllBooks();
 
@@ -37,6 +37,8 @@ public class BookController {
 
   @GetMapping("/{bookId}")
   public ResponseEntity<Book> getBook(@PathVariable UUID bookId) {
+    log.info("Finding book. BookId: {}", bookId);
+
     Book response = bookService.findBook(bookId);
 
     return ResponseEntity.ok(response);
@@ -44,6 +46,8 @@ public class BookController {
 
   @PostMapping
   public ResponseEntity<Book> insertBook(@RequestBody @Valid Book book) throws URISyntaxException {
+    log.info("Creating book. bookIsbn: {}", book.getIsbn());
+
     BookCreatedVO newBook = bookService.insertBook(book);
 
     Book response = newBook.book();
@@ -57,6 +61,8 @@ public class BookController {
       @PathVariable UUID bookId,
       @RequestBody @Valid BookUpdateDTORequest updatedBook
   ) {
+    log.info("Updating book. BookId: {}", bookId);
+
     Book response = bookService.updateBook(bookId, updatedBook);
 
     return ResponseEntity.ok(response);
@@ -64,6 +70,8 @@ public class BookController {
 
   @DeleteMapping("/{bookId}")
   public ResponseEntity<Void> deleteBook(@PathVariable UUID bookId) {
+    log.info("Deleting book. BookId: {}", bookId);
+
     bookService.deleteBook(bookId);
 
     return ResponseEntity.noContent().build();

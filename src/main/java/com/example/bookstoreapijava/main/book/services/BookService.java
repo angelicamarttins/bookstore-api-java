@@ -68,7 +68,9 @@ public class BookService {
         .orElseThrow(() -> new CategoryNotFoundException(categoryId));
 
     log.info(
-        "Book does not exists and category were found. Will now save book. CategoryId: {}",
+        "Book wasn't created yet and category were found. Will now save book. " +
+            "BookIsbn: {}, CategoryId: {}",
+        bookIsbn,
         categoryId
     );
 
@@ -78,7 +80,9 @@ public class BookService {
 
     URI uri = new URI(baseUrl + "/bookstore/" + savedBook.getBookId().toString());
 
-    log.info("Book saved successfully. BookId: {}", savedBook.getBookId());
+    log.info("Book saved successfully. BookIsbn: {}, BookId: {}",
+        bookIsbn,
+        savedBook.getBookId());
 
     return new BookCreatedVO(savedBook, uri);
   }
