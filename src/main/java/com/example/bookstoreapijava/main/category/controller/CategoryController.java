@@ -6,6 +6,7 @@ import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.category.services.CategoryService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping(value = "/category")
 public class CategoryController {
@@ -27,6 +29,8 @@ public class CategoryController {
 
   @GetMapping
   public ResponseEntity<List<Category>> findAllCategories() {
+    log.info("Finding all categories");
+
     List<Category> response = categoryService.findAllCategories();
 
     return ResponseEntity.ok(response);
@@ -34,6 +38,8 @@ public class CategoryController {
 
   @GetMapping("/{categoryId}")
   public ResponseEntity<Category> getCategory(@PathVariable UUID categoryId) {
+    log.info("Finding category. CategoryId: {}", categoryId);
+
     Category response = categoryService.findCategory(categoryId);
 
     return ResponseEntity.ok(response);
@@ -41,6 +47,8 @@ public class CategoryController {
 
   @PostMapping()
   public ResponseEntity<Category> insertCategory(@RequestBody @Valid Category category) throws URISyntaxException {
+    log.info("Creating category. CategoryName: {}", category.getCategoryName());
+
     CategoryCreatedVO savedCategory = categoryService.insertCategory(category);
 
     Category response = savedCategory.category();
@@ -54,6 +62,8 @@ public class CategoryController {
       @PathVariable UUID categoryId,
       @RequestBody @Valid CategoryUpdateDTO categoryUpdateDTO
   ) {
+    log.info("Updating category. CategoryId: {}", categoryId);
+
     Category updatedCategory = categoryService.updateCategory(categoryUpdateDTO, categoryId);
 
     return ResponseEntity.ok(updatedCategory);
@@ -61,6 +71,8 @@ public class CategoryController {
 
   @DeleteMapping("/{categoryId}")
   public ResponseEntity<Void> deleteCategory(@PathVariable UUID categoryId) {
+    log.info("Deleting category. CategoryId: {}", categoryId);
+
     categoryService.deleteCategory(categoryId);
 
     return ResponseEntity.noContent().build();

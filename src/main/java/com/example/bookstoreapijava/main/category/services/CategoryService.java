@@ -54,7 +54,7 @@ public class CategoryService {
     categoryRepository
         .getByCategoryName(sanitizedCategory)
         .ifPresent(savedCategory -> {
-          log.info("Category already exists. CategoryId: {}", category.getCategoryId());
+          log.info("Category already exists. CategoryId: {}", savedCategory.getCategoryId());
 
           throw new CategoryAlreadyExistsException(sanitizedCategory);
         });
@@ -68,7 +68,10 @@ public class CategoryService {
     URI uri =
         new URI(baseUrl + "/category/" + newCategory.getCategoryId().toString());
 
-    log.info("Category saved successfully. CategoryId: {}", category.getCategoryId());
+    log.info("Category saved successfully. CategoryName: {}, CategoryId: {}",
+        category.getCategoryName(),
+        category.getCategoryId()
+    );
 
     return new CategoryCreatedVO(newCategory, uri);
   }
