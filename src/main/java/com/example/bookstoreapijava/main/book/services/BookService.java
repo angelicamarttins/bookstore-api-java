@@ -60,12 +60,18 @@ public class BookService {
     bookRepository
         .findBookByIsbn(bookIsbn)
         .ifPresent(savedBook -> {
+          log.info("Book already exists. Aborting... BookIsbn: {}", bookIsbn);
+
           throw new BookAlreadyExistsException(bookIsbn);
         });
 
     Category category = categoryRepository
         .findById(categoryId)
-        .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        .orElseThrow(() -> {
+          log.info("Category not found. Aborting... CategoryId: {}", categoryId);
+
+          return new CategoryNotFoundException(categoryId);
+        });
 
     log.info(
         "Book wasn't created yet and category were found. Will now save book. " +
@@ -82,7 +88,8 @@ public class BookService {
 
     log.info("Book saved successfully. BookIsbn: {}, BookId: {}",
         bookIsbn,
-        savedBook.getBookId());
+        savedBook.getBookId()
+    );
 
     return new BookCreatedVO(savedBook, uri);
   }
@@ -90,9 +97,11 @@ public class BookService {
   public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) {
     Book savedBook = bookRepository
         .findById(bookId)
-        .orElseThrow(() -> new BookNotFoundException(bookId));
+        .orElseThrow(() -> {
+          log.info("Book not found. BookId: {}", bookId);
 
-    log.info("Book exists. Will now update info. BookId: {}", bookId);
+          return new BookNotFoundException(bookId);
+        });
 
     if (updatedBook.author() != null) {
       savedBook.setAuthor(updatedBook.author());
@@ -140,8 +149,6 @@ public class BookService {
 
           return new BookNotFoundException(bookId);
         });
-
-    log.info("Book were found. Will now delete it. BookId: {}", bookId);
 
     deletedBook.setInactivatedAt(LocalDateTime.now());
 
