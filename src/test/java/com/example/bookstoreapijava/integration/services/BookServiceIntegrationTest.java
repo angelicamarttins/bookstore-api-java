@@ -250,7 +250,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     }};
 
     BookUpdateDTORequest bookUpdateDTORequest =
-        createBookUpdateDTORequest(bookInfo, Optional.of(newCategory));
+        createBookUpdateDTORequest(bookInfo, Optional.of(newCategory.getCategoryId()));
 
     categoryRepository.save(book.getCategory());
     categoryRepository.save(newCategory);
@@ -278,7 +278,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     }};
 
     BookUpdateDTORequest bookUpdateDTORequest =
-        createBookUpdateDTORequest(bookInfo, Optional.of(newCategory));
+        createBookUpdateDTORequest(bookInfo, Optional.of(newCategory.getCategoryId()));
 
     categoryRepository.save(book.getCategory());
     bookRepository.save(book);

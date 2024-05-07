@@ -190,7 +190,7 @@ public class BookE2ETest extends PostgresTestContainersBase {
     }};
 
     BookUpdateDTORequest bookUpdateDTORequest =
-        createBookUpdateDTORequest(bookInfo, Optional.of(newCategory));
+        createBookUpdateDTORequest(bookInfo, Optional.of(newCategory.getCategoryId()));
 
     Book updatedBook = given()
         .baseUri(baseURI)

@@ -115,10 +115,10 @@ public class BookService {
       savedBook.setIsbn(updatedBook.isbn());
     }
 
-    if (updatedBook.category() != null) {
-      UUID categoryId = updatedBook.category().getCategoryId();
+    if (updatedBook.categoryId() != null) {
+      UUID categoryId = updatedBook.categoryId();
 
-      categoryRepository
+     Category category = categoryRepository
           .findById(categoryId)
           .orElseThrow(() -> {
             log.info(
@@ -130,10 +130,7 @@ public class BookService {
             return new CategoryNotFoundException(categoryId);
           });
 
-      savedBook.setCategory(updatedBook.category());
-      // TODO: Não permitir que os dados da categoria sejam alterados.
-      //  Deixar apenas alterar o relacionamento entre categoria e livro
-      //  Pedir para enviar apenas o ID é uma boa para solucionar essa possibilidade!
+      savedBook.setCategory(category);
     }
 
     log.info("All info sent is updated. Will now save book. BookId: {}", bookId);
