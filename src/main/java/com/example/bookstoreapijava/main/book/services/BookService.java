@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -57,15 +58,17 @@ public class BookService {
     String bookIsbn = book.getIsbn();
     UUID categoryId = book.getCategory().getCategoryId();
 
-    bookRepository
-        .findBookByIsbn(bookIsbn)
-        .ifPresent(savedBook -> {
-          log.info("Book already exists. Aborting... BookIsbn: {}", bookIsbn);
+    Optional<Book> maybeBook = bookRepository.findBookByIsbn(bookIsbn);
 
-          throw new BookAlreadyExistsException(bookIsbn);
-        });
+    maybeBook.ifPresent(savedBook -> {
+      if (savedBook.getInactivatedAt() == null) {
+        log.info("Book already exists. Aborting... BookIsbn: {}", bookIsbn);
 
-    Category category = categoryRepository
+        throw new BookAlreadyExistsException(bookIsbn);
+      }
+    });
+
+   categoryRepository
         .findById(categoryId)
         .orElseThrow(() -> {
           log.info("Category not found. Aborting... CategoryId: {}", categoryId);
@@ -80,9 +83,11 @@ public class BookService {
         categoryId
     );
 
-    book.setCategory(category);
+//    book.setCategory(category);
 
-    Book savedBook = bookRepository.save(book);
+    maybeBook.orElse(book);
+
+    Book savedBook = bookRepository.save();
 
     URI uri = new URI(baseUrl + "/bookstore/" + savedBook.getBookId().toString());
 
@@ -118,7 +123,7 @@ public class BookService {
     if (updatedBook.categoryId() != null) {
       UUID categoryId = updatedBook.categoryId();
 
-     Category category = categoryRepository
+      Category category = categoryRepository
           .findById(categoryId)
           .orElseThrow(() -> {
             log.info(

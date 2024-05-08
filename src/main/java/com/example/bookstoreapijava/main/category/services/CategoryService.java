@@ -58,9 +58,8 @@ public class CategoryService {
 
           throw new CategoryAlreadyExistsException(sanitizedCategory);
         });
-    //TODO: Isso pode dar um problema de sanitização, pois os acentos podem ser fundamentais
-    // para distinguir categorias com mesmo nome sem acento, mas diferentes quando há acentos.
-    // Pesquisar melhor sobre isso.
+    //TODO: Na v2, o isbn será buscada na API do Google e as categorias serão traduzidas pela API
+    // do DeepL
 
     category.setCategoryName(sanitizedCategory);
 
