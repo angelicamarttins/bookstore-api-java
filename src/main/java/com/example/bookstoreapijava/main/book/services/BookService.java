@@ -60,15 +60,27 @@ public class BookService {
 
     Optional<Book> maybeBook = bookRepository.findBookByIsbn(bookIsbn);
 
-    maybeBook.ifPresent(savedBook -> {
-      if (savedBook.getInactivatedAt() == null) {
-        log.info("Book already exists. Aborting... BookIsbn: {}", bookIsbn);
+    if (maybeBook.isPresent()) {
+      Book alreadySavedBook = maybeBook.get();
+
+      if (alreadySavedBook.getInactivatedAt() == null) {
+        log.info("Book already exists. Aborting... BookIsbn: {}, BookId: {}",
+            alreadySavedBook.getIsbn(),
+            alreadySavedBook.getBookId());
 
         throw new BookAlreadyExistsException(bookIsbn);
       }
-    });
 
-   categoryRepository
+      log.info("Book was inactivated. Will now reactivate it. BookIsbn: {}, BookId: {}",
+          alreadySavedBook.getIsbn(),
+          alreadySavedBook.getBookId()
+      );
+
+      alreadySavedBook.setInactivatedAt(null);
+      return saveBook(alreadySavedBook);
+    }
+
+    categoryRepository
         .findById(categoryId)
         .orElseThrow(() -> {
           log.info("Category not found. Aborting... CategoryId: {}", categoryId);
@@ -83,20 +95,7 @@ public class BookService {
         categoryId
     );
 
-//    book.setCategory(category);
-
-    maybeBook.orElse(book);
-
-    Book savedBook = bookRepository.save();
-
-    URI uri = new URI(baseUrl + "/bookstore/" + savedBook.getBookId().toString());
-
-    log.info("Book saved successfully. BookIsbn: {}, BookId: {}",
-        bookIsbn,
-        savedBook.getBookId()
-    );
-
-    return new BookCreatedVO(savedBook, uri);
+    return saveBook(book);
   }
 
   public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) {
@@ -157,6 +156,19 @@ public class BookService {
     bookRepository.save(deletedBook);
 
     log.info("Book deleted successfully. BookId: {}", bookId);
+  }
+
+  private BookCreatedVO saveBook(Book book) throws URISyntaxException {
+    Book savedBook = bookRepository.save(book);
+
+    URI uri = new URI(baseUrl + "/bookstore/" + savedBook.getBookId().toString());
+
+    log.info("Book saved successfully. BookIsbn: {}, BookId: {}",
+        book.getIsbn(),
+        savedBook.getBookId()
+    );
+
+    return new BookCreatedVO(savedBook, uri);
   }
 
 }

@@ -46,7 +46,7 @@ public class BookController {
 
   @PostMapping
   public ResponseEntity<Book> insertBook(@RequestBody @Valid Book book) throws URISyntaxException {
-    log.info("Creating book. bookIsbn: {}", book.getIsbn());
+    log.info("Creating book. BookIsbn: {}", book.getIsbn());
 
     BookCreatedVO newBook = bookService.insertBook(book);
 
