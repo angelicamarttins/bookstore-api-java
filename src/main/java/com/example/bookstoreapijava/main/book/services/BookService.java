@@ -10,6 +10,7 @@ import com.example.bookstoreapijava.main.category.entities.Category;
 import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -56,29 +57,19 @@ public class BookService {
 
   public BookCreatedVO insertBook(Book book) throws URISyntaxException {
     String bookIsbn = book.getIsbn();
-    UUID categoryId = book.getCategory().getCategoryId();
-
     Optional<Book> maybeBook = bookRepository.findBookByIsbn(bookIsbn);
 
     if (maybeBook.isPresent()) {
-      Book alreadySavedBook = maybeBook.get();
+      checkIfBookAlreadyExists(maybeBook.get(), bookIsbn);
 
-      if (alreadySavedBook.getInactivatedAt() == null) {
-        log.info("Book already exists. Aborting... BookIsbn: {}, BookId: {}",
-            alreadySavedBook.getIsbn(),
-            alreadySavedBook.getBookId());
-
-        throw new BookAlreadyExistsException(bookIsbn);
-      }
-
-      log.info("Book was inactivated. Will now reactivate it. BookIsbn: {}, BookId: {}",
-          alreadySavedBook.getIsbn(),
-          alreadySavedBook.getBookId()
-      );
-
-      alreadySavedBook.setInactivatedAt(null);
-      return saveBook(alreadySavedBook);
+      return reactivateBook(maybeBook.get());
     }
+
+    return createBook(book, bookIsbn);
+  }
+
+  private @NotNull BookCreatedVO createBook(Book book, String bookIsbn) throws URISyntaxException {
+    UUID categoryId = book.getCategory().getCategoryId();
 
     categoryRepository
         .findById(categoryId)
@@ -89,7 +80,7 @@ public class BookService {
         });
 
     log.info(
-        "Book wasn't created yet and category were found. Will now save book. " +
+        "Book has not yet been created and category were found. Will now save book. " +
             "BookIsbn: {}, CategoryId: {}",
         bookIsbn,
         categoryId
@@ -169,6 +160,27 @@ public class BookService {
     );
 
     return new BookCreatedVO(savedBook, uri);
+  }
+
+  private void checkIfBookAlreadyExists(Book savedBook, String bookIsbn) {
+    if (savedBook.getInactivatedAt() == null) {
+      log.info("Book already exists. Aborting... BookIsbn: {}, BookId: {}",
+          savedBook.getIsbn(),
+          savedBook.getBookId());
+
+      throw new BookAlreadyExistsException(bookIsbn);
+    }
+  }
+
+  private BookCreatedVO reactivateBook(Book savedBook) throws URISyntaxException {
+    log.info("Book was inactivated. Will now reactivate it. BookIsbn: {}, BookId: {}",
+        savedBook.getIsbn(),
+        savedBook.getBookId()
+    );
+
+    savedBook.setInactivatedAt(null);
+
+    return saveBook(savedBook);
   }
 
 }
