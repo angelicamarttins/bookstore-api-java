@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.example.bookstoreapijava.providers.BookCreatedVOProvider.createBookCreatedVO;
@@ -43,8 +44,8 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is inserted, should returns correctly")
-  void should_returnCorrectly_when_bookIsInserted() throws URISyntaxException {
+  @DisplayName(value = "When book does not exists and is inserted, should returns correctly")
+  void should_returnCorrectly_when_bookIsInsertedAndDoesNotExists() throws URISyntaxException {
     Book book = createBook(Optional.empty(), Optional.empty());
     BookCreatedVO bookCreatedMock = createBookCreatedVO(book);
 
@@ -57,8 +58,8 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is inserted and already exists, should throw exception correctly")
-  void should_throwException_when_bookIsInsertedAndAlreadyExists() {
+  @DisplayName(value = "When book is inserted, already exists and is active, should throw exception correctly")
+  void should_throwException_when_bookIsInsertedIsActiveAndAlreadyExists() {
     Book book = createBook(Optional.empty(), Optional.empty());
 
     categoryRepository.save(book.getCategory());
@@ -88,6 +89,28 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
         "Category not found with id " + book.getCategory().getCategoryId();
 
     assertTrue(categoryNotFoundException.getMessage().contains(expectedExceptionMessage));
+  }
+
+  @Test
+  @DisplayName(value = "When book is inserted, already exists and is inactivated, should reactivate it")
+  void should_reactivateBook_when_bookIsInsertedAlreadyExistsAndIsInactivated() throws URISyntaxException {
+    Category category = createCategory(Optional.empty());
+    Book expectedBook = createBook(Optional.empty(), Optional.of(category));
+    BookCreatedVO expectedBookCreated = createBookCreatedVO(expectedBook);
+    LocalDateTime insertDate = LocalDateTime.now();
+
+    expectedBook.setInactivatedAt(insertDate);
+    expectedBook.setUpdatedAt(insertDate);
+
+    categoryRepository.save(category);
+    bookRepository.save(expectedBook);
+
+    BookCreatedVO actualBookCreated = bookService.insertBook(expectedBook);
+
+    assertEquals(expectedBookCreated.book().getBookId(), actualBookCreated.book().getBookId());
+    assertEquals(expectedBookCreated.book().getIsbn(), actualBookCreated.book().getIsbn());
+    assertNotNull(actualBookCreated.book().getUpdatedAt());
+    assertNull(actualBookCreated.book().getInactivatedAt());
   }
 
   @Test
