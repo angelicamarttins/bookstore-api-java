@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
@@ -122,7 +123,7 @@ public class BookE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is inserted, returns correctly")
+  @DisplayName(value = "When book is inserted and does not exist, returns correctly")
   void postBookSuccessfully() {
     Category category = createCategory(Optional.empty());
     Book expectedBook = createBook(Optional.empty(), Optional.of(category));
@@ -144,7 +145,7 @@ public class BookE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is inserted and already exists, throws exception correctly")
+  @DisplayName(value = "When book is inserted, already exists and is active, throws exception correctly")
   void postBookAlreadyExists() {
     Category category = createCategory(Optional.empty());
     Book book = createBook(Optional.empty(), Optional.of(category));
@@ -169,6 +170,36 @@ public class BookE2ETest extends PostgresTestContainersBase {
         .as(ExceptionDTOResponse.class);
 
     assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+  }
+
+  @Test
+  @DisplayName(value = "When book is inserted, already exist but is inactivated, " +
+      "reactivate book and returns correctly")
+  void postReactivateBookSuccessfully() {
+    Category category = createCategory(Optional.empty());
+    Book expectedBook = createBook(Optional.empty(), Optional.of(category));
+    LocalDateTime postTime = LocalDateTime.now();
+    expectedBook.setInactivatedAt(postTime);
+    expectedBook.setUpdatedAt(postTime);
+
+    categoryRepository.save(category);
+    bookRepository.save(expectedBook);
+
+    Book actualBook = given()
+        .contentType("application/json")
+        .baseUri(baseURI)
+        .body(expectedBook)
+        .post("/bookstore")
+        .then()
+        .header("Location", baseUrl + "/bookstore/" + expectedBook.getBookId())
+        .statusCode(201)
+        .extract()
+        .as(Book.class);
+
+    assertEquals(expectedBook.getBookId(), actualBook.getBookId());
+    assertEquals(expectedBook.getIsbn(), actualBook.getIsbn());
+    assertNotNull(actualBook.getUpdatedAt());
+    assertNull(actualBook.getInactivatedAt());
   }
 
   @Test
