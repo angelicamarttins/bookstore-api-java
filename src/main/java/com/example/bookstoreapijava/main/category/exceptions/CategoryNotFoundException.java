@@ -4,8 +4,8 @@ import java.util.UUID;
 
 public class CategoryNotFoundException extends RuntimeException {
 
-  public CategoryNotFoundException(UUID message) {
-    super("Category not found with id " + message.toString());
+  public CategoryNotFoundException(UUID categoryId) {
+    super("Category not found with id " + categoryId.toString());
   }
 
 }

@@ -7,10 +7,10 @@ import com.example.bookstoreapijava.main.book.exceptions.BookAlreadyExistsExcept
 import com.example.bookstoreapijava.main.book.exceptions.BookNotFoundException;
 import com.example.bookstoreapijava.main.book.repositories.BookRepository;
 import com.example.bookstoreapijava.main.category.entities.Category;
+import com.example.bookstoreapijava.main.category.exceptions.CategoryIsInactiveException;
 import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -66,27 +66,6 @@ public class BookService {
     }
 
     return createBook(book, bookIsbn);
-  }
-
-  private @NotNull BookCreatedVO createBook(Book book, String bookIsbn) throws URISyntaxException {
-    UUID categoryId = book.getCategory().getCategoryId();
-
-    categoryRepository
-        .findById(categoryId)
-        .orElseThrow(() -> {
-          log.info("Category not found. Aborting... CategoryId: {}", categoryId);
-
-          return new CategoryNotFoundException(categoryId);
-        });
-
-    log.info(
-        "Book has not yet been created and category were found. Will now save book. " +
-            "BookIsbn: {}, CategoryId: {}",
-        bookIsbn,
-        categoryId
-    );
-
-    return saveBook(book);
   }
 
   public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) {
@@ -181,6 +160,37 @@ public class BookService {
     savedBook.setInactivatedAt(null);
 
     return saveBook(savedBook);
+  }
+
+  private BookCreatedVO createBook(Book book, String bookIsbn) throws URISyntaxException {
+    UUID categoryId = book.getCategory().getCategoryId();
+
+    Optional<Category> maybeCategory = categoryRepository.findById(categoryId);
+
+    checkCategory(maybeCategory, categoryId);
+
+    log.info(
+        "Book has not yet been created and category were found. Will now save book. " +
+            "BookIsbn: {}, CategoryId: {}",
+        bookIsbn,
+        categoryId
+    );
+
+    return saveBook(book);
+  }
+
+  private void checkCategory(Optional<Category> maybeCategory, UUID categoryId) {
+    if (maybeCategory.isEmpty()) {
+      log.info("Category not found. Aborting... CategoryId: {}", categoryId);
+
+      throw new CategoryNotFoundException(categoryId);
+    }
+
+    if (maybeCategory.get().getInactivatedAt() != null) {
+      log.info("Category is inactive. CategoryId: {}", categoryId);
+
+      throw new CategoryIsInactiveException(categoryId);
+    }
   }
 
 }
