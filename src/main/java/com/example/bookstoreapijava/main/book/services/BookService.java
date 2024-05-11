@@ -62,13 +62,15 @@ public class BookService {
     if (maybeBook.isPresent()) {
       checkIfBookAlreadyExists(maybeBook.get(), bookIsbn);
 
-      return reactivateBook(maybeBook.get());
+      Book reactivatedBook = reactivateBook(maybeBook.get());
+
+      return saveBook(reactivatedBook);
     }
 
     return createBook(book, bookIsbn);
   }
 
-  public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) {
+  public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) throws URISyntaxException {
     Book savedBook = bookRepository
         .findById(bookId)
         .orElseThrow(() -> {
@@ -76,6 +78,7 @@ public class BookService {
 
           return new BookNotFoundException(bookId);
         });
+
 
     if (updatedBook.author() != null) {
       savedBook.setAuthor(updatedBook.author());
@@ -108,6 +111,10 @@ public class BookService {
     }
 
     log.info("All info sent is updated. Will now save book. BookId: {}", bookId);
+
+    if (savedBook.getInactivatedAt() != null) {
+      reactivateBook(savedBook);
+    }
 
     return bookRepository.save(savedBook);
   }
@@ -151,15 +158,15 @@ public class BookService {
     }
   }
 
-  private BookCreatedVO reactivateBook(Book savedBook) throws URISyntaxException {
-    log.info("Book was inactivated. Will now reactivate it. BookIsbn: {}, BookId: {}",
+  private Book reactivateBook(Book savedBook) throws URISyntaxException {
+    log.info("Book has been inactivated. Will now reactivate it. BookIsbn: {}, BookId: {}",
         savedBook.getIsbn(),
         savedBook.getBookId()
     );
 
     savedBook.setInactivatedAt(null);
 
-    return saveBook(savedBook);
+    return savedBook;
   }
 
   private BookCreatedVO createBook(Book book, String bookIsbn) throws URISyntaxException {
