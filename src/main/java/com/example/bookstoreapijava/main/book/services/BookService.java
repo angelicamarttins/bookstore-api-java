@@ -95,19 +95,11 @@ public class BookService {
     if (updatedBook.categoryId() != null) {
       UUID categoryId = updatedBook.categoryId();
 
-      Category category = categoryRepository
-          .findById(categoryId)
-          .orElseThrow(() -> {
-            log.info(
-                "Category not found. Aborting... BookId: {}, CategoryId: {}",
-                bookId,
-                categoryId
-            );
+      Optional<Category> category = categoryRepository.findById(categoryId);
 
-            return new CategoryNotFoundException(categoryId);
-          });
+      checkCategory(category, categoryId);
 
-      savedBook.setCategory(category);
+      savedBook.setCategory(category.get());
     }
 
     log.info("All info sent is updated. Will now save book. BookId: {}", bookId);
