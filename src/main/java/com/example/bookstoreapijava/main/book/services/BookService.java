@@ -41,13 +41,7 @@ public class BookService {
   }
 
   public Book findBook(UUID bookId) {
-    Book book = bookRepository
-        .findById(bookId)
-        .orElseThrow(() -> {
-          log.info("Book not found. Aborting... BookId: {}", bookId);
-
-          return new BookNotFoundException(bookId);
-        });
+    Book book = searchAndCheckBook(bookId);
 
     log.info("Book found. BookId: {}", bookId);
 
@@ -70,13 +64,7 @@ public class BookService {
   }
 
   public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) throws URISyntaxException {
-    Book savedBook = bookRepository
-        .findById(bookId)
-        .orElseThrow(() -> {
-          log.info("Book not found. BookId: {}", bookId);
-
-          return new BookNotFoundException(bookId);
-        });
+    Book savedBook = searchAndCheckBook(bookId);
 
 
     if (updatedBook.author() != null) {
@@ -111,13 +99,7 @@ public class BookService {
   }
 
   public void deleteBook(UUID bookId) {
-    Book deletedBook = bookRepository
-        .findById(bookId)
-        .orElseThrow(() -> {
-          log.info("Book not found. Aborting... BookId: {}", bookId);
-
-          return new BookNotFoundException(bookId);
-        });
+    Book deletedBook = searchAndCheckBook(bookId);
 
     deletedBook.setInactivatedAt(LocalDateTime.now());
 
@@ -189,6 +171,16 @@ public class BookService {
 
       throw new CategoryIsInactiveException(categoryId);
     }
+  }
+
+  private Book searchAndCheckBook(UUID bookId) {
+    return bookRepository
+        .findById(bookId)
+        .orElseThrow(() -> {
+          log.info("Book not found. Aborting... BookId: {}", bookId);
+
+          return new BookNotFoundException(bookId);
+        });
   }
 
 }
