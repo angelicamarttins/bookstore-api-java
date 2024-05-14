@@ -6,6 +6,7 @@ import com.example.bookstoreapijava.main.book.entities.Book;
 import com.example.bookstoreapijava.main.book.services.BookService;
 import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,12 +20,12 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping(value = "/bookstore")
+@AllArgsConstructor
 public class BookController {
-  @Autowired
-  private BookService bookService = new BookService();
 
-  @Autowired
-  private CategoryRepository categoryRepository;
+  private final BookService bookService;
+
+  private final CategoryRepository categoryRepository;
 
   @GetMapping
   public ResponseEntity<List<Book>> findAllBooks() {
@@ -60,7 +61,7 @@ public class BookController {
   public ResponseEntity<Book> updateBook(
       @PathVariable UUID bookId,
       @RequestBody @Valid BookUpdateDTORequest updatedBook
-  ) {
+  ) throws URISyntaxException {
     log.info("Updating book. BookId: {}", bookId);
 
     Book response = bookService.updateBook(bookId, updatedBook);
