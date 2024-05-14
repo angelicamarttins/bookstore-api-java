@@ -3,11 +3,10 @@ package com.example.bookstoreapijava.main.category.controller;
 import com.example.bookstoreapijava.main.category.data.dto.CategoryUpdateDTO;
 import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.category.entities.Category;
-import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.category.services.CategoryService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,13 +18,9 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequestMapping(value = "/category")
+@AllArgsConstructor
 public class CategoryController {
-
-  @Autowired
-  private CategoryRepository categoryRepository;
-
-  @Autowired
-  private CategoryService categoryService;
+  private final CategoryService categoryService;
 
   @GetMapping
   public ResponseEntity<List<Category>> findAllCategories() {
