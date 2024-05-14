@@ -9,7 +9,6 @@ import com.example.bookstoreapijava.main.category.repositories.CategoryRepositor
 import com.example.bookstoreapijava.main.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -36,13 +35,7 @@ public class CategoryService {
   }
 
   public Category findCategory(UUID categoryId) {
-    Category category = categoryRepository
-        .findById(categoryId)
-        .orElseThrow(() -> {
-          log.info("Category not found. Aborting... CategoryId: {}", categoryId);
-
-          return new CategoryNotFoundException(categoryId);
-        });
+    Category category = searchAndCheckCategory(categoryId);
 
     log.info("Category found. CategoryId: {}", categoryId);
 
@@ -52,13 +45,7 @@ public class CategoryService {
   public CategoryCreatedVO insertCategory(Category category) throws URISyntaxException {
     String sanitizedCategory = Utils.sanitizeStringField(category.getCategoryName());
 
-    categoryRepository
-        .getByCategoryName(sanitizedCategory)
-        .ifPresent(savedCategory -> {
-          log.info("Category already exists. CategoryId: {}", savedCategory.getCategoryId());
-
-          throw new CategoryAlreadyExistsException(sanitizedCategory);
-        });
+    searchAndCheckCategoryAlreadyExists(sanitizedCategory);
     //TODO: Na v2, o isbn será buscada na API do Google e as categorias serão traduzidas pela API
     // do DeepL
 
@@ -77,14 +64,7 @@ public class CategoryService {
   }
 
   public Category updateCategory(CategoryUpdateDTO updateCategory, UUID categoryId) {
-    Category savedCategory = categoryRepository
-        .findById(categoryId)
-        .orElseThrow(() -> {
-          log.info("Category not found. CategoryId: {}", categoryId);
-
-          return new CategoryNotFoundException(categoryId);
-        });
-
+    Category savedCategory = searchAndCheckCategory(categoryId);
     log.info("All info sent is updated. Will now save category. CategoryId: {}", categoryId);
 
     savedCategory.setCategoryName(updateCategory.categoryName());
@@ -93,19 +73,33 @@ public class CategoryService {
   }
 
   public void deleteCategory(UUID categoryId) {
-    Category deletedCategory = categoryRepository
-        .findById(categoryId)
-        .orElseThrow(() -> {
-          log.info("Category not found. Aborting... CategoryId: {}", categoryId);
-
-          return new CategoryNotFoundException(categoryId);
-        });
+    Category deletedCategory = searchAndCheckCategory(categoryId);
 
     deletedCategory.setInactivatedAt(LocalDateTime.now());
 
     categoryRepository.save(deletedCategory);
 
     log.info("Category deleted successfully. CategoryId: {}", categoryId);
+  }
+
+  private Category searchAndCheckCategory(UUID categoryId) {
+    return categoryRepository
+        .findById(categoryId)
+        .orElseThrow(() -> {
+          log.info("Category not found. Aborting... CategoryId: {}", categoryId);
+
+          return new CategoryNotFoundException(categoryId);
+        });
+  }
+
+  private void searchAndCheckCategoryAlreadyExists(String sanitizedCategory) {
+    categoryRepository
+        .getByCategoryName(sanitizedCategory)
+        .ifPresent(savedCategory -> {
+          log.info("Category already exists. CategoryId: {}", savedCategory.getCategoryId());
+
+          throw new CategoryAlreadyExistsException(sanitizedCategory);
+        });
   }
 
 }
