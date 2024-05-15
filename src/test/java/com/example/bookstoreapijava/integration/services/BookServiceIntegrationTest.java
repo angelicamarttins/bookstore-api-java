@@ -183,7 +183,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When book title is updated, should return correctly")
-  void should_returnEquals_when_bookTitleIsUpdated() {
+  void should_returnEquals_when_bookTitleIsUpdated() throws URISyntaxException {
     Book book = createBook(Optional.empty(), Optional.empty());
 
     String newBookTitle = "New Book Title";
@@ -209,7 +209,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When book author is updated, should return correctly")
-  void should_returnEquals_when_bookAuthorIsUpdated() {
+  void should_returnEquals_when_bookAuthorIsUpdated() throws URISyntaxException {
     Book book = createBook(Optional.empty(), Optional.empty());
 
     String newBookAuthor = "New Book Author";
@@ -235,7 +235,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When book isbn is updated, should return correctly")
-  void should_returnEquals_when_bookIsbnIsUpdated() {
+  void should_returnEquals_when_bookIsbnIsUpdated() throws URISyntaxException {
     Book book = createBook(Optional.empty(), Optional.empty());
 
     String newBookIsbn = "9876543210";
@@ -261,7 +261,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName(value = "When book category is updated, should return correctly")
-  void should_returnEquals_when_bookCategoryIsUpdated() {
+  void should_returnEquals_when_bookCategoryIsUpdated() throws URISyntaxException {
     Book book = createBook(Optional.empty(), Optional.empty());
 
     Category newCategory = createCategory(Optional.of("New Category Name"));
