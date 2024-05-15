@@ -1,11 +1,11 @@
 package com.example.bookstoreapijava.E2E;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.book.data.dto.BookUpdateDTORequest;
-import com.example.bookstoreapijava.main.book.entities.Book;
-import com.example.bookstoreapijava.main.book.repositories.BookRepository;
-import com.example.bookstoreapijava.main.category.entities.Category;
-import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
+import com.example.bookstoreapijava.main.data.dto.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.entities.Book;
+import com.example.bookstoreapijava.main.repositories.BookRepository;
+import com.example.bookstoreapijava.main.entities.Category;
+import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;

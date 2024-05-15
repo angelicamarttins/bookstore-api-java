@@ -1,4 +1,4 @@
-package com.example.bookstoreapijava.main.category.entities;
+package com.example.bookstoreapijava.main.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,6 +1,5 @@
-package com.example.bookstoreapijava.main.book.entities;
+package com.example.bookstoreapijava.main.entities;
 
-import com.example.bookstoreapijava.main.category.entities.Category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,4 +1,4 @@
-package com.example.bookstoreapijava.main.book.exceptions;
+package com.example.bookstoreapijava.main.exceptions;
 
 public class BookAlreadyExistsException extends RuntimeException {
 

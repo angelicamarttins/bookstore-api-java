@@ -1,14 +1,14 @@
 package com.example.bookstoreapijava.integration.services;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.book.repositories.BookRepository;
-import com.example.bookstoreapijava.main.category.data.dto.CategoryUpdateDTO;
-import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
-import com.example.bookstoreapijava.main.category.entities.Category;
-import com.example.bookstoreapijava.main.category.exceptions.CategoryAlreadyExistsException;
-import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
-import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
-import com.example.bookstoreapijava.main.category.services.CategoryService;
+import com.example.bookstoreapijava.main.repositories.BookRepository;
+import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTO;
+import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
+import com.example.bookstoreapijava.main.entities.Category;
+import com.example.bookstoreapijava.main.exceptions.CategoryAlreadyExistsException;
+import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
+import com.example.bookstoreapijava.main.repositories.CategoryRepository;
+import com.example.bookstoreapijava.main.services.CategoryService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

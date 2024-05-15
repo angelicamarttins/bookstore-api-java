@@ -1,7 +1,7 @@
-package com.example.bookstoreapijava.main.book.repositories;
+package com.example.bookstoreapijava.main.repositories;
 
 
-import com.example.bookstoreapijava.main.book.entities.Book;
+import com.example.bookstoreapijava.main.entities.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

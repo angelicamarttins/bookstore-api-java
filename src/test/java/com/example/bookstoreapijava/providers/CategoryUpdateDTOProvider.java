@@ -1,6 +1,6 @@
 package com.example.bookstoreapijava.providers;
 
-import com.example.bookstoreapijava.main.category.data.dto.CategoryUpdateDTO;
+import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTO;
 
 public class CategoryUpdateDTOProvider {
 

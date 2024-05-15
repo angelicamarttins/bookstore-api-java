@@ -1,7 +1,7 @@
 package com.example.bookstoreapijava.providers;
 
-import com.example.bookstoreapijava.main.book.entities.Book;
-import com.example.bookstoreapijava.main.category.entities.Category;
+import com.example.bookstoreapijava.main.entities.Book;
+import com.example.bookstoreapijava.main.entities.Category;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.bookstoreapijava.main.category.exceptions;
+package com.example.bookstoreapijava.main.exceptions;
 
 import java.util.UUID;
 

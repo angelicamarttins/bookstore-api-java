@@ -1,16 +1,16 @@
 package com.example.bookstoreapijava.integration.services;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.book.data.dto.BookUpdateDTORequest;
-import com.example.bookstoreapijava.main.book.data.vo.BookCreatedVO;
-import com.example.bookstoreapijava.main.book.entities.Book;
-import com.example.bookstoreapijava.main.book.exceptions.BookAlreadyExistsException;
-import com.example.bookstoreapijava.main.book.exceptions.BookNotFoundException;
-import com.example.bookstoreapijava.main.book.repositories.BookRepository;
-import com.example.bookstoreapijava.main.book.services.BookService;
-import com.example.bookstoreapijava.main.category.entities.Category;
-import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
-import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
+import com.example.bookstoreapijava.main.data.dto.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.vo.BookCreatedVO;
+import com.example.bookstoreapijava.main.entities.Book;
+import com.example.bookstoreapijava.main.exceptions.BookAlreadyExistsException;
+import com.example.bookstoreapijava.main.exceptions.BookNotFoundException;
+import com.example.bookstoreapijava.main.repositories.BookRepository;
+import com.example.bookstoreapijava.main.services.BookService;
+import com.example.bookstoreapijava.main.entities.Category;
+import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
+import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

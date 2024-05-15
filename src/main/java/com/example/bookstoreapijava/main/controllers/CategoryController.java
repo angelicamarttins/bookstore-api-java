@@ -1,9 +1,9 @@
-package com.example.bookstoreapijava.main.category.controller;
+package com.example.bookstoreapijava.main.controllers;
 
-import com.example.bookstoreapijava.main.category.data.dto.CategoryUpdateDTO;
-import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
-import com.example.bookstoreapijava.main.category.entities.Category;
-import com.example.bookstoreapijava.main.category.services.CategoryService;
+import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTO;
+import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
+import com.example.bookstoreapijava.main.entities.Category;
+import com.example.bookstoreapijava.main.services.CategoryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

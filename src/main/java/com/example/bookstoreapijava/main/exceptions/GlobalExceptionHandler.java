@@ -1,9 +1,5 @@
 package com.example.bookstoreapijava.main.exceptions;
 
-import com.example.bookstoreapijava.main.book.exceptions.BookAlreadyExistsException;
-import com.example.bookstoreapijava.main.book.exceptions.BookNotFoundException;
-import com.example.bookstoreapijava.main.category.exceptions.CategoryAlreadyExistsException;
-import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

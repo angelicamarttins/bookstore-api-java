@@ -1,10 +1,10 @@
-package com.example.bookstoreapijava.main.book.controllers;
+package com.example.bookstoreapijava.main.controllers;
 
-import com.example.bookstoreapijava.main.book.data.dto.BookUpdateDTORequest;
-import com.example.bookstoreapijava.main.book.data.vo.BookCreatedVO;
-import com.example.bookstoreapijava.main.book.entities.Book;
-import com.example.bookstoreapijava.main.book.services.BookService;
-import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
+import com.example.bookstoreapijava.main.data.dto.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.vo.BookCreatedVO;
+import com.example.bookstoreapijava.main.entities.Book;
+import com.example.bookstoreapijava.main.services.BookService;
+import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

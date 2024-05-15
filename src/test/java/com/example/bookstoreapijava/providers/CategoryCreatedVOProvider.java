@@ -1,7 +1,7 @@
 package com.example.bookstoreapijava.providers;
 
-import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
-import com.example.bookstoreapijava.main.category.entities.Category;
+import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
+import com.example.bookstoreapijava.main.entities.Category;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.net.URI;

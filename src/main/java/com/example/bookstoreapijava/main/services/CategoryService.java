@@ -1,11 +1,11 @@
-package com.example.bookstoreapijava.main.category.services;
+package com.example.bookstoreapijava.main.services;
 
-import com.example.bookstoreapijava.main.category.data.dto.CategoryUpdateDTO;
-import com.example.bookstoreapijava.main.category.data.vo.CategoryCreatedVO;
-import com.example.bookstoreapijava.main.category.entities.Category;
-import com.example.bookstoreapijava.main.category.exceptions.CategoryAlreadyExistsException;
-import com.example.bookstoreapijava.main.category.exceptions.CategoryNotFoundException;
-import com.example.bookstoreapijava.main.category.repositories.CategoryRepository;
+import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTO;
+import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
+import com.example.bookstoreapijava.main.entities.Category;
+import com.example.bookstoreapijava.main.exceptions.CategoryAlreadyExistsException;
+import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
+import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.utils.Utils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

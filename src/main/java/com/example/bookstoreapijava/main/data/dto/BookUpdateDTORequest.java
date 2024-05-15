@@ -1,4 +1,4 @@
-package com.example.bookstoreapijava.main.book.data.dto;
+package com.example.bookstoreapijava.main.data.dto;
 
 import java.util.UUID;
 
