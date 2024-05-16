@@ -10,6 +10,7 @@ import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.CategoryIsInactiveException;
 import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
+import com.example.bookstoreapijava.main.validators.BookValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,8 @@ public class BookService {
 
   private final CategoryRepository categoryRepository;
 
+  private final BookValidator bookValidator;
+
   public List<Book> findAllBooks() {
     log.info("All books were found");
 
@@ -41,7 +44,7 @@ public class BookService {
   }
 
   public Book findBook(UUID bookId) {
-    Book book = searchAndCheckBook(bookId);
+    Book book = bookValidator.searchAndCheckBook(bookId);
 
     log.info("Book found. BookId: {}", bookId);
 
@@ -53,7 +56,7 @@ public class BookService {
     Optional<Book> maybeBook = bookRepository.findBookByIsbn(bookIsbn);
 
     if (maybeBook.isPresent()) {
-      checkIfBookAlreadyExists(maybeBook.get(), bookIsbn);
+      bookValidator.checkIfBookAlreadyExists(maybeBook.get(), bookIsbn);
 
       Book reactivatedBook = reactivateBook(maybeBook.get());
 
@@ -64,7 +67,7 @@ public class BookService {
   }
 
   public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) throws URISyntaxException {
-    Book savedBook = searchAndCheckBook(bookId);
+    Book savedBook = bookValidator.searchAndCheckBook(bookId);
 
 
     if (updatedBook.author() != null) {
@@ -99,7 +102,7 @@ public class BookService {
   }
 
   public void deleteBook(UUID bookId) {
-    Book deletedBook = searchAndCheckBook(bookId);
+    Book deletedBook = bookValidator.searchAndCheckBook(bookId);
 
     deletedBook.setInactivatedAt(LocalDateTime.now());
 
@@ -119,16 +122,6 @@ public class BookService {
     );
 
     return new BookCreatedVO(savedBook, uri);
-  }
-
-  private void checkIfBookAlreadyExists(Book savedBook, String bookIsbn) {
-    if (savedBook.getInactivatedAt() == null) {
-      log.info("Book already exists. Aborting... BookIsbn: {}, BookId: {}",
-          savedBook.getIsbn(),
-          savedBook.getBookId());
-
-      throw new BookAlreadyExistsException(bookIsbn);
-    }
   }
 
   private Book reactivateBook(Book savedBook) throws URISyntaxException {
@@ -171,16 +164,6 @@ public class BookService {
 
       throw new CategoryIsInactiveException(categoryId);
     }
-  }
-
-  private Book searchAndCheckBook(UUID bookId) {
-    return bookRepository
-        .findById(bookId)
-        .orElseThrow(() -> {
-          log.info("Book not found. Aborting... BookId: {}", bookId);
-
-          return new BookNotFoundException(bookId);
-        });
   }
 
 }
