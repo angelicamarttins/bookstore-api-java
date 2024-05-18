@@ -15,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -42,13 +43,25 @@ public class CategoryService {
   }
 
   public CategoryCreatedVO insertCategory(Category category) throws URISyntaxException {
-    String sanitizedCategory = Utils.sanitizeStringField(category.getCategoryName());
+    String sanitizedCategoryName = Utils.sanitizeStringField(category.getCategoryName());
 
-    categoryValidator.checkIfCategoryAlreadyExists(sanitizedCategory);
+    Optional<Category> maybeCategory = categoryRepository.getByCategoryName(sanitizedCategoryName);
+
+    if (maybeCategory.isPresent()) {
+      categoryValidator.checkIfCategoryAlreadyExists(maybeCategory.get());
+
+      Category reactivatedCategory = reactivateCategory(maybeCategory.get());
+
+      return saveCategory(reactivatedCategory, sanitizedCategoryName);
+    }
+
     //TODO: Na v2, o isbn será buscada na API do Google e as categorias serão traduzidas pela API
     // do DeepL
+    return saveCategory(category, sanitizedCategoryName);
+  }
 
-    category.setCategoryName(sanitizedCategory);
+  private CategoryCreatedVO saveCategory(Category category, String sanitizedCategoryName) throws URISyntaxException {
+    category.setCategoryName(sanitizedCategoryName);
 
     Category newCategory = categoryRepository.save(category);
     URI uri =
@@ -60,6 +73,17 @@ public class CategoryService {
     );
 
     return new CategoryCreatedVO(newCategory, uri);
+  }
+
+  private Category reactivateCategory(Category savedCategory) {
+    log.info("Category has been inactivated. Will now reactivate it. CategoryName: {}, CategoryId: {}",
+        savedCategory.getCategoryName(),
+        savedCategory.getCategoryId()
+    );
+
+    savedCategory.setInactivatedAt(null);
+
+    return savedCategory;
   }
 
   public Category updateCategory(CategoryUpdateDTO updateCategory, UUID categoryId) {

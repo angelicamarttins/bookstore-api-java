@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -28,14 +29,12 @@ public class CategoryValidator {
         });
   }
 
-  public void checkIfCategoryAlreadyExists(String sanitizedCategory) {
-    categoryRepository
-        .getByCategoryName(sanitizedCategory)
-        .ifPresent(savedCategory -> {
-          log.info("Category already exists. CategoryId: {}", savedCategory.getCategoryId());
+  public void checkIfCategoryAlreadyExists(Category category) {
+    if (category.getInactivatedAt() == null) {
+      log.info("Category already exists. CategoryId: {}", category.getCategoryId());
 
-          throw new CategoryAlreadyExistsException(sanitizedCategory);
-        });
+      throw new CategoryAlreadyExistsException(category.getCategoryName());
+    }
   }
 
   public void checkIfCategoryIsActive(Category category) {
