@@ -2,6 +2,7 @@ package com.example.bookstoreapijava.main.validators;
 
 import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.exceptions.BookAlreadyExistsException;
+import com.example.bookstoreapijava.main.exceptions.BookIsInactiveException;
 import com.example.bookstoreapijava.main.exceptions.BookNotFoundException;
 import com.example.bookstoreapijava.main.repositories.BookRepository;
 import lombok.AllArgsConstructor;
@@ -35,6 +36,16 @@ public class BookValidator {
 
           return new BookNotFoundException(bookId);
         });
+  }
+
+  public void checkIfBookIsActive(Book book) {
+    UUID bookId = book.getBookId();
+
+    if (book.getInactivatedAt() != null) {
+      log.info("Book is inactive. BookId: {}", bookId);
+
+      throw new BookIsInactiveException(bookId);
+    }
   }
 
 }
