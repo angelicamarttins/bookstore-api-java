@@ -3,10 +3,8 @@ package com.example.bookstoreapijava.main.services;
 import com.example.bookstoreapijava.main.data.dto.BookUpdateDTORequest;
 import com.example.bookstoreapijava.main.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.entities.Book;
-import com.example.bookstoreapijava.main.repositories.BookRepository;
 import com.example.bookstoreapijava.main.entities.Category;
-import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
-import com.example.bookstoreapijava.main.repositories.CategoryRepository;
+import com.example.bookstoreapijava.main.repositories.BookRepository;
 import com.example.bookstoreapijava.main.validators.BookValidator;
 import com.example.bookstoreapijava.main.validators.CategoryValidator;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +27,6 @@ public class BookService {
   @Value("${app.baseUrl}")
   private static String baseUrl;
   private final BookRepository bookRepository;
-  private final CategoryRepository categoryRepository;
   private final BookValidator bookValidator;
   private final CategoryValidator categoryValidator;
 
@@ -90,7 +87,7 @@ public class BookService {
     log.info("All info sent is updated. Will now save book. BookId: {}", bookId);
 
     if (savedBook.getInactivatedAt() != null) {
-      return reactivateBook(savedBook);
+      return bookRepository.save(reactivateBook(savedBook));
     }
 
     return bookRepository.save(savedBook);
