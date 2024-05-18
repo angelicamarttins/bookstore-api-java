@@ -52,27 +52,63 @@ public class CategoryService {
 
       Category reactivatedCategory = reactivateCategory(maybeCategory.get());
 
-      return saveCategory(reactivatedCategory, sanitizedCategoryName);
+      return createCategory(reactivatedCategory);
     }
 
     //TODO: Na v2, o isbn será buscada na API do Google e as categorias serão traduzidas pela API
     // do DeepL
-    return saveCategory(category, sanitizedCategoryName);
+    return createCategory(category);
   }
 
-  private CategoryCreatedVO saveCategory(Category category, String sanitizedCategoryName) throws URISyntaxException {
+  public Category updateCategory(CategoryUpdateDTO updateCategory, UUID categoryId) {
+    Category savedCategory = categoryValidator.checkIfCategoryIsFound(categoryId);
+
+    if (savedCategory.getInactivatedAt() != null) {
+      Category reactivatedCategory = reactivateCategory(savedCategory);
+
+      savedCategory.setCategoryName(updateCategory.categoryName());
+
+      return saveCategory(reactivatedCategory);
+    }
+
+    savedCategory.setCategoryName(updateCategory.categoryName());
+
+    log.info("All info sent is updated. Will now save category. CategoryId: {}", categoryId);
+    return saveCategory(savedCategory);
+  }
+
+  public void deleteCategory(UUID categoryId) {
+    Category deletedCategory = categoryValidator.checkIfCategoryIsFound(categoryId);
+
+    deletedCategory.setInactivatedAt(LocalDateTime.now());
+
+    categoryRepository.save(deletedCategory);
+
+    log.info("Category deleted successfully. CategoryId: {}", categoryId);
+  }
+
+  private CategoryCreatedVO createCategory(Category category) throws URISyntaxException {
+    Category newCategory = saveCategory(category);
+
+    URI uri =
+        new URI(baseUrl + "/category/" + newCategory.getCategoryId().toString());
+
+    return new CategoryCreatedVO(newCategory, uri);
+  }
+
+  private Category saveCategory(Category category) {
+    String sanitizedCategoryName = Utils.sanitizeStringField(category.getCategoryName());
+
     category.setCategoryName(sanitizedCategoryName);
 
     Category newCategory = categoryRepository.save(category);
-    URI uri =
-        new URI(baseUrl + "/category/" + newCategory.getCategoryId().toString());
 
     log.info("Category saved successfully. CategoryName: {}, CategoryId: {}",
         category.getCategoryName(),
         category.getCategoryId()
     );
 
-    return new CategoryCreatedVO(newCategory, uri);
+    return newCategory;
   }
 
   private Category reactivateCategory(Category savedCategory) {
@@ -84,25 +120,6 @@ public class CategoryService {
     savedCategory.setInactivatedAt(null);
 
     return savedCategory;
-  }
-
-  public Category updateCategory(CategoryUpdateDTO updateCategory, UUID categoryId) {
-    Category savedCategory = categoryValidator.checkIfCategoryIsFound(categoryId);
-    log.info("All info sent is updated. Will now save category. CategoryId: {}", categoryId);
-
-    savedCategory.setCategoryName(updateCategory.categoryName());
-
-    return categoryRepository.save(savedCategory);
-  }
-
-  public void deleteCategory(UUID categoryId) {
-    Category deletedCategory = categoryValidator.checkIfCategoryIsFound(categoryId);
-
-    deletedCategory.setInactivatedAt(LocalDateTime.now());
-
-    categoryRepository.save(deletedCategory);
-
-    log.info("Category deleted successfully. CategoryId: {}", categoryId);
   }
 
 }
