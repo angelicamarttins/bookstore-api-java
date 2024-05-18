@@ -326,7 +326,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     categoryRepository.save(category);
     bookRepository.save(book);
 
-    bookService.deleteBook(book.getBookId());
+    bookService.inactiveBook(book.getBookId());
 
     Book deletedBook = bookRepository.findById(book.getBookId()).get();
 
@@ -343,7 +343,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
 
     BookNotFoundException bookNotFoundException = assertThrows(
         BookNotFoundException.class,
-        () -> bookService.deleteBook(bookId)
+        () -> bookService.inactiveBook(bookId)
     );
 
     String expectedExceptionMessage = "Book not found with id " + bookId;

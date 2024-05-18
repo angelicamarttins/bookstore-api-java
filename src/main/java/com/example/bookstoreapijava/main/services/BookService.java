@@ -5,7 +5,6 @@ import com.example.bookstoreapijava.main.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.repositories.BookRepository;
 import com.example.bookstoreapijava.main.entities.Category;
-import com.example.bookstoreapijava.main.exceptions.CategoryIsInactiveException;
 import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.validators.BookValidator;
@@ -66,7 +65,6 @@ public class BookService {
   public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) throws URISyntaxException {
     Book savedBook = bookValidator.checkIfBookIsFound(bookId);
 
-
     if (updatedBook.author() != null) {
       savedBook.setAuthor(updatedBook.author());
     }
@@ -92,20 +90,22 @@ public class BookService {
     log.info("All info sent is updated. Will now save book. BookId: {}", bookId);
 
     if (savedBook.getInactivatedAt() != null) {
-      reactivateBook(savedBook);
+      return reactivateBook(savedBook);
     }
 
     return bookRepository.save(savedBook);
   }
 
-  public void deleteBook(UUID bookId) {
+  public void inactiveBook(UUID bookId) {
     Book deletedBook = bookValidator.checkIfBookIsFound(bookId);
+
+    bookValidator.checkIfBookIsActive(deletedBook);
 
     deletedBook.setInactivatedAt(LocalDateTime.now());
 
     bookRepository.save(deletedBook);
 
-    log.info("Book deleted successfully. BookId: {}", bookId);
+    log.info("Book successfully inactivated. BookId: {}", bookId);
   }
 
   private BookCreatedVO saveBook(Book book) throws URISyntaxException {
@@ -121,7 +121,7 @@ public class BookService {
     return new BookCreatedVO(savedBook, uri);
   }
 
-  private Book reactivateBook(Book savedBook) throws URISyntaxException {
+  private Book reactivateBook(Book savedBook) {
     log.info("Book has been inactivated. Will now reactivate it. BookIsbn: {}, BookId: {}",
         savedBook.getIsbn(),
         savedBook.getBookId()
@@ -135,26 +135,18 @@ public class BookService {
   private BookCreatedVO createBook(Book book, String bookIsbn) throws URISyntaxException {
     UUID categoryId = book.getCategory().getCategoryId();
 
-    Optional<Category> maybeCategory = categoryRepository.findById(categoryId);
+    Category category = categoryValidator.checkIfCategoryIsFound(categoryId);
 
-    checkCategory(maybeCategory, categoryId);
+    categoryValidator.checkIfCategoryIsActive(category);
 
     log.info(
-        "Book has not yet been created and category were found. Will now save book. " +
+        "Book has not been created yet and category were found. Will now save book. " +
             "BookIsbn: {}, CategoryId: {}",
         bookIsbn,
         categoryId
     );
 
     return saveBook(book);
-  }
-
-  private void checkCategory(Optional<Category> maybeCategory, UUID categoryId) {
-    if (maybeCategory.isEmpty()) {
-      log.info("Category not found. Aborting... CategoryId: {}", categoryId);
-
-      throw new CategoryNotFoundException(categoryId);
-    }
   }
 
 }

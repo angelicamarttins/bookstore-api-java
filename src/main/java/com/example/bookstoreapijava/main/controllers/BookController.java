@@ -69,10 +69,10 @@ public class BookController {
   }
 
   @DeleteMapping("/{bookId}")
-  public ResponseEntity<Void> deleteBook(@PathVariable UUID bookId) {
-    log.info("Deleting book. BookId: {}", bookId);
+  public ResponseEntity<Void> inactiveBook(@PathVariable UUID bookId) {
+    log.info("Inactivating book. BookId: {}", bookId);
 
-    bookService.deleteBook(bookId);
+    bookService.inactiveBook(bookId);
 
     return ResponseEntity.noContent().build();
   }
