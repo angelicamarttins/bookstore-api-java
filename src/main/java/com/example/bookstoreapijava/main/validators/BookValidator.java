@@ -27,7 +27,7 @@ public class BookValidator {
     }
   }
 
-  public Book searchAndCheckBook(UUID bookId) {
+  public Book checkIfBookIsFound(UUID bookId) {
     return bookRepository
         .findById(bookId)
         .orElseThrow(() -> {

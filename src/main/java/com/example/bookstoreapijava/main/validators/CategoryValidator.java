@@ -2,6 +2,7 @@ package com.example.bookstoreapijava.main.validators;
 
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.CategoryAlreadyExistsException;
+import com.example.bookstoreapijava.main.exceptions.CategoryIsInactiveException;
 import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ public class CategoryValidator {
 
   private final CategoryRepository categoryRepository;
 
-  public Category searchAndCheckCategory(UUID categoryId) {
+  public Category checkIfCategoryIsFound(UUID categoryId) {
     return categoryRepository
         .findById(categoryId)
         .orElseThrow(() -> {
@@ -27,7 +28,7 @@ public class CategoryValidator {
         });
   }
 
-  public void searchAndCheckCategoryAlreadyExists(String sanitizedCategory) {
+  public void checkIfCategoryAlreadyExists(String sanitizedCategory) {
     categoryRepository
         .getByCategoryName(sanitizedCategory)
         .ifPresent(savedCategory -> {
@@ -35,6 +36,16 @@ public class CategoryValidator {
 
           throw new CategoryAlreadyExistsException(sanitizedCategory);
         });
+  }
+
+  public void checkIfCategoryIsActive(Category category) {
+    UUID categoryId = category.getCategoryId();
+
+    if (category.getInactivatedAt() != null) {
+      log.info("Category is inactive. CategoryId: {}", categoryId);
+
+      throw new CategoryIsInactiveException(categoryId);
+    }
   }
 
 }

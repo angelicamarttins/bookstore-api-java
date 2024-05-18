@@ -3,8 +3,6 @@ package com.example.bookstoreapijava.main.services;
 import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTO;
 import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.entities.Category;
-import com.example.bookstoreapijava.main.exceptions.CategoryAlreadyExistsException;
-import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.utils.Utils;
 import com.example.bookstoreapijava.main.validators.CategoryValidator;
@@ -26,9 +24,7 @@ public class CategoryService {
 
   @Value("${app.baseUrl}")
   private static String baseUrl;
-
   private final CategoryRepository categoryRepository;
-
   private final CategoryValidator categoryValidator;
 
   public List<Category> findAllCategories() {
@@ -38,7 +34,7 @@ public class CategoryService {
   }
 
   public Category findCategory(UUID categoryId) {
-    Category category = categoryValidator.searchAndCheckCategory(categoryId);
+    Category category = categoryValidator.checkIfCategoryIsFound(categoryId);
 
     log.info("Category found. CategoryId: {}", categoryId);
 
@@ -48,7 +44,7 @@ public class CategoryService {
   public CategoryCreatedVO insertCategory(Category category) throws URISyntaxException {
     String sanitizedCategory = Utils.sanitizeStringField(category.getCategoryName());
 
-    categoryValidator.searchAndCheckCategoryAlreadyExists(sanitizedCategory);
+    categoryValidator.checkIfCategoryAlreadyExists(sanitizedCategory);
     //TODO: Na v2, o isbn será buscada na API do Google e as categorias serão traduzidas pela API
     // do DeepL
 
@@ -67,7 +63,7 @@ public class CategoryService {
   }
 
   public Category updateCategory(CategoryUpdateDTO updateCategory, UUID categoryId) {
-    Category savedCategory = categoryValidator.searchAndCheckCategory(categoryId);
+    Category savedCategory = categoryValidator.checkIfCategoryIsFound(categoryId);
     log.info("All info sent is updated. Will now save category. CategoryId: {}", categoryId);
 
     savedCategory.setCategoryName(updateCategory.categoryName());
@@ -76,7 +72,7 @@ public class CategoryService {
   }
 
   public void deleteCategory(UUID categoryId) {
-    Category deletedCategory = categoryValidator.searchAndCheckCategory(categoryId);
+    Category deletedCategory = categoryValidator.checkIfCategoryIsFound(categoryId);
 
     deletedCategory.setInactivatedAt(LocalDateTime.now());
 

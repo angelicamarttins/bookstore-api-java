@@ -3,14 +3,13 @@ package com.example.bookstoreapijava.main.services;
 import com.example.bookstoreapijava.main.data.dto.BookUpdateDTORequest;
 import com.example.bookstoreapijava.main.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.entities.Book;
-import com.example.bookstoreapijava.main.exceptions.BookAlreadyExistsException;
-import com.example.bookstoreapijava.main.exceptions.BookNotFoundException;
 import com.example.bookstoreapijava.main.repositories.BookRepository;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.CategoryIsInactiveException;
 import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.validators.BookValidator;
+import com.example.bookstoreapijava.main.validators.CategoryValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,12 +29,10 @@ public class BookService {
 
   @Value("${app.baseUrl}")
   private static String baseUrl;
-
   private final BookRepository bookRepository;
-
   private final CategoryRepository categoryRepository;
-
   private final BookValidator bookValidator;
+  private final CategoryValidator categoryValidator;
 
   public List<Book> findAllBooks() {
     log.info("All books were found");
@@ -44,7 +41,7 @@ public class BookService {
   }
 
   public Book findBook(UUID bookId) {
-    Book book = bookValidator.searchAndCheckBook(bookId);
+    Book book = bookValidator.checkIfBookIsFound(bookId);
 
     log.info("Book found. BookId: {}", bookId);
 
@@ -67,7 +64,7 @@ public class BookService {
   }
 
   public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) throws URISyntaxException {
-    Book savedBook = bookValidator.searchAndCheckBook(bookId);
+    Book savedBook = bookValidator.checkIfBookIsFound(bookId);
 
 
     if (updatedBook.author() != null) {
@@ -85,11 +82,11 @@ public class BookService {
     if (updatedBook.categoryId() != null) {
       UUID categoryId = updatedBook.categoryId();
 
-      Optional<Category> category = categoryRepository.findById(categoryId);
+      Category category = categoryValidator.checkIfCategoryIsFound(categoryId);
 
-      checkCategory(category, categoryId);
+      categoryValidator.checkIfCategoryIsActive(category);
 
-      savedBook.setCategory(category.get());
+      savedBook.setCategory(category);
     }
 
     log.info("All info sent is updated. Will now save book. BookId: {}", bookId);
@@ -102,7 +99,7 @@ public class BookService {
   }
 
   public void deleteBook(UUID bookId) {
-    Book deletedBook = bookValidator.searchAndCheckBook(bookId);
+    Book deletedBook = bookValidator.checkIfBookIsFound(bookId);
 
     deletedBook.setInactivatedAt(LocalDateTime.now());
 
@@ -157,12 +154,6 @@ public class BookService {
       log.info("Category not found. Aborting... CategoryId: {}", categoryId);
 
       throw new CategoryNotFoundException(categoryId);
-    }
-
-    if (maybeCategory.get().getInactivatedAt() != null) {
-      log.info("Category is inactive. CategoryId: {}", categoryId);
-
-      throw new CategoryIsInactiveException(categoryId);
     }
   }
 
