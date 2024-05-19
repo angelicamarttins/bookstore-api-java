@@ -65,10 +65,10 @@ public class CategoryController {
   }
 
   @DeleteMapping("/{categoryId}")
-  public ResponseEntity<Void> deleteCategory(@PathVariable UUID categoryId) {
+  public ResponseEntity<Void> inactiveCategory(@PathVariable UUID categoryId) {
     log.info("Deleting category. CategoryId: {}", categoryId);
 
-    categoryService.deleteCategory(categoryId);
+    categoryService.inactiveCategory(categoryId);
 
     return ResponseEntity.noContent().build();
   }

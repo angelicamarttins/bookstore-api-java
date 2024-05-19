@@ -154,7 +154,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
     categoryRepository.save(category);
 
-    categoryService.deleteCategory(categoryId);
+    categoryService.inactiveCategory(categoryId);
 
     Category deletedCategory = categoryRepository.findById(categoryId).get();
 
@@ -171,7 +171,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
         CategoryNotFoundException.class,
-        () -> categoryService.deleteCategory(categoryId)
+        () -> categoryService.inactiveCategory(categoryId)
     );
 
     String expectedExceptionMessage = "Category not found with id " + categoryId;

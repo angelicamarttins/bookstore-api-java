@@ -79,7 +79,7 @@ public class BookService {
 
       Category category = categoryValidator.checkIfCategoryIsFound(categoryId);
 
-      categoryValidator.checkIfCategoryIsActive(category);
+      categoryValidator.checkIfCategoryIsInactive(category);
 
       savedBook.setCategory(category);
     }
@@ -94,13 +94,13 @@ public class BookService {
   }
 
   public void inactiveBook(UUID bookId) {
-    Book deletedBook = bookValidator.checkIfBookIsFound(bookId);
+    Book inactivatedBook = bookValidator.checkIfBookIsFound(bookId);
 
-    bookValidator.checkIfBookIsActive(deletedBook);
+    bookValidator.checkIfBookIsInactive(inactivatedBook);
 
-    deletedBook.setInactivatedAt(LocalDateTime.now());
+    inactivatedBook.setInactivatedAt(LocalDateTime.now());
 
-    bookRepository.save(deletedBook);
+    bookRepository.save(inactivatedBook);
 
     log.info("Book successfully inactivated. BookId: {}", bookId);
   }
@@ -134,7 +134,7 @@ public class BookService {
 
     Category category = categoryValidator.checkIfCategoryIsFound(categoryId);
 
-    categoryValidator.checkIfCategoryIsActive(category);
+    categoryValidator.checkIfCategoryIsInactive(category);
 
     log.info(
         "Book has not been created yet and category were found. Will now save book. " +

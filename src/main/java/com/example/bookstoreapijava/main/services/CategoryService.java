@@ -78,12 +78,14 @@ public class CategoryService {
     return saveCategory(savedCategory);
   }
 
-  public void deleteCategory(UUID categoryId) {
-    Category deletedCategory = categoryValidator.checkIfCategoryIsFound(categoryId);
+  public void inactiveCategory(UUID categoryId) {
+    Category inactivatedCategory = categoryValidator.checkIfCategoryIsFound(categoryId);
 
-    deletedCategory.setInactivatedAt(LocalDateTime.now());
+    categoryValidator.checkIfCategoryIsInactive(inactivatedCategory);
 
-    categoryRepository.save(deletedCategory);
+    inactivatedCategory.setInactivatedAt(LocalDateTime.now());
+
+    categoryRepository.save(inactivatedCategory);
 
     log.info("Category deleted successfully. CategoryId: {}", categoryId);
   }

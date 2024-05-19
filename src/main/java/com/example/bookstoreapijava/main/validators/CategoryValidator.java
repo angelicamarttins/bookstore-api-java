@@ -36,7 +36,7 @@ public class CategoryValidator {
     }
   }
 
-  public void checkIfCategoryIsActive(Category category) {
+  public void checkIfCategoryIsInactive(Category category) {
     UUID categoryId = category.getCategoryId();
 
     if (category.getInactivatedAt() != null) {

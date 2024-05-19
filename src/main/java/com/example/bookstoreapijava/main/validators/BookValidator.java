@@ -38,7 +38,7 @@ public class BookValidator {
         });
   }
 
-  public void checkIfBookIsActive(Book book) {
+  public void checkIfBookIsInactive(Book book) {
     UUID bookId = book.getBookId();
 
     if (book.getInactivatedAt() != null) {
