@@ -77,12 +77,4 @@ public class BookController {
     return ResponseEntity.noContent().build();
   }
 
-  /*
-  TODO: Response: 204 No content
-    Faremos um soft delete com inactivatedAt. Caso o isbn feito em um POST for o mesmo de
-    um "deletado", apenas restauraremos esse registro, removendo o inactivatedAt. Isso é possível,
-    pois cada edição tem seu próprio isbn e, se o usuário está reinserindo este livro, significa
-    que ele quer retomar o registro dessa obra em específico. Apenas devemos tomar cuidado no caso
-    de um DELETE e um PATCH com o mesmo isbn.
-   */
 }

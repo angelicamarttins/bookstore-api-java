@@ -33,6 +33,10 @@ public class Category {
   @Size(min = 1, max = 500, message = "O nome da categoria deve conter entre 1 e 500 caracteres")
   private String categoryName;
 
+  @Column(name = "sanitized_category_name")
+  @NonNull
+  private String sanitizedCategoryName;
+
   @Column(name = "created_at")
   private LocalDateTime createdAt;
 

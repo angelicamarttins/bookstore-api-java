@@ -74,6 +74,7 @@ public class CategoryService {
     savedCategory.setCategoryName(updateCategory.categoryName());
 
     log.info("All info sent is updated. Will now save category. CategoryId: {}", categoryId);
+
     return saveCategory(savedCategory);
   }
 
@@ -99,7 +100,7 @@ public class CategoryService {
   private Category saveCategory(Category category) {
     String sanitizedCategoryName = Utils.sanitizeStringField(category.getCategoryName());
 
-    category.setCategoryName(sanitizedCategoryName);
+    category.setSanitizedCategoryName(sanitizedCategoryName);
 
     Category newCategory = categoryRepository.save(category);
 
