@@ -52,23 +52,19 @@ public class CategoryService {
 
       Category reactivatedCategory = reactivateCategory(maybeCategory.get());
 
-      return createCategory(reactivatedCategory);
+      return createCategory(reactivatedCategory, false);
     }
 
     //TODO: Na v2, o isbn será buscada na API do Google e as categorias serão traduzidas pela API
     // do DeepL
-    return createCategory(category);
+    return createCategory(category, true);
   }
 
   public Category updateCategory(CategoryUpdateDTO updateCategory, UUID categoryId) {
     Category savedCategory = categoryValidator.checkIfCategoryIsFound(categoryId);
 
     if (savedCategory.getInactivatedAt() != null) {
-      Category reactivatedCategory = reactivateCategory(savedCategory);
-
-      savedCategory.setCategoryName(updateCategory.categoryName());
-
-      return saveCategory(reactivatedCategory);
+      return reactivateCategory(savedCategory);
     }
 
     savedCategory.setCategoryName(updateCategory.categoryName());
@@ -90,8 +86,12 @@ public class CategoryService {
     log.info("Category deleted successfully. CategoryId: {}", categoryId);
   }
 
-  private CategoryCreatedVO createCategory(Category category) throws URISyntaxException {
-    Category newCategory = saveCategory(category);
+  private CategoryCreatedVO createCategory(Category category, boolean shouldSaveCategory) throws URISyntaxException {
+    Category newCategory = category;
+
+    if (shouldSaveCategory) {
+      newCategory = categoryRepository.save(category);
+    }
 
     URI uri =
         new URI(baseUrl + "/category/" + newCategory.getCategoryId().toString());
@@ -120,7 +120,12 @@ public class CategoryService {
         savedCategory.getCategoryId()
     );
 
+    String sanitizedCategoryName = Utils.sanitizeStringField(savedCategory.getCategoryName());
+
+    savedCategory.setSanitizedCategoryName(sanitizedCategoryName);
     savedCategory.setInactivatedAt(null);
+
+    categoryRepository.reactivateByCategoryId(savedCategory.getCategoryId().toString());
 
     return savedCategory;
   }
