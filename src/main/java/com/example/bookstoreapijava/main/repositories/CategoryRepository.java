@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
 
-  Optional<Category> getByCategoryName(String name);
+  Optional<Category> getBySanitizedCategoryName(String name);
 
   @Modifying
   @Query("UPDATE Category SET inactivatedAt = NULL " +

@@ -30,6 +30,7 @@ public class CategoryValidator {
 
   public void checkIfCategoryAlreadyExists(Category category) {
     if (category.getInactivatedAt() == null) {
+      System.out.println("AAAAAAAAAAAAA" + category.getInactivatedAt());
       log.info("Category already exists. CategoryId: {}", category.getCategoryId());
 
       throw new CategoryAlreadyExistsException(category.getCategoryName());

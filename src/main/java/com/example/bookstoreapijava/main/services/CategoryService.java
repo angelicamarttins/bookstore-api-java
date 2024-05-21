@@ -44,10 +44,12 @@ public class CategoryService {
 
   public CategoryCreatedVO insertCategory(Category category) throws URISyntaxException {
     String sanitizedCategoryName = Utils.sanitizeStringField(category.getCategoryName());
-
-    Optional<Category> maybeCategory = categoryRepository.getByCategoryName(sanitizedCategoryName);
+    Optional<Category> maybeCategory =
+        categoryRepository.getBySanitizedCategoryName(sanitizedCategoryName);
+    log.info("recoreco {}", maybeCategory);
 
     if (maybeCategory.isPresent()) {
+      log.info("BBBBBBBBBBBBBBBBBBBBBBB {}", maybeCategory.get());
       categoryValidator.checkIfCategoryAlreadyExists(maybeCategory.get());
 
       Category reactivatedCategory = reactivateCategory(maybeCategory.get());
@@ -100,11 +102,7 @@ public class CategoryService {
   }
 
   private Category saveCategory(Category category) {
-    String sanitizedCategoryName = Utils.sanitizeStringField(category.getCategoryName());
-
-    category.setSanitizedCategoryName(sanitizedCategoryName);
-
-    Category newCategory = categoryRepository.save(category);
+    Category newCategory = categoryRepository.save(updateSanitizedCategoryName(category));
 
     log.info("Category saved successfully. CategoryName: {}, CategoryId: {}",
         category.getCategoryName(),
@@ -114,20 +112,27 @@ public class CategoryService {
     return newCategory;
   }
 
+  private Category updateSanitizedCategoryName(Category category) {
+    String sanitizedCategoryName = Utils.sanitizeStringField(category.getCategoryName());
+
+    category.setSanitizedCategoryName(sanitizedCategoryName);
+
+    return category;
+  }
+
   private Category reactivateCategory(Category savedCategory) {
     log.info("Category has been inactivated. Will now reactivate it. CategoryName: {}, CategoryId: {}",
         savedCategory.getCategoryName(),
         savedCategory.getCategoryId()
     );
 
-    String sanitizedCategoryName = Utils.sanitizeStringField(savedCategory.getCategoryName());
+    Category sanitizedCategory = updateSanitizedCategoryName(savedCategory);
 
-    savedCategory.setSanitizedCategoryName(sanitizedCategoryName);
-    savedCategory.setInactivatedAt(null);
+    sanitizedCategory.setInactivatedAt(null);
 
-    categoryRepository.reactivateByCategoryId(savedCategory.getCategoryId().toString());
+    categoryRepository.reactivateByCategoryId(sanitizedCategory.getCategoryId().toString());
 
-    return savedCategory;
+    return sanitizedCategory;
   }
 
 }
