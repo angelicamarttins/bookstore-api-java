@@ -38,6 +38,23 @@ public class GlobalExceptionHandler {
         .body(invalidArguments);
   }
 
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<ExceptionDTOResponse> handleRuntimeException(
+      RuntimeException runtimeException
+  ) {
+    HttpStatus internalServerError = HttpStatus.INTERNAL_SERVER_ERROR;
+
+    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+        internalServerError.value(),
+        RuntimeException.class.getSimpleName(),
+        runtimeException.getMessage()
+    );
+
+    return ResponseEntity
+        .status(internalServerError)
+        .body(exceptionResponse);
+  }
+
   @ExceptionHandler(BookNotFoundException.class)
   public ResponseEntity<ExceptionDTOResponse> handleBookNotFoundException(
       BookNotFoundException bookNotFoundException
@@ -65,6 +82,23 @@ public class GlobalExceptionHandler {
         conflict.value(),
         BookAlreadyExistsException.class.getSimpleName(),
         bookAlreadyExistsException.getMessage()
+    );
+
+    return ResponseEntity
+        .status(conflict)
+        .body(exceptionResponse);
+  }
+
+  @ExceptionHandler(BookIsInactiveException.class)
+  public ResponseEntity<ExceptionDTOResponse> handleBookIsInactiveException(
+      BookIsInactiveException bookIsInactiveException
+  ) {
+    HttpStatus conflict = HttpStatus.CONFLICT;
+
+    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+        conflict.value(),
+        BookIsInactiveException.class.getSimpleName(),
+        bookIsInactiveException.getMessage()
     );
 
     return ResponseEntity
@@ -106,20 +140,21 @@ public class GlobalExceptionHandler {
         .body(exceptionResponse);
   }
 
-  @ExceptionHandler(RuntimeException.class)
-  public ResponseEntity<ExceptionDTOResponse> handleRuntimeException(
-      RuntimeException runtimeException
+  @ExceptionHandler(CategoryIsInactiveException.class)
+  public ResponseEntity<ExceptionDTOResponse> handleCategoryIsInactiveException(
+      CategoryIsInactiveException categoryIsInactiveException
   ) {
-    HttpStatus internalServerError = HttpStatus.INTERNAL_SERVER_ERROR;
+    HttpStatus conflict = HttpStatus.CONFLICT;
 
     ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
-        internalServerError.value(),
-        RuntimeException.class.getSimpleName(),
-        runtimeException.getMessage()
+        conflict.value(),
+        CategoryIsInactiveException.class.getSimpleName(),
+        categoryIsInactiveException.getMessage()
     );
 
     return ResponseEntity
-        .status(internalServerError)
+        .status(conflict)
         .body(exceptionResponse);
   }
+
 }
