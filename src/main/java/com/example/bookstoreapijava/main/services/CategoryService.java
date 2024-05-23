@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -42,6 +43,7 @@ public class CategoryService {
     return category;
   }
 
+  @Transactional
   public CategoryCreatedVO insertCategory(Category category) throws URISyntaxException {
     String sanitizedCategoryName = Utils.sanitizeStringField(category.getCategoryName());
     Optional<Category> maybeCategory =
@@ -49,7 +51,6 @@ public class CategoryService {
     log.info("recoreco {}", maybeCategory);
 
     if (maybeCategory.isPresent()) {
-      log.info("BBBBBBBBBBBBBBBBBBBBBBB {}", maybeCategory.get());
       categoryValidator.checkIfCategoryAlreadyExists(maybeCategory.get());
 
       Category reactivatedCategory = reactivateCategory(maybeCategory.get());
@@ -62,6 +63,7 @@ public class CategoryService {
     return createCategory(category, true);
   }
 
+  @Transactional
   public Category updateCategory(CategoryUpdateDTO updateCategory, UUID categoryId) {
     Category savedCategory = categoryValidator.checkIfCategoryIsFound(categoryId);
 
@@ -92,7 +94,7 @@ public class CategoryService {
     Category newCategory = category;
 
     if (shouldSaveCategory) {
-      newCategory = categoryRepository.save(category);
+      newCategory = saveCategory(newCategory);
     }
 
     URI uri =
@@ -120,6 +122,7 @@ public class CategoryService {
     return category;
   }
 
+
   private Category reactivateCategory(Category savedCategory) {
     log.info("Category has been inactivated. Will now reactivate it. CategoryName: {}, CategoryId: {}",
         savedCategory.getCategoryName(),
@@ -130,7 +133,7 @@ public class CategoryService {
 
     sanitizedCategory.setInactivatedAt(null);
 
-    categoryRepository.reactivateByCategoryId(sanitizedCategory.getCategoryId().toString());
+    categoryRepository.reactivateByCategoryId(sanitizedCategory.getCategoryId());
 
     return sanitizedCategory;
   }
