@@ -13,6 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -80,7 +81,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
     categoryRepository.saveAll(categoryList);
 
-    List<Category> savedCategoryList = categoryService.findAllCategories();
+    Page<Category> savedCategoryList = categoryService.findAllCategories(0, 10);
 
     assertNotNull(savedCategoryList);
     assertEquals(categoryList, savedCategoryList);

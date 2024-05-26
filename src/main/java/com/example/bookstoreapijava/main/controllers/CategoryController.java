@@ -7,6 +7,7 @@ import com.example.bookstoreapijava.main.services.CategoryService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +24,13 @@ public class CategoryController {
   private final CategoryService categoryService;
 
   @GetMapping
-  public ResponseEntity<List<Category>> findAllCategories() {
+  public ResponseEntity<Page<Category>> findAllCategories(
+      @RequestParam(value = "page", defaultValue = "0") int page,
+      @RequestParam(value = "size", defaultValue = "10") int size
+  ) {
     log.info("Finding all categories");
 
-    List<Category> response = categoryService.findAllCategories();
+    Page<Category> response = categoryService.findAllCategories(page, size);
 
     return ResponseEntity.ok(response);
   }

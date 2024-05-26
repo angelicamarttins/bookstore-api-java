@@ -9,6 +9,8 @@ import com.example.bookstoreapijava.main.validators.CategoryValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,10 +31,12 @@ public class CategoryService {
   private final CategoryRepository categoryRepository;
   private final CategoryValidator categoryValidator;
 
-  public List<Category> findAllCategories() {
+  public Page<Category> findAllCategories(int page, int size) {
+    PageRequest pageRequest = PageRequest.of(page, size);
+
     log.info("All categories were found");
 
-    return categoryRepository.findAll();
+    return categoryRepository.findAll(pageRequest);
   }
 
   public Category findCategory(UUID categoryId) {
