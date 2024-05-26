@@ -10,12 +10,14 @@ import com.example.bookstoreapijava.main.validators.CategoryValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,10 +32,12 @@ public class BookService {
   private final BookValidator bookValidator;
   private final CategoryValidator categoryValidator;
 
-  public List<Book> findAllBooks() {
+  public Page<Book> findAllBooks(int page, int size) {
+    Pageable pageable = PageRequest.of(page, size);
+
     log.info("All books were found");
 
-    return bookRepository.findAll();
+    return bookRepository.findAll(pageable);
   }
 
   public Book findBook(UUID bookId) {

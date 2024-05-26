@@ -15,6 +15,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -122,7 +123,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     categoryRepository.save(category);
     bookRepository.saveAll(bookList);
 
-    List<Book> savedBookList = bookService.findAllBooks();
+    Page<Book> savedBookList = bookService.findAllBooks(0, 10);
 
     assertNotNull(savedBookList);
     assertEquals(bookList, savedBookList);
