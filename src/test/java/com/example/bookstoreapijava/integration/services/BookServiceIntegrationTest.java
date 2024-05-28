@@ -123,10 +123,19 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     categoryRepository.save(category);
     bookRepository.saveAll(bookList);
 
-    Page<Book> savedBookList = bookService.findAllBooks(0, 10);
+    Page<Book> savedBookList = bookService.findAllBooks(0, 2);
 
     assertNotNull(savedBookList);
-    assertEquals(bookList, savedBookList);
+    assertEquals(bookList.getFirst(), savedBookList.toList().getFirst());
+    assertTrue(savedBookList.getNumberOfElements() == 2);
+  }
+
+  @Test
+  @DisplayName(value = "When book list is searched and nothing is found, should return correctly")
+  void should_returnEquals_when_bookListIsSearchedAndNothingIsFound() {
+    Page<Book> savedBookList = bookService.findAllBooks(0, 5);
+
+    assertTrue(savedBookList.getNumberOfElements() == 0);
   }
 
   @Test
