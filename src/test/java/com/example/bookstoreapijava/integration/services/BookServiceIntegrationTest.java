@@ -6,6 +6,7 @@ import com.example.bookstoreapijava.main.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.BookAlreadyExistsException;
+import com.example.bookstoreapijava.main.exceptions.BookIsInactiveException;
 import com.example.bookstoreapijava.main.exceptions.BookNotFoundException;
 import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.repositories.BookRepository;
@@ -328,8 +329,8 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is deleted, should soft delete correctly")
-  void should_softDelete_when_bookIsDeleted() {
+  @DisplayName(value = "When book is inactivated, should inactivate correctly")
+  void should_inactivate_when_bookIsInactivated() {
     Category category = createCategory(Optional.empty());
     Book book = createBook(Optional.empty(), Optional.of(category));
 
@@ -338,17 +339,17 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
 
     bookService.inactiveBook(book.getBookId());
 
-    Book deletedBook = bookRepository.findById(book.getBookId()).get();
+    Book inactivatedBook = bookRepository.findById(book.getBookId()).get();
 
-    assertNotNull(deletedBook);
-    assertNotNull(deletedBook.getInactivatedAt());
-    assertNotNull(deletedBook.getUpdatedAt());
-    assertNotEquals(book, deletedBook);
+    assertNotNull(inactivatedBook);
+    assertNotNull(inactivatedBook.getInactivatedAt());
+    assertNotNull(inactivatedBook.getUpdatedAt());
+    assertNotEquals(book, inactivatedBook);
   }
 
   @Test
-  @DisplayName(value = "When book is deleted and is not found, should throw exception")
-  void should_throwException_when_bookIsDeletedAndIsNotFound() {
+  @DisplayName(value = "When book is inactivated and is not found, should throw exception")
+  void should_throwException_when_bookIsInactivatedAndIsNotFound() {
     UUID bookId = UUID.randomUUID();
 
     BookNotFoundException bookNotFoundException = assertThrows(
@@ -357,6 +358,27 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     );
 
     String expectedExceptionMessage = "Book not found with id " + bookId;
+
+    assertTrue(bookNotFoundException.getMessage().contains(expectedExceptionMessage));
+  }
+
+  @Test
+  @DisplayName(value = "When book is inactivated and is not found, should throw exception")
+  void should_throwException_when_bookAlreadyIsInactivated() {
+    Category category = createCategory(Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.of(category));
+    UUID bookId = book.getBookId();
+
+    book.setInactivatedAt(LocalDateTime.now());
+    categoryRepository.save(category);
+    bookRepository.save(book);
+
+    BookIsInactiveException bookNotFoundException = assertThrows(
+        BookIsInactiveException.class,
+        () -> bookService.inactiveBook(bookId)
+    );
+
+    String expectedExceptionMessage = "Book is inactive. BookId: " + bookId;
 
     assertTrue(bookNotFoundException.getMessage().contains(expectedExceptionMessage));
   }
