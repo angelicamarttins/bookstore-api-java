@@ -14,7 +14,11 @@ import static com.example.bookstoreapijava.utils.TestUtils.localDateTimeFormat;
 
 public class BookProvider {
 
-  public static Book createBook(Optional<String> isbn, Optional<Category> category) {
+  public static Book createBook(
+      Optional<String> isbn,
+      Optional<Category> category,
+      Optional<LocalDateTime> inactivatedAt
+  ) {
     return new Book(
         UUID.randomUUID(),
         UUID.randomUUID().toString().replace("-", ""),
@@ -22,7 +26,7 @@ public class BookProvider {
         isbn.orElse("0123456789"),
         localDateTimeFormat(LocalDateTime.now()),
         null,
-        null,
+        inactivatedAt.orElse(null),
         category.orElse(createCategory(Optional.empty()))
     );
   }
@@ -31,7 +35,7 @@ public class BookProvider {
     List<Book> bookList = new ArrayList<>();
 
     for (int i = 0; i <= 5; i++) {
-      bookList.add(createBook(Optional.of("0123456789" + i) ,category));
+      bookList.add(createBook(Optional.of("0123456789" + i), category, Optional.empty()));
     }
 
     return bookList;

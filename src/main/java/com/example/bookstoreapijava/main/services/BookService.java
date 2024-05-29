@@ -94,6 +94,8 @@ public class BookService {
       return bookRepository.save(reactivateBook(savedBook));
     }
 
+    savedBook.setUpdatedAt(LocalDateTime.now());
+
     return bookRepository.save(savedBook);
   }
 
@@ -129,6 +131,7 @@ public class BookService {
     );
 
     savedBook.setInactivatedAt(null);
+    savedBook.setUpdatedAt(LocalDateTime.now());
 
     return savedBook;
   }

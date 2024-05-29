@@ -48,7 +48,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book does not exists and is inserted, should returns correctly")
   void should_returnCorrectly_when_bookIsInsertedAndDoesNotExists() throws URISyntaxException {
-    Book book = createBook(Optional.empty(), Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.empty(), Optional.empty());
     BookCreatedVO bookCreatedMock = createBookCreatedVO(book);
 
     categoryRepository.save(book.getCategory());
@@ -62,7 +62,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book is inserted, already exists and is active, should throw exception correctly")
   void should_throwException_when_bookIsInsertedIsActiveAndAlreadyExists() {
-    Book book = createBook(Optional.empty(), Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
     categoryRepository.save(book.getCategory());
     bookRepository.save(book);
@@ -80,7 +80,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book is inserted and category is not found, should throw exception correctly")
   void should_throwException_when_bookIsInsertedAndCategoryIsNotFound() {
-    Book book = createBook(Optional.empty(), Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
         CategoryNotFoundException.class,
@@ -97,7 +97,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @DisplayName(value = "When book is inserted, already exists and is inactivated, should reactivate it")
   void should_reactivateBook_when_bookIsInsertedAlreadyExistsAndIsInactivated() throws URISyntaxException {
     Category category = createCategory(Optional.empty());
-    Book expectedBook = createBook(Optional.empty(), Optional.of(category));
+    Book expectedBook = createBook(Optional.empty(), Optional.of(category), Optional.empty());
     BookCreatedVO expectedBookCreated = createBookCreatedVO(expectedBook);
     LocalDateTime insertDate = LocalDateTime.now();
 
@@ -143,7 +143,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @DisplayName(value = "When book is searched, should return correctly")
   void should_returnEquals_when_bookIsSearched() {
     Category category = createCategory(Optional.empty());
-    Book book = createBook(Optional.empty(), Optional.of(category));
+    Book book = createBook(Optional.empty(), Optional.of(category), Optional.empty());
 
     categoryRepository.save(category);
     bookRepository.save(book);
@@ -172,7 +172,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book is updated and is not found, should throw exception")
   void should_throwException_when_bookIsUpdatedAndIsNotFound() {
-    Book book = createBook(Optional.empty(), Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
     Map<String, Optional<String>> bookInfo = new HashMap<>() {{
       put("title", Optional.empty());
@@ -195,7 +195,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book title is updated, should return correctly")
   void should_returnEquals_when_bookTitleIsUpdated() throws URISyntaxException {
-    Book book = createBook(Optional.empty(), Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
     String newBookTitle = "New Book Title";
 
@@ -221,7 +221,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book author is updated, should return correctly")
   void should_returnEquals_when_bookAuthorIsUpdated() throws URISyntaxException {
-    Book book = createBook(Optional.empty(), Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
     String newBookAuthor = "New Book Author";
 
@@ -247,7 +247,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book isbn is updated, should return correctly")
   void should_returnEquals_when_bookIsbnIsUpdated() throws URISyntaxException {
-    Book book = createBook(Optional.empty(), Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
     String newBookIsbn = "9876543210";
 
@@ -273,7 +273,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book category is updated, should return correctly")
   void should_returnEquals_when_bookCategoryIsUpdated() throws URISyntaxException {
-    Book book = createBook(Optional.empty(), Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
     Category newCategory = createCategory(Optional.of("New Category Name"));
 
@@ -301,7 +301,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book category is updated and is not found, should throw exception correctly")
   void should_throwException_when_bookCategoryIsNotFound() {
-    Book book = createBook(Optional.empty(), Optional.empty());
+    Book book = createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
     Category newCategory = createCategory(Optional.of("New Category Name"));
 
@@ -329,10 +329,35 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
+  @DisplayName(value = "When book is updated and is inactive, should reactive and update correctly")
+  void should_updateAndReactive_whenBookIsInactiveAndUpdated() throws URISyntaxException {
+    Book book =
+        createBook(Optional.empty(), Optional.empty(), Optional.of(LocalDateTime.now()));
+
+    categoryRepository.save(book.getCategory());
+    bookRepository.save(book);
+
+    Map<String, Optional<String>> bookInfo = new HashMap<>() {{
+      put("title", Optional.of("New Book Title"));
+      put("author", Optional.of("New Book Author"));
+      put("isbn", Optional.of("9876543210"));
+    }};
+
+    BookUpdateDTORequest bookUpdateDTORequest =
+        createBookUpdateDTORequest(bookInfo, Optional.empty());
+
+    Book updatedBook = bookService.updateBook(book.getBookId(), bookUpdateDTORequest);
+
+    assertNull(updatedBook.getInactivatedAt());
+    assertNotNull(updatedBook.getUpdatedAt());
+    assertNotEquals(book, updatedBook);
+  }
+
+  @Test
   @DisplayName(value = "When book is inactivated, should inactivate correctly")
   void should_inactivate_when_bookIsInactivated() {
     Category category = createCategory(Optional.empty());
-    Book book = createBook(Optional.empty(), Optional.of(category));
+    Book book = createBook(Optional.empty(), Optional.of(category), Optional.empty());
 
     categoryRepository.save(category);
     bookRepository.save(book);
@@ -366,7 +391,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
   @DisplayName(value = "When book is inactivated and is not found, should throw exception")
   void should_throwException_when_bookAlreadyIsInactivated() {
     Category category = createCategory(Optional.empty());
-    Book book = createBook(Optional.empty(), Optional.of(category));
+    Book book = createBook(Optional.empty(), Optional.of(category), Optional.empty());
     UUID bookId = book.getBookId();
 
     book.setInactivatedAt(LocalDateTime.now());
