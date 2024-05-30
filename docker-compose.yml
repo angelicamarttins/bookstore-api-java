@@ -11,8 +11,24 @@ services:
       - TZ=GMT
     ports:
       - "5432:5432"
+    networks:
+      - spring-network
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  application:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    networks:
+      - spring-network
+
+networks:
+  spring-network:
+    driver: bridge
 
 volumes:
   postgres_data:
