@@ -67,7 +67,7 @@ public class BookE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is searched by id, returns correctly")
+  @DisplayName(value = "When book is searched by id and is not found, returns correctly")
   void getBookByIdNotFound() {
     UUID bookId = UUID.randomUUID();
 
@@ -97,7 +97,7 @@ public class BookE2ETest extends PostgresTestContainersBase {
         .get("/bookstore")
         .then()
         .extract()
-        .as(Book[].class));
+        .as(Pagea.class));
 
     assertTrue(actualBookList.isEmpty());
   }
