@@ -49,6 +49,7 @@ public class BookE2ETest extends PostgresTestContainersBase {
   @AfterEach
   void cleanUpDb() {
     bookRepository.deleteAll();
+    categoryRepository.deleteAll();
   }
 
   @Test
@@ -94,16 +95,16 @@ public class BookE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book list is searched and there is not books, returns correctly")
+  @DisplayName(value = "When book list is searched and there is no books, returns correctly")
   void getBookEmptyListSuccessfully() {
-    var actualBookList = given()
+    List<Book> actualBookList = given()
         .baseUri(baseURI)
         .get("/bookstore")
         .then()
         .extract()
         .response()
         .jsonPath()
-        .getList("content");
+        .getList("content", Book.class);
 
     assertTrue(actualBookList.isEmpty());
   }
@@ -117,12 +118,14 @@ public class BookE2ETest extends PostgresTestContainersBase {
     categoryRepository.save(category);
     bookRepository.saveAll(expectedBookList);
 
-    List<Book> actualBookList = Arrays.asList(given()
+    List<Book> actualBookList = given()
         .baseUri(baseURI)
         .get("/bookstore")
         .then()
         .extract()
-        .as(Book[].class));
+        .response()
+        .jsonPath()
+        .getList("content", Book.class);
 
     assertEquals(expectedBookList, actualBookList);
     assertFalse(actualBookList.isEmpty());
