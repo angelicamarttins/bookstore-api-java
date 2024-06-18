@@ -37,7 +37,7 @@ public class BookService {
 
     log.info("All books were found");
 
-    return bookRepository.findAll(pageable);
+    return bookRepository.findAllActiveBooks(pageable);
   }
 
   public Book findBook(UUID bookId) {
