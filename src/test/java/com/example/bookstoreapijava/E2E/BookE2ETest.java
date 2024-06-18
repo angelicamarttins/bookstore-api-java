@@ -7,12 +7,15 @@ import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
 import com.example.bookstoreapijava.main.repositories.BookRepository;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -26,6 +29,7 @@ import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 public class BookE2ETest extends PostgresTestContainersBase {
 
   @Value("${app.baseUrl}")
@@ -92,12 +96,14 @@ public class BookE2ETest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book list is searched and there is not books, returns correctly")
   void getBookEmptyListSuccessfully() {
-    List<Book> actualBookList = Arrays.asList(given()
+    var actualBookList = given()
         .baseUri(baseURI)
         .get("/bookstore")
         .then()
         .extract()
-        .as(Pagea.class));
+        .response()
+        .jsonPath()
+        .getList("content");
 
     assertTrue(actualBookList.isEmpty());
   }
