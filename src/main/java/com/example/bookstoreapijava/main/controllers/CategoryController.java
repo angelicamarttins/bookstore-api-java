@@ -1,6 +1,6 @@
 package com.example.bookstoreapijava.main.controllers;
 
-import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTO;
+import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTORequest;
 import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.services.CategoryService;
@@ -58,11 +58,11 @@ public class CategoryController {
   @PatchMapping("/{categoryId}")
   public ResponseEntity<Category> updateCategory(
       @PathVariable UUID categoryId,
-      @RequestBody @Valid CategoryUpdateDTO categoryUpdateDTO
+      @RequestBody @Valid CategoryUpdateDTORequest categoryUpdateDTORequest
   ) {
     log.info("Updating category. CategoryId: {}", categoryId);
 
-    Category updatedCategory = categoryService.updateCategory(categoryUpdateDTO, categoryId);
+    Category updatedCategory = categoryService.updateCategory(categoryUpdateDTORequest, categoryId);
 
     return ResponseEntity.ok(updatedCategory);
   }

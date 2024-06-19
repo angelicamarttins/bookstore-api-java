@@ -1,6 +1,6 @@
 package com.example.bookstoreapijava.main.services;
 
-import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTO;
+import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTORequest;
 import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
@@ -67,7 +67,7 @@ public class CategoryService {
   }
 
   @Transactional
-  public Category updateCategory(CategoryUpdateDTO updateCategory, UUID categoryId) {
+  public Category updateCategory(CategoryUpdateDTORequest updateCategory, UUID categoryId) {
     Category savedCategory = categoryValidator.checkIfCategoryIsFound(categoryId);
 
     if (savedCategory.getInactivatedAt() != null) {

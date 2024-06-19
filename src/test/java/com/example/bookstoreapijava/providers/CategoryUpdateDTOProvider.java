@@ -1,11 +1,11 @@
 package com.example.bookstoreapijava.providers;
 
-import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTO;
+import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTORequest;
 
 public class CategoryUpdateDTOProvider {
 
-  public static CategoryUpdateDTO createCategoryUpdateDTO() {
-    return new CategoryUpdateDTO("New categoryName");
+  public static CategoryUpdateDTORequest createCategoryUpdateDTO() {
+    return new CategoryUpdateDTORequest("New categoryName");
   }
 
 }

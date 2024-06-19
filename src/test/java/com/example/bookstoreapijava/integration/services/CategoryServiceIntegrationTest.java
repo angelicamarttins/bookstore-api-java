@@ -1,7 +1,7 @@
 package com.example.bookstoreapijava.integration.services;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTO;
+import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTORequest;
 import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.CategoryAlreadyExistsException;
@@ -119,15 +119,15 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @DisplayName(value = "When a category is updated, should return correctly")
   void should_returnEquals_when_categoryIsUpdated() {
     Category category = createCategory(Optional.empty());
-    CategoryUpdateDTO categoryUpdateDTO = createCategoryUpdateDTO();
+    CategoryUpdateDTORequest categoryUpdateDTORequest = createCategoryUpdateDTO();
 
     categoryRepository.save(category);
 
-    Category savedCategory = categoryService.updateCategory(categoryUpdateDTO, category.getCategoryId());
+    Category savedCategory = categoryService.updateCategory(categoryUpdateDTORequest, category.getCategoryId());
 
     assertNotNull(savedCategory);
     assertNotNull(savedCategory.getUpdatedAt());
-    assertEquals(categoryUpdateDTO.categoryName(), savedCategory.getCategoryName());
+    assertEquals(categoryUpdateDTORequest.categoryName(), savedCategory.getCategoryName());
     assertNotEquals(category, savedCategory);
   }
 
@@ -135,11 +135,11 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @DisplayName(value = "When category is updated and is not found, should throw exception correctly")
   void should_throwException_when_isUpdatedAndCategoryIsNotFound() {
     UUID categoryId = UUID.randomUUID();
-    CategoryUpdateDTO categoryUpdateDTO = createCategoryUpdateDTO();
+    CategoryUpdateDTORequest categoryUpdateDTORequest = createCategoryUpdateDTO();
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
         CategoryNotFoundException.class,
-        () -> categoryService.updateCategory(categoryUpdateDTO, categoryId)
+        () -> categoryService.updateCategory(categoryUpdateDTORequest, categoryId)
     );
 
     String expectedExceptionMessage = "Category not found with id " + categoryId;

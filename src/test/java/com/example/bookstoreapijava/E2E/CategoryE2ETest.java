@@ -1,7 +1,7 @@
 package com.example.bookstoreapijava.E2E;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTO;
+import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTORequest;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
@@ -168,12 +168,12 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
 
     categoryRepository.save(savedCategory);
 
-    CategoryUpdateDTO categoryUpdateDTO = createCategoryUpdateDTO();
+    CategoryUpdateDTORequest categoryUpdateDTORequest = createCategoryUpdateDTO();
 
     Category updatedCategory = given()
         .baseUri(baseURI)
         .contentType("application/json")
-        .body(categoryUpdateDTO)
+        .body(categoryUpdateDTORequest)
         .patch("/category/" + savedCategory.getCategoryId())
         .then()
         .statusCode(200)
@@ -182,7 +182,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
 
     assertNotNull(updatedCategory);
     assertNotEquals(savedCategory, updatedCategory);
-    assertEquals(categoryUpdateDTO.categoryName(), updatedCategory.getCategoryName());
+    assertEquals(categoryUpdateDTORequest.categoryName(), updatedCategory.getCategoryName());
     assertNotNull(updatedCategory.getUpdatedAt());
   }
 
@@ -191,7 +191,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   void updateCategoryNotFound() {
     UUID categoryId = UUID.randomUUID();
 
-    CategoryUpdateDTO categoryUpdateDTO = createCategoryUpdateDTO();
+    CategoryUpdateDTORequest categoryUpdateDTORequest = createCategoryUpdateDTO();
 
     ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
         Optional.of(404),
@@ -202,7 +202,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     ExceptionDTOResponse actualExceptionDTOResponse = given()
         .baseUri(baseURI)
         .contentType("application/json")
-        .body(categoryUpdateDTO)
+        .body(categoryUpdateDTORequest)
         .patch("/category/" + categoryId)
         .then()
         .statusCode(404)
