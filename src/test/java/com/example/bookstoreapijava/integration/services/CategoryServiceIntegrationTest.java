@@ -2,6 +2,7 @@ package com.example.bookstoreapijava.integration.services;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
 import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
 import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.CategoryAlreadyExistsException;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -81,7 +81,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
     categoryRepository.saveAll(categoryList);
 
-    Page<Category> savedCategoryList = categoryService.findAllCategories(0, 10);
+    PageResponse<Category> savedCategoryList = categoryService.findAllCategories(0, 10);
 
     assertNotNull(savedCategoryList);
     assertEquals(categoryList, savedCategoryList);

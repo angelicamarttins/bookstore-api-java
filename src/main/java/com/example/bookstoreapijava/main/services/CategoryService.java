@@ -1,8 +1,10 @@
 package com.example.bookstoreapijava.main.services;
 
 import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
 import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.entities.Category;
+import com.example.bookstoreapijava.main.factories.PageResponseFactory;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.utils.Utils;
 import com.example.bookstoreapijava.main.validators.CategoryValidator;
@@ -30,12 +32,13 @@ public class CategoryService {
   private final CategoryRepository categoryRepository;
   private final CategoryValidator categoryValidator;
 
-  public Page<Category> findAllCategories(int page, int size) {
+  public PageResponse<Category> findAllCategories(int page, int size) {
     PageRequest pageRequest = PageRequest.of(page, size);
+    Page<Category> activeCategories = categoryRepository.findAllActiveCategories(pageRequest);
 
     log.info("All categories were found");
 
-    return categoryRepository.findAll(pageRequest);
+    return PageResponseFactory.toPageResponse(activeCategories);
   }
 
   public Category findCategory(UUID categoryId) {
