@@ -1,6 +1,7 @@
 package com.example.bookstoreapijava.main.controllers;
 
 import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
 import com.example.bookstoreapijava.main.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
@@ -8,7 +9,6 @@ import com.example.bookstoreapijava.main.services.BookService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,13 +27,13 @@ public class BookController {
   private final CategoryRepository categoryRepository;
 
   @GetMapping
-  public ResponseEntity<Page<Book>> findAllBooks(
+  public ResponseEntity<PageResponse<Book>> findAllBooks(
       @RequestParam(value = "page", defaultValue = "0") int page,
       @RequestParam(value = "size", defaultValue = "10") int size
   ) {
     log.info("Finding all books");
 
-    Page<Book> response = bookService.findAllBooks(page, size) ;
+    PageResponse<Book> response = bookService.findAllBooks(page, size) ;
 
     return ResponseEntity.ok(response);
   }

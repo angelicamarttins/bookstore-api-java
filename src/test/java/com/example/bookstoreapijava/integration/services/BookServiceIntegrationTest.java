@@ -2,6 +2,7 @@ package com.example.bookstoreapijava.integration.services;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
 import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
 import com.example.bookstoreapijava.main.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.entities.Category;
@@ -16,7 +17,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
@@ -124,19 +124,19 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     categoryRepository.save(category);
     bookRepository.saveAll(bookList);
 
-    Page<Book> savedBookList = bookService.findAllBooks(0, 2);
+    PageResponse<Book> savedBookList = bookService.findAllBooks(0, 2);
 
     assertNotNull(savedBookList);
-    assertEquals(bookList.getFirst(), savedBookList.toList().getFirst());
-    assertTrue(savedBookList.getNumberOfElements() == 2);
+    assertEquals(bookList.getFirst(), savedBookList.content().getFirst());
+    assertTrue(savedBookList.hasNextPage());
   }
 
   @Test
   @DisplayName(value = "When book list is searched and nothing is found, should return correctly")
   void should_returnEquals_when_bookListIsSearchedAndNothingIsFound() {
-    Page<Book> savedBookList = bookService.findAllBooks(0, 5);
+    PageResponse<Book> savedBookList = bookService.findAllBooks(0, 5);
 
-    assertTrue(savedBookList.getNumberOfElements() == 0);
+    assertFalse(savedBookList.hasNextPage());
   }
 
   @Test

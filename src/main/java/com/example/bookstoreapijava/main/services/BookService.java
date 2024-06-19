@@ -1,9 +1,11 @@
 package com.example.bookstoreapijava.main.services;
 
 import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
 import com.example.bookstoreapijava.main.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.entities.Category;
+import com.example.bookstoreapijava.main.factories.PageResponseFactory;
 import com.example.bookstoreapijava.main.repositories.BookRepository;
 import com.example.bookstoreapijava.main.validators.BookValidator;
 import com.example.bookstoreapijava.main.validators.CategoryValidator;
@@ -32,12 +34,13 @@ public class BookService {
   private final BookValidator bookValidator;
   private final CategoryValidator categoryValidator;
 
-  public Page<Book> findAllBooks(int page, int size) {
+  public PageResponse<Book> findAllBooks(int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
+    Page<Book> activeBooks = bookRepository.findAllActiveBooks(pageable);
 
     log.info("All books were found");
 
-    return bookRepository.findAllActiveBooks(pageable);
+    return PageResponseFactory.toPageResponse(activeBooks);
   }
 
   public Book findBook(UUID bookId) {
