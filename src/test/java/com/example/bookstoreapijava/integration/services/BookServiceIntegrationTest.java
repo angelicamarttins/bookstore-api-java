@@ -1,7 +1,7 @@
 package com.example.bookstoreapijava.integration.services;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.data.dto.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDTORequest;
 import com.example.bookstoreapijava.main.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.entities.Category;

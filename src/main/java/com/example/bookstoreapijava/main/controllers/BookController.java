@@ -1,6 +1,6 @@
 package com.example.bookstoreapijava.main.controllers;
 
-import com.example.bookstoreapijava.main.data.dto.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDTORequest;
 import com.example.bookstoreapijava.main.data.vo.BookCreatedVO;
 import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;

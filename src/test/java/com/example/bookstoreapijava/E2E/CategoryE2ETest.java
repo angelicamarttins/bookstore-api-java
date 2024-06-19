@@ -1,7 +1,7 @@
 package com.example.bookstoreapijava.E2E;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDTORequest;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;

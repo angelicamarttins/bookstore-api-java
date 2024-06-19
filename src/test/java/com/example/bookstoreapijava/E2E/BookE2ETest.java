@@ -1,7 +1,7 @@
 package com.example.bookstoreapijava.E2E;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.data.dto.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDTORequest;
 import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
@@ -14,8 +14,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
 import java.time.LocalDateTime;
 import java.util.*;

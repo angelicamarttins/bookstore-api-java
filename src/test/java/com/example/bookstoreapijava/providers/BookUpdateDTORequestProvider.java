@@ -1,6 +1,6 @@
 package com.example.bookstoreapijava.providers;
 
-import com.example.bookstoreapijava.main.data.dto.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDTORequest;
 
 import java.util.Map;
 import java.util.Optional;

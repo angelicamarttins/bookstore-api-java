@@ -1,7 +1,7 @@
 package com.example.bookstoreapijava.integration.services;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.data.dto.CategoryUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDTORequest;
 import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.CategoryAlreadyExistsException;
