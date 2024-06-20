@@ -2,9 +2,12 @@ package com.example.bookstoreapijava.E2E;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
 import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
+import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
+import io.restassured.path.json.JsonPath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -90,30 +93,40 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     List<Category> expectedCategories = createCategoryList();
     categoryRepository.saveAll(expectedCategories);
 
-    List<Category> actualCategories = Arrays.asList(given()
+    JsonPath response = given()
+        .params("page", 0)
+        .params("size", 1)
         .baseUri(baseURI)
         .get("/category")
         .then()
         .statusCode(200)
         .extract()
-        .as(Category[].class));
+        .response()
+        .jsonPath();
 
-    assertEquals(expectedCategories, actualCategories);
-    assertFalse(actualCategories.isEmpty());
+    List<Category> actualCategoriesContent = response.getList("content", Category.class);
+    Boolean hasNextPage = response.getBoolean("hasNextPage");
+
+    assertEquals(expectedCategories.getFirst(), actualCategoriesContent.getFirst());
+    assertTrue(hasNextPage);
   }
 
   @Test
   @DisplayName(value = "When category list is searched and there is not categories, returns correctly")
   void getCategoryEmptyListSuccessfully() {
-    List<Category> actualCategories = Arrays.asList(given()
+    JsonPath response = given()
         .baseUri(baseURI)
         .get("/category")
         .then()
         .statusCode(200)
         .extract()
-        .as(Category[].class));
+        .jsonPath();
 
-    assertTrue(actualCategories.isEmpty());
+    List<Category> actualActiveCategoriesContent = response.getList("content", Category.class);
+    Boolean hasNextPage = response.getBoolean("hasNextPage");
+
+    assertTrue(actualActiveCategoriesContent.isEmpty());
+    assertFalse(hasNextPage);
   }
 
   @Test

@@ -54,7 +54,6 @@ public class CategoryService {
     String sanitizedCategoryName = Utils.sanitizeStringField(category.getCategoryName());
     Optional<Category> maybeCategory =
         categoryRepository.getBySanitizedCategoryName(sanitizedCategoryName);
-    log.info("recoreco {}", maybeCategory);
 
     if (maybeCategory.isPresent()) {
       categoryValidator.checkIfCategoryAlreadyExists(maybeCategory.get());
