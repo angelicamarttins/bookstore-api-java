@@ -16,7 +16,7 @@ public class CategoryProvider {
     return new Category(
         UUID.randomUUID(),
         categoryName.orElse(UUID.randomUUID().toString().replace("-", "")),
-        categoryName.orElse(UUID.randomUUID().toString().replace("-", "")),
+        categoryName.orElse(UUID.randomUUID().toString().replace("-", "")).toUpperCase(),
         localDateTimeFormat(LocalDateTime.now()),
         null,
         null
