@@ -7,6 +7,7 @@ import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
 import com.example.bookstoreapijava.main.repositories.BookRepository;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
+import io.restassured.path.json.JsonPath;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -95,16 +96,19 @@ public class BookE2ETest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When book list is searched and there is no books, returns correctly")
   void getBookEmptyListSuccessfully() {
-    List<Book> actualBookList = given()
+    JsonPath response = given()
         .baseUri(baseURI)
         .get("/bookstore")
         .then()
         .extract()
         .response()
-        .jsonPath()
-        .getList("content", Book.class);
+        .jsonPath();
 
-    assertTrue(actualBookList.isEmpty());
+    List<Book> activeBooks = response.getList("content", Book.class);
+    Boolean hasNextPage = response.getBoolean("hasNextPage");
+
+    assertTrue(activeBooks.isEmpty());
+    assertFalse(hasNextPage);
   }
 
   @Test
@@ -116,17 +120,21 @@ public class BookE2ETest extends PostgresTestContainersBase {
     categoryRepository.save(category);
     bookRepository.saveAll(expectedBookList);
 
-    List<Book> actualBookList = given()
+    JsonPath response = given()
         .baseUri(baseURI)
+        .params("page", 0)
+        .params("size", 1)
         .get("/bookstore")
         .then()
         .extract()
         .response()
-        .jsonPath()
-        .getList("content", Book.class);
+        .jsonPath();
 
-    assertEquals(expectedBookList, actualBookList);
-    assertFalse(actualBookList.isEmpty());
+    List<Book> activeBooks = response.getList("content", Book.class);
+    Boolean hasNextPage = response.getBoolean("hasNextPage");
+
+    assertEquals(expectedBookList.getFirst(), activeBooks.getFirst());
+    assertTrue(hasNextPage);
   }
 
   @Test

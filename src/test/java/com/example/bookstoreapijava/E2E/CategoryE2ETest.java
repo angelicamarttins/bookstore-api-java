@@ -112,7 +112,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category list is searched and there is not categories, returns correctly")
+  @DisplayName(value = "When category list is searched and there is no categories, returns correctly")
   void getCategoryEmptyListSuccessfully() {
     JsonPath response = given()
         .baseUri(baseURI)
