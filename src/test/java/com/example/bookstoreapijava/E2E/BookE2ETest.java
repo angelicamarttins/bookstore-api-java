@@ -138,6 +138,31 @@ public class BookE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
+  @DisplayName(value = "When book list is searched and there is categories, returns correctly")
+  void getBookListSuccessfullyWithOnlyActiveBooks() {
+    Category category = createCategory(Optional.empty());
+    List<Book> expectedBookList = createBookList(Optional.of(category));
+    Book inactiveBook =
+        createBook(Optional.empty(), Optional.of(category), Optional.of(LocalDateTime.now()));
+    expectedBookList.add(inactiveBook);
+
+    categoryRepository.save(category);
+    bookRepository.saveAll(expectedBookList);
+
+    List<Book> activeBooks = given()
+        .baseUri(baseURI)
+        .get("/bookstore")
+        .then()
+        .extract()
+        .response()
+        .jsonPath()
+        .getList("content", Book.class);
+
+    assertNotEquals(expectedBookList, activeBooks);
+    assertTrue(expectedBookList.size() - 1 == activeBooks.size());
+  }
+
+  @Test
   @DisplayName(value = "When book is inserted and does not exist, returns correctly")
   void postBookSuccessfully() {
     Category category = createCategory(Optional.empty());
