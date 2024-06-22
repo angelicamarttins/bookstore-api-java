@@ -33,7 +33,7 @@ public class BookController {
   ) {
     log.info("Finding all books");
 
-    PageResponse<Book> response = bookService.findAllBooks(page, size) ;
+    PageResponse<Book> response = bookService.findAllBooks(page, size);
 
     return ResponseEntity.ok(response);
   }

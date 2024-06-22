@@ -138,7 +138,7 @@ public class BookE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book list is searched and there is categories, returns correctly")
+  @DisplayName(value = "When book list is searched and there is active and inactive categories, returns only categories correctly")
   void getBookListSuccessfullyWithOnlyActiveBooks() {
     Category category = createCategory(Optional.empty());
     List<Book> expectedBookList = createBookList(Optional.of(category));

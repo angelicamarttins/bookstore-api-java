@@ -17,15 +17,15 @@ public class PostgresTestContainersBase {
   @Container
   protected static final PostgreSQLContainer POSTGRES_CONTAINER;
 
-  @LocalServerPort
-  protected int port;
-
   static {
     POSTGRES_CONTAINER =
-    new PostgreSQLContainer<>("postgres:alpine");
+        new PostgreSQLContainer<>("postgres:alpine");
 
     POSTGRES_CONTAINER.start();
   }
+
+  @LocalServerPort
+  protected int port;
 
   @DynamicPropertySource
   static void configureProperties(DynamicPropertyRegistry registry) {
