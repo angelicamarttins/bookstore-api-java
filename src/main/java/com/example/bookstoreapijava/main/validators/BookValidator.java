@@ -5,11 +5,10 @@ import com.example.bookstoreapijava.main.exceptions.BookAlreadyExistsException;
 import com.example.bookstoreapijava.main.exceptions.BookIsInactiveException;
 import com.example.bookstoreapijava.main.exceptions.BookNotFoundException;
 import com.example.bookstoreapijava.main.repositories.BookRepository;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @Component
 @Slf4j
@@ -21,8 +20,8 @@ public class BookValidator {
   public void checkIfBookAlreadyExists(Book savedBook, String bookIsbn) {
     if (savedBook.getInactivatedAt() == null) {
       log.info("Book already exists. Aborting... BookIsbn: {}, BookId: {}",
-          savedBook.getIsbn(),
-          savedBook.getBookId());
+        savedBook.getIsbn(),
+        savedBook.getBookId());
 
       throw new BookAlreadyExistsException(bookIsbn);
     }
@@ -30,12 +29,12 @@ public class BookValidator {
 
   public Book checkIfBookIsFound(UUID bookId) {
     return bookRepository
-        .findById(bookId)
-        .orElseThrow(() -> {
-          log.info("Book not found. Aborting... BookId: {}", bookId);
+      .findById(bookId)
+      .orElseThrow(() -> {
+        log.info("Book not found. Aborting... BookId: {}", bookId);
 
-          return new BookNotFoundException(bookId);
-        });
+        return new BookNotFoundException(bookId);
+      });
   }
 
   public void checkIfBookIsInactive(Book book) {

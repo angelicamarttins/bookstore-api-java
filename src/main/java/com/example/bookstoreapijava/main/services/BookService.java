@@ -2,13 +2,18 @@ package com.example.bookstoreapijava.main.services;
 
 import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDTORequest;
 import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
-import com.example.bookstoreapijava.main.data.vo.BookCreatedVO;
+import com.example.bookstoreapijava.main.data.vo.BookCreatedVo;
 import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.factories.PageResponseFactory;
 import com.example.bookstoreapijava.main.repositories.BookRepository;
 import com.example.bookstoreapijava.main.validators.BookValidator;
 import com.example.bookstoreapijava.main.validators.CategoryValidator;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,12 +21,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -51,7 +50,7 @@ public class BookService {
     return book;
   }
 
-  public BookCreatedVO insertBook(Book book) throws URISyntaxException {
+  public BookCreatedVo insertBook(Book book) throws URISyntaxException {
     String bookIsbn = book.getIsbn();
     Optional<Book> maybeBook = bookRepository.findBookByIsbn(bookIsbn);
 
@@ -114,23 +113,23 @@ public class BookService {
     log.info("Book successfully inactivated. BookId: {}", bookId);
   }
 
-  private BookCreatedVO saveBook(Book book) throws URISyntaxException {
+  private BookCreatedVo saveBook(Book book) throws URISyntaxException {
     Book savedBook = bookRepository.save(book);
 
     URI uri = new URI(baseUrl + "/bookstore/" + savedBook.getBookId().toString());
 
     log.info("Book saved successfully. BookIsbn: {}, BookId: {}",
-        book.getIsbn(),
-        savedBook.getBookId()
+      book.getIsbn(),
+      savedBook.getBookId()
     );
 
-    return new BookCreatedVO(savedBook, uri);
+    return new BookCreatedVo(savedBook, uri);
   }
 
   private Book reactivateBook(Book savedBook) {
     log.info("Book has been inactivated. Will now reactivate it. BookIsbn: {}, BookId: {}",
-        savedBook.getIsbn(),
-        savedBook.getBookId()
+      savedBook.getIsbn(),
+      savedBook.getBookId()
     );
 
     savedBook.setInactivatedAt(null);
@@ -139,7 +138,7 @@ public class BookService {
     return savedBook;
   }
 
-  private BookCreatedVO createBook(Book book, String bookIsbn) throws URISyntaxException {
+  private BookCreatedVo createBook(Book book, String bookIsbn) throws URISyntaxException {
     UUID categoryId = book.getCategory().getCategoryId();
 
     Category category = categoryValidator.checkIfCategoryIsFound(categoryId);
@@ -147,10 +146,10 @@ public class BookService {
     categoryValidator.checkIfCategoryIsInactive(category);
 
     log.info(
-        "Book has not been created yet and category were found. Will now save book. " +
-            "BookIsbn: {}, CategoryId: {}",
-        bookIsbn,
-        categoryId
+      "Book has not been created yet and category were found. Will now save book. "
+        + "BookIsbn: {}, CategoryId: {}",
+      bookIsbn,
+      categoryId
     );
 
     return saveBook(book);

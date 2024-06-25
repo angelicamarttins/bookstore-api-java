@@ -1,21 +1,4 @@
-package com.example.bookstoreapijava.E2E;
-
-import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDTORequest;
-import com.example.bookstoreapijava.main.entities.Category;
-import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
-import com.example.bookstoreapijava.main.repositories.CategoryRepository;
-import io.restassured.path.json.JsonPath;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+package com.example.bookstoreapijava.e2e;
 
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
@@ -23,7 +6,27 @@ import static com.example.bookstoreapijava.providers.CategoryUpdateDTOProvider.c
 import static com.example.bookstoreapijava.providers.ExceptionDTOResponseProvider.createExceptionDTOResponse;
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import com.example.bookstoreapijava.config.PostgresTestContainersBase;
+import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDTORequest;
+import com.example.bookstoreapijava.main.entities.Category;
+import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
+import com.example.bookstoreapijava.main.repositories.CategoryRepository;
+import io.restassured.path.json.JsonPath;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 public class CategoryE2ETest extends PostgresTestContainersBase {
 
@@ -51,12 +54,12 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     categoryRepository.save(expectedCategory);
 
     Category actualCategory = given()
-        .baseUri(baseURI)
-        .get("/category/" + expectedCategory.getCategoryId())
-        .then()
-        .statusCode(200)
-        .extract()
-        .as(Category.class);
+      .baseUri(baseURI)
+      .get("/category/" + expectedCategory.getCategoryId())
+      .then()
+      .statusCode(200)
+      .extract()
+      .as(Category.class);
 
     assertEquals(expectedCategory, actualCategory);
   }
@@ -67,19 +70,19 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     UUID categoryId = UUID.randomUUID();
 
     ExceptionDTOResponse expectedExceptionDTOResponse =
-        createExceptionDTOResponse(
-            Optional.of(404),
-            Optional.of("CategoryNotFoundException"),
-            Optional.of("Category not found with id " + categoryId)
-        );
+      createExceptionDTOResponse(
+        Optional.of(404),
+        Optional.of("CategoryNotFoundException"),
+        Optional.of("Category not found with id " + categoryId)
+      );
 
     ExceptionDTOResponse actualExceptionDTOResponse = given()
-        .baseUri(baseURI)
-        .get("/category/" + categoryId)
-        .then()
-        .statusCode(404)
-        .extract()
-        .as(ExceptionDTOResponse.class);
+      .baseUri(baseURI)
+      .get("/category/" + categoryId)
+      .then()
+      .statusCode(404)
+      .extract()
+      .as(ExceptionDTOResponse.class);
 
     assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
   }
@@ -91,15 +94,15 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     categoryRepository.saveAll(expectedCategories);
 
     JsonPath response = given()
-        .params("page", 0)
-        .params("size", 1)
-        .baseUri(baseURI)
-        .get("/category")
-        .then()
-        .statusCode(200)
-        .extract()
-        .response()
-        .jsonPath();
+      .params("page", 0)
+      .params("size", 1)
+      .baseUri(baseURI)
+      .get("/category")
+      .then()
+      .statusCode(200)
+      .extract()
+      .response()
+      .jsonPath();
 
     List<Category> actualCategoriesContent = response.getList("content", Category.class);
     Boolean hasNextPage = response.getBoolean("hasNextPage");
@@ -112,12 +115,12 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   @DisplayName(value = "When category list is searched and there is no categories, returns correctly")
   void getCategoryEmptyListSuccessfully() {
     JsonPath response = given()
-        .baseUri(baseURI)
-        .get("/category")
-        .then()
-        .statusCode(200)
-        .extract()
-        .jsonPath();
+      .baseUri(baseURI)
+      .get("/category")
+      .then()
+      .statusCode(200)
+      .extract()
+      .jsonPath();
 
     List<Category> actualActiveCategoriesContent = response.getList("content", Category.class);
     Boolean hasNextPage = response.getBoolean("hasNextPage");
@@ -129,18 +132,19 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When category is inserted, return correctly")
   void postCategorySuccessfully() {
-    Category expectedCategory = createCategory(Optional.of("Category name")); //TODO: Ajustar para que nomes compostos, ambos os nomes permaneçam com letra maiúscula
+    Category expectedCategory = createCategory(Optional.of(
+      "Category name")); //TODO: Ajustar para que nomes compostos, ambos os nomes permaneçam com letra maiúscula
 
     Category actualCategory = given()
-        .baseUri(baseURI)
-        .contentType("application/json")
-        .body(expectedCategory)
-        .post("/category")
-        .then()
-        .header("Location", baseUrl + "/category/" + expectedCategory.getCategoryId())
-        .statusCode(201)
-        .extract()
-        .as(Category.class);
+      .baseUri(baseURI)
+      .contentType("application/json")
+      .body(expectedCategory)
+      .post("/category")
+      .then()
+      .header("Location", baseUrl + "/category/" + expectedCategory.getCategoryId())
+      .statusCode(201)
+      .extract()
+      .as(Category.class);
 
     assertEquals(expectedCategory, actualCategory);
   }
@@ -153,20 +157,20 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     categoryRepository.save(category);
 
     ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
-        Optional.of(409),
-        Optional.of("CategoryAlreadyExistsException"),
-        Optional.of("Category already exists with name " + category.getCategoryName())
+      Optional.of(409),
+      Optional.of("CategoryAlreadyExistsException"),
+      Optional.of("Category already exists with name " + category.getCategoryName())
     );
 
     ExceptionDTOResponse actualExceptionDTOResponse = given()
-        .baseUri(baseURI)
-        .contentType("application/json")
-        .body(category)
-        .post("/category")
-        .then()
-        .statusCode(409)
-        .extract()
-        .as(ExceptionDTOResponse.class);
+      .baseUri(baseURI)
+      .contentType("application/json")
+      .body(category)
+      .post("/category")
+      .then()
+      .statusCode(409)
+      .extract()
+      .as(ExceptionDTOResponse.class);
 
     assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
   }
@@ -181,14 +185,14 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     CategoryUpdateDTORequest categoryUpdateDTORequest = createCategoryUpdateDTO();
 
     Category updatedCategory = given()
-        .baseUri(baseURI)
-        .contentType("application/json")
-        .body(categoryUpdateDTORequest)
-        .patch("/category/" + savedCategory.getCategoryId())
-        .then()
-        .statusCode(200)
-        .extract()
-        .as(Category.class);
+      .baseUri(baseURI)
+      .contentType("application/json")
+      .body(categoryUpdateDTORequest)
+      .patch("/category/" + savedCategory.getCategoryId())
+      .then()
+      .statusCode(200)
+      .extract()
+      .as(Category.class);
 
     assertNotNull(updatedCategory);
     assertNotEquals(savedCategory, updatedCategory);
@@ -204,20 +208,20 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     CategoryUpdateDTORequest categoryUpdateDTORequest = createCategoryUpdateDTO();
 
     ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
-        Optional.of(404),
-        Optional.of("CategoryNotFoundException"),
-        Optional.of("Category not found with id " + categoryId)
+      Optional.of(404),
+      Optional.of("CategoryNotFoundException"),
+      Optional.of("Category not found with id " + categoryId)
     );
 
     ExceptionDTOResponse actualExceptionDTOResponse = given()
-        .baseUri(baseURI)
-        .contentType("application/json")
-        .body(categoryUpdateDTORequest)
-        .patch("/category/" + categoryId)
-        .then()
-        .statusCode(404)
-        .extract()
-        .as(ExceptionDTOResponse.class);
+      .baseUri(baseURI)
+      .contentType("application/json")
+      .body(categoryUpdateDTORequest)
+      .patch("/category/" + categoryId)
+      .then()
+      .statusCode(404)
+      .extract()
+      .as(ExceptionDTOResponse.class);
 
     assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
   }
@@ -230,10 +234,10 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     categoryRepository.save(savedCategory);
 
     given()
-        .baseUri(baseURI)
-        .delete("/category/" + savedCategory.getCategoryId())
-        .then()
-        .statusCode(204);
+      .baseUri(baseURI)
+      .delete("/category/" + savedCategory.getCategoryId())
+      .then()
+      .statusCode(204);
 
     Category deletedCategory = categoryRepository.findById(savedCategory.getCategoryId()).get();
 
@@ -248,18 +252,18 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
     UUID categoryId = UUID.randomUUID();
 
     ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
-        Optional.of(404),
-        Optional.of("CategoryNotFoundException"),
-        Optional.of("Category not found with id " + categoryId)
+      Optional.of(404),
+      Optional.of("CategoryNotFoundException"),
+      Optional.of("Category not found with id " + categoryId)
     );
 
     ExceptionDTOResponse actualExceptionDTOResponse = given()
-        .baseUri(baseURI)
-        .delete("/category/" + categoryId)
-        .then()
-        .statusCode(404)
-        .extract()
-        .as(ExceptionDTOResponse.class);
+      .baseUri(baseURI)
+      .delete("/category/" + categoryId)
+      .then()
+      .statusCode(404)
+      .extract()
+      .as(ExceptionDTOResponse.class);
 
     assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
   }

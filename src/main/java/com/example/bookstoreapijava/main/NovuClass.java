@@ -8,7 +8,6 @@ import co.novu.api.notifications.requests.NotificationRequest;
 import co.novu.api.notifications.responses.NotificationsResponse;
 import co.novu.api.subscribers.requests.UpdateSubscriberRequest;
 import co.novu.common.base.Novu;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,39 +18,39 @@ public class NovuClass {
     String apiKey = "70af9423233f461a0667d1967522f65b";
     Novu novu = new Novu(apiKey);
 
-//    subscribe(novu);
+    // subscribe(novu);
     //update(novu);
     SubscriberRequest subscriberRequest = new SubscriberRequest();
     subscriberRequest.setSubscriberId("65d5eec934a25e4f83a5fb18");
     trigger(novu, subscriberRequest);
-//    SingleSubscriberResponse sub =
-//        novu.getSubscriber("e9b613b6-5ecd-4943-bb85-306c5534e46d");
+    //    SingleSubscriberResponse sub =
+    //        novu.getSubscriber("e9b613b6-5ecd-4943-bb85-306c5534e46d");
 
-//    TopicRequest topicRequestA = new TopicRequest();
-//    TopicRequest topicRequestB = new TopicRequest();
-//    topicRequestA.setKey("testA");
-//    topicRequestB.setKey("testB");
-//    topicRequestA.setName("This is a test A/B and this is for A group.");
-//    topicRequestB.setName("This is a test A/B and this is for B group.");
-//    novu.createTopic(topicRequestA);
-//    novu.createTopic(topicRequestB);
+    //    TopicRequest topicRequestA = new TopicRequest();
+    //    TopicRequest topicRequestB = new TopicRequest();
+    //    topicRequestA.setKey("testA");
+    //    topicRequestB.setKey("testB");
+    //    topicRequestA.setName("This is a test A/B and this is for A group.");
+    //    topicRequestB.setName("This is a test A/B and this is for B group.");
+    //    novu.createTopic(topicRequestA);
+    //    novu.createTopic(topicRequestB);
 
-//    TopicResponse a = novu.getTopic("testA");
-//    TopicResponse b =novu.getTopic("testB");
-//    System.out.println(a);
-//    System.out.println(b);
+    //    TopicResponse a = novu.getTopic("testA");
+    //    TopicResponse b =novu.getTopic("testB");
+    //    System.out.println(a);
+    //    System.out.println(b);
 
-//    List<String> subA = Arrays.asList("e9b613b6-5ecd-4943-bb85-306c5534e46d");
-//    List<String> subB = Arrays.asList("9b88fe4a-ecd1-4812-ab48-c4224c2ee38a");
-//    SubscriberAdditionRequest subscriberAdditionRequestA = new SubscriberAdditionRequest();
-//    subscriberAdditionRequestA.setSubscribers(subA);
-//    SubscriberAdditionRequest subscriberAdditionRequestB = new SubscriberAdditionRequest();
-//    subscriberAdditionRequestB.setSubscribers(subB);
-//    novu.addSubscriberToTopic(subscriberAdditionRequestA, "testA");
-//    novu.addSubscriberToTopic(subscriberAdditionRequestB, "testB");
+    //    List<String> subA = Arrays.asList("e9b613b6-5ecd-4943-bb85-306c5534e46d");
+    //    List<String> subB = Arrays.asList("9b88fe4a-ecd1-4812-ab48-c4224c2ee38a");
+    //    SubscriberAdditionRequest subscriberAdditionRequestA = new SubscriberAdditionRequest();
+    //    subscriberAdditionRequestA.setSubscribers(subA);
+    //    SubscriberAdditionRequest subscriberAdditionRequestB = new SubscriberAdditionRequest();
+    //    subscriberAdditionRequestB.setSubscribers(subB);
+    //    novu.addSubscriberToTopic(subscriberAdditionRequestA, "testA");
+    //    novu.addSubscriberToTopic(subscriberAdditionRequestB, "testB");
 
-//    triggerA(novu);
-//    triggerB(novu);
+    //    triggerA(novu);
+    //    triggerB(novu);
   }
 
   private static SubscriberRequest subscribe(Novu novu) {

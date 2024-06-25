@@ -5,11 +5,10 @@ import com.example.bookstoreapijava.main.exceptions.CategoryAlreadyExistsExcepti
 import com.example.bookstoreapijava.main.exceptions.CategoryIsInactiveException;
 import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.UUID;
 
 @Component
 @Slf4j
@@ -20,12 +19,12 @@ public class CategoryValidator {
 
   public Category checkIfCategoryIsFound(UUID categoryId) {
     return categoryRepository
-        .findById(categoryId)
-        .orElseThrow(() -> {
-          log.info("Category not found. Aborting... CategoryId: {}", categoryId);
+      .findById(categoryId)
+      .orElseThrow(() -> {
+        log.info("Category not found. Aborting... CategoryId: {}", categoryId);
 
-          return new CategoryNotFoundException(categoryId);
-        });
+        return new CategoryNotFoundException(categoryId);
+      });
   }
 
   public void checkIfCategoryAlreadyExists(Category category) {

@@ -19,7 +19,7 @@ public class PostgresTestContainersBase {
 
   static {
     POSTGRES_CONTAINER =
-        new PostgreSQLContainer<>("postgres:alpine");
+      new PostgreSQLContainer<>("postgres:alpine");
 
     POSTGRES_CONTAINER.start();
   }

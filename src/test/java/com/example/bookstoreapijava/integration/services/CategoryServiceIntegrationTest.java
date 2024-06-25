@@ -1,5 +1,15 @@
 package com.example.bookstoreapijava.integration.services;
 
+import static com.example.bookstoreapijava.providers.CategoryCreatedVOProvider.createCategoryCreatedVO;
+import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
+import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
+import static com.example.bookstoreapijava.providers.CategoryUpdateDTOProvider.createCategoryUpdateDTO;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
 import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDTORequest;
 import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
@@ -10,21 +20,14 @@ import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
 import com.example.bookstoreapijava.main.repositories.BookRepository;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.services.CategoryService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static com.example.bookstoreapijava.providers.CategoryCreatedVOProvider.createCategoryCreatedVO;
-import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
-import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
-import static com.example.bookstoreapijava.providers.CategoryUpdateDTOProvider.createCategoryUpdateDTO;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
@@ -64,12 +67,12 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
     categoryRepository.save(firstCategory);
 
     CategoryAlreadyExistsException categoryAlreadyExistsException = assertThrows(
-        CategoryAlreadyExistsException.class,
-        () -> categoryService.insertCategory(secondCategory)
+      CategoryAlreadyExistsException.class,
+      () -> categoryService.insertCategory(secondCategory)
     );
 
     String expectedExceptionMessage =
-        "Category already exists with name " + secondCategory.getCategoryName();
+      "Category already exists with name " + secondCategory.getCategoryName();
 
     assertTrue(categoryAlreadyExistsException.getMessage().contains(expectedExceptionMessage));
   }
@@ -106,8 +109,8 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
     UUID categoryId = UUID.randomUUID();
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
-        CategoryNotFoundException.class,
-        () -> categoryService.findCategory(categoryId)
+      CategoryNotFoundException.class,
+      () -> categoryService.findCategory(categoryId)
     );
 
     String expectedExceptionMessage = "Category not found with id " + categoryId;
@@ -123,7 +126,8 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
     categoryRepository.save(category);
 
-    Category savedCategory = categoryService.updateCategory(categoryUpdateDTORequest, category.getCategoryId());
+    Category savedCategory =
+      categoryService.updateCategory(categoryUpdateDTORequest, category.getCategoryId());
 
     assertNotNull(savedCategory);
     assertNotNull(savedCategory.getUpdatedAt());
@@ -138,8 +142,8 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
     CategoryUpdateDTORequest categoryUpdateDTORequest = createCategoryUpdateDTO();
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
-        CategoryNotFoundException.class,
-        () -> categoryService.updateCategory(categoryUpdateDTORequest, categoryId)
+      CategoryNotFoundException.class,
+      () -> categoryService.updateCategory(categoryUpdateDTORequest, categoryId)
     );
 
     String expectedExceptionMessage = "Category not found with id " + categoryId;
@@ -171,8 +175,8 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
     UUID categoryId = UUID.randomUUID();
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
-        CategoryNotFoundException.class,
-        () -> categoryService.inactiveCategory(categoryId)
+      CategoryNotFoundException.class,
+      () -> categoryService.inactiveCategory(categoryId)
     );
 
     String expectedExceptionMessage = "Category not found with id " + categoryId;

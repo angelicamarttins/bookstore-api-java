@@ -1,25 +1,24 @@
 package com.example.bookstoreapijava.providers;
 
-import com.example.bookstoreapijava.main.entities.Category;
+import static com.example.bookstoreapijava.utils.TestUtils.localDateTimeFormat;
 
+import com.example.bookstoreapijava.main.entities.Category;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.example.bookstoreapijava.utils.TestUtils.localDateTimeFormat;
-
 public class CategoryProvider {
 
   public static Category createCategory(Optional<String> categoryName) {
     return new Category(
-        UUID.randomUUID(),
-        categoryName.orElse(UUID.randomUUID().toString().replace("-", "")),
-        categoryName.orElse(UUID.randomUUID().toString().replace("-", "")).toUpperCase(),
-        localDateTimeFormat(LocalDateTime.now()),
-        null,
-        null
+      UUID.randomUUID(),
+      categoryName.orElse(UUID.randomUUID().toString().replace("-", "")),
+      categoryName.orElse(UUID.randomUUID().toString().replace("-", "")).toUpperCase(),
+      localDateTimeFormat(LocalDateTime.now()),
+      null,
+      null
     );
   }
 

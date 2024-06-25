@@ -8,6 +8,11 @@ import com.example.bookstoreapijava.main.factories.PageResponseFactory;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.utils.Utils;
 import com.example.bookstoreapijava.main.validators.CategoryValidator;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,12 +20,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -53,7 +52,7 @@ public class CategoryService {
   public CategoryCreatedVO insertCategory(Category category) throws URISyntaxException {
     String sanitizedCategoryName = Utils.sanitizeStringField(category.getCategoryName());
     Optional<Category> maybeCategory =
-        categoryRepository.getBySanitizedCategoryName(sanitizedCategoryName);
+      categoryRepository.getBySanitizedCategoryName(sanitizedCategoryName);
 
     if (maybeCategory.isPresent()) {
       categoryValidator.checkIfCategoryAlreadyExists(maybeCategory.get());
@@ -95,7 +94,8 @@ public class CategoryService {
     log.info("Category deleted successfully. CategoryId: {}", categoryId);
   }
 
-  private CategoryCreatedVO createCategory(Category category, boolean shouldSaveCategory) throws URISyntaxException {
+  private CategoryCreatedVO createCategory(Category category, boolean shouldSaveCategory)
+    throws URISyntaxException {
     Category newCategory = category;
 
     if (shouldSaveCategory) {
@@ -103,7 +103,7 @@ public class CategoryService {
     }
 
     URI uri =
-        new URI(baseUrl + "/category/" + newCategory.getCategoryId().toString());
+      new URI(baseUrl + "/category/" + newCategory.getCategoryId().toString());
 
     return new CategoryCreatedVO(newCategory, uri);
   }
@@ -112,8 +112,8 @@ public class CategoryService {
     Category newCategory = categoryRepository.save(updateSanitizedCategoryName(category));
 
     log.info("Category saved successfully. CategoryName: {}, CategoryId: {}",
-        category.getCategoryName(),
-        category.getCategoryId()
+      category.getCategoryName(),
+      category.getCategoryId()
     );
 
     return newCategory;
@@ -129,9 +129,10 @@ public class CategoryService {
 
 
   private Category reactivateCategory(Category savedCategory) {
-    log.info("Category has been inactivated. Will now reactivate it. CategoryName: {}, CategoryId: {}",
-        savedCategory.getCategoryName(),
-        savedCategory.getCategoryId()
+    log.info(
+      "Category has been inactivated. Will now reactivate it. CategoryName: {}, CategoryId: {}",
+      savedCategory.getCategoryName(),
+      savedCategory.getCategoryId()
     );
 
     Category sanitizedCategory = updateSanitizedCategoryName(savedCategory);

@@ -7,8 +7,8 @@ public class PageResponseFactory {
 
   public static <T> PageResponse<T> toPageResponse(Page<T> page) {
     return new PageResponse<>(
-        page.getContent(),
-        page.hasNext()
+      page.getContent(),
+      page.hasNext()
     );
   }
 
