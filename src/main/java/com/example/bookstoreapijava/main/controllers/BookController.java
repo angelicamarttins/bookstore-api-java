@@ -1,6 +1,6 @@
 package com.example.bookstoreapijava.main.controllers;
 
-import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDtoRequest;
 import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
 import com.example.bookstoreapijava.main.data.vo.BookCreatedVo;
 import com.example.bookstoreapijava.main.entities.Book;
@@ -69,7 +69,7 @@ public class BookController {
   @PatchMapping("/{bookId}")
   public ResponseEntity<Book> updateBook(
     @PathVariable UUID bookId,
-    @RequestBody @Valid BookUpdateDTORequest updatedBook
+    @RequestBody @Valid BookUpdateDtoRequest updatedBook
   ) throws URISyntaxException {
     log.info("Updating book. BookId: {}", bookId);
 

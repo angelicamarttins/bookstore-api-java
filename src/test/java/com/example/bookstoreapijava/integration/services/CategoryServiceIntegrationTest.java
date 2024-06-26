@@ -1,9 +1,9 @@
 package com.example.bookstoreapijava.integration.services;
 
-import static com.example.bookstoreapijava.providers.CategoryCreatedVOProvider.createCategoryCreatedVO;
+import static com.example.bookstoreapijava.providers.CategoryCreatedVoProvider.createCategoryCreatedVo;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
-import static com.example.bookstoreapijava.providers.CategoryUpdateDTOProvider.createCategoryUpdateDTO;
+import static com.example.bookstoreapijava.providers.CategoryUpdateDtoProvider.createCategoryUpdateDto;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDtoRequest;
 import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
-import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
+import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVo;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.CategoryAlreadyExistsException;
 import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
@@ -49,17 +49,18 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @DisplayName(value = "When category is inserted, should return correctly")
   void should_returnEquals_when_categoryIsInsertedCorrectly() throws URISyntaxException {
     Category category = createCategory(Optional.empty());
-    CategoryCreatedVO categoryCreatedVO = createCategoryCreatedVO(category);
+    CategoryCreatedVo categoryCreatedVo = createCategoryCreatedVo(category);
 
-    CategoryCreatedVO savedCategoryCreatedVO = categoryService.insertCategory(category);
+    CategoryCreatedVo savedCategoryCreatedVo = categoryService.insertCategory(category);
 
-    assertNotNull(savedCategoryCreatedVO);
-    assertEquals(categoryCreatedVO, savedCategoryCreatedVO);
-    assertEquals(category, savedCategoryCreatedVO.category());
+    assertNotNull(savedCategoryCreatedVo);
+    assertEquals(categoryCreatedVo, savedCategoryCreatedVo);
+    assertEquals(category, savedCategoryCreatedVo.category());
   }
 
   @Test
-  @DisplayName(value = "When a category already exists and try to insert again, should throw exception correctly")
+  @DisplayName(value = "When a category already exists and try to insert again, "
+    + "should throw exception correctly")
   void should_throwException_when_categoryAlreadyExistsAndIsInsertAgain() {
     Category firstCategory = createCategory(Optional.of("Test"));
     Category secondCategory = createCategory(Optional.of("Test"));
@@ -104,7 +105,8 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is searched and is not found, should throw exception correctly")
+  @DisplayName(value = "When category is searched and is not found, "
+    + "should throw exception correctly")
   void should_throwException_when_isSearchedAndCategoryIsNotFound() {
     UUID categoryId = UUID.randomUUID();
 
@@ -122,31 +124,31 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @DisplayName(value = "When a category is updated, should return correctly")
   void should_returnEquals_when_categoryIsUpdated() {
     Category category = createCategory(Optional.empty());
-    CategoryUpdateDTORequest categoryUpdateDTORequest = createCategoryUpdateDTO();
+    CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
 
     categoryRepository.save(category);
 
     Category savedCategory =
-      categoryService.updateCategory(categoryUpdateDTORequest, category.getCategoryId());
+      categoryService.updateCategory(categoryUpdateDtoRequest, category.getCategoryId());
 
     assertNotNull(savedCategory);
     assertNotNull(savedCategory.getUpdatedAt());
-    assertEquals(categoryUpdateDTORequest.categoryName(), savedCategory.getCategoryName());
+    assertEquals(categoryUpdateDtoRequest.categoryName(), savedCategory.getCategoryName());
     assertNotEquals(category, savedCategory);
   }
 
   @Test
-  @DisplayName(value = "When category is updated and is not found, should throw exception correctly")
+  @DisplayName(value = "When category is updated and is not found, "
+    + "should throw exception correctly")
   void should_throwException_when_isUpdatedAndCategoryIsNotFound() {
     UUID categoryId = UUID.randomUUID();
-    CategoryUpdateDTORequest categoryUpdateDTORequest = createCategoryUpdateDTO();
+    CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
+    String expectedExceptionMessage = "Category not found with id " + categoryId;
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
       CategoryNotFoundException.class,
-      () -> categoryService.updateCategory(categoryUpdateDTORequest, categoryId)
+      () -> categoryService.updateCategory(categoryUpdateDtoRequest, categoryId)
     );
-
-    String expectedExceptionMessage = "Category not found with id " + categoryId;
 
     assertTrue(categoryNotFoundException.getMessage().contains(expectedExceptionMessage));
   }
@@ -170,16 +172,16 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is deleted and is not found, should throw exception correctly")
+  @DisplayName(value = "When category is deleted and is not found, "
+    + "should throw exception correctly")
   void should_throwException_when_isDeletedAndCategoryIsNotFound() {
     UUID categoryId = UUID.randomUUID();
+    String expectedExceptionMessage = "Category not found with id " + categoryId;
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
       CategoryNotFoundException.class,
       () -> categoryService.inactiveCategory(categoryId)
     );
-
-    String expectedExceptionMessage = "Category not found with id " + categoryId;
 
     assertTrue(categoryNotFoundException.getMessage().contains(expectedExceptionMessage));
   }

@@ -1,22 +1,21 @@
 package com.example.bookstoreapijava.providers;
 
-import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
+import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVo;
 import com.example.bookstoreapijava.main.entities.Category;
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.springframework.beans.factory.annotation.Value;
 
-public class CategoryCreatedVOProvider {
+public class CategoryCreatedVoProvider {
 
   @Value("${app.baseUrl}")
   private static String baseUrl;
 
-  public static CategoryCreatedVO createCategoryCreatedVO(Category category)
+  public static CategoryCreatedVo createCategoryCreatedVo(Category category)
     throws URISyntaxException {
-    URI uri =
-      new URI(baseUrl + "/category/" + category.getCategoryId());
+    URI uri = new URI(baseUrl + "/category/" + category.getCategoryId());
 
-    return new CategoryCreatedVO(category, uri);
+    return new CategoryCreatedVo(category, uri);
   }
 
 }

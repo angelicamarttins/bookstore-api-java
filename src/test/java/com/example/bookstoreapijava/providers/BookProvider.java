@@ -34,7 +34,12 @@ public class BookProvider {
     List<Book> bookList = new ArrayList<>();
 
     for (int i = 0; i <= 5; i++) {
-      bookList.add(createBook(Optional.of("0123456789" + i), category, Optional.empty()));
+      bookList.add(
+        createBook(
+          Optional.of("0123456789" + i),
+          category, Optional.empty()
+        )
+      );
     }
 
     return bookList;

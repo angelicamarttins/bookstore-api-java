@@ -17,8 +17,8 @@ public interface CategoryRepository extends JpaRepository<Category, UUID> {
   Page<Category> findAllActiveCategories(Pageable pageable);
 
   @Modifying
-  @Query("UPDATE Category SET inactivatedAt = NULL " +
-    "WHERE categoryId = :categoryId AND inactivatedAt IS NOT NULL")
+  @Query("UPDATE Category SET inactivatedAt = NULL "
+    + "WHERE categoryId = :categoryId AND inactivatedAt IS NOT NULL")
   void reactivateByCategoryId(UUID categoryId);
 
 }

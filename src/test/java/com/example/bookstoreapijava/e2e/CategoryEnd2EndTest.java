@@ -2,8 +2,8 @@ package com.example.bookstoreapijava.e2e;
 
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
-import static com.example.bookstoreapijava.providers.CategoryUpdateDTOProvider.createCategoryUpdateDTO;
-import static com.example.bookstoreapijava.providers.ExceptionDTOResponseProvider.createExceptionDTOResponse;
+import static com.example.bookstoreapijava.providers.CategoryUpdateDtoProvider.createCategoryUpdateDto;
+import static com.example.bookstoreapijava.providers.ExceptionDtoResponseProvider.createExceptionDtoResponse;
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -13,9 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDtoRequest;
 import com.example.bookstoreapijava.main.entities.Category;
-import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
+import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDtoResponse;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import io.restassured.path.json.JsonPath;
 import java.util.List;
@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-public class CategoryE2ETest extends PostgresTestContainersBase {
+public class CategoryEnd2EndTest extends PostgresTestContainersBase {
 
   @Value("${app.baseUrl}")
   private static String baseUrl;
@@ -51,6 +51,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   void getCategoryByIdSuccessfully() {
     String categoryName = "Test Category Name";
     Category expectedCategory = createCategory(Optional.of(categoryName));
+
     categoryRepository.save(expectedCategory);
 
     Category actualCategory = given()
@@ -65,32 +66,34 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is searched and is not found, should throws exception correctly")
+  @DisplayName(value = "When category is searched and is not found, "
+    + "should throws exception correctly")
   void getCategoryByIdNotFound() {
     UUID categoryId = UUID.randomUUID();
 
-    ExceptionDTOResponse expectedExceptionDTOResponse =
-      createExceptionDTOResponse(
+    ExceptionDtoResponse expectedExceptionDtoResponse =
+      createExceptionDtoResponse(
         Optional.of(404),
         Optional.of("CategoryNotFoundException"),
         Optional.of("Category not found with id " + categoryId)
       );
 
-    ExceptionDTOResponse actualExceptionDTOResponse = given()
+    ExceptionDtoResponse actualExceptionDtoResponse = given()
       .baseUri(baseURI)
       .get("/category/" + categoryId)
       .then()
       .statusCode(404)
       .extract()
-      .as(ExceptionDTOResponse.class);
+      .as(ExceptionDtoResponse.class);
 
-    assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+    assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
   }
 
   @Test
   @DisplayName(value = "When category list is searched and there is categories, returns correctly")
   void getCategoryListSuccessfully() {
     List<Category> expectedCategories = createCategoryList();
+
     categoryRepository.saveAll(expectedCategories);
 
     JsonPath response = given()
@@ -112,7 +115,8 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category list is searched and there is no categories, returns correctly")
+  @DisplayName(value = "When category list is searched and there is no categories, "
+    + "returns correctly")
   void getCategoryEmptyListSuccessfully() {
     JsonPath response = given()
       .baseUri(baseURI)
@@ -132,8 +136,8 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When category is inserted, return correctly")
   void postCategorySuccessfully() {
-    Category expectedCategory = createCategory(Optional.of(
-      "Category name")); //TODO: Ajustar para que nomes compostos, ambos os nomes permaneçam com letra maiúscula
+    Category expectedCategory = createCategory(Optional.of("Category name"));
+    //TODO: Ajustar para que nomes compostos, ambos os nomes permaneçam com letra maiúscula
 
     Category actualCategory = given()
       .baseUri(baseURI)
@@ -154,15 +158,15 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   void postCategoryAlreadyExists() {
     Category category = createCategory(Optional.of("Category name"));
 
-    categoryRepository.save(category);
-
-    ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
+    ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(409),
       Optional.of("CategoryAlreadyExistsException"),
       Optional.of("Category already exists with name " + category.getCategoryName())
     );
 
-    ExceptionDTOResponse actualExceptionDTOResponse = given()
+    categoryRepository.save(category);
+
+    ExceptionDtoResponse actualExceptionDtoResponse = given()
       .baseUri(baseURI)
       .contentType("application/json")
       .body(category)
@@ -170,24 +174,23 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
       .then()
       .statusCode(409)
       .extract()
-      .as(ExceptionDTOResponse.class);
+      .as(ExceptionDtoResponse.class);
 
-    assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+    assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
   }
 
   @Test
   @DisplayName(value = "When category is updated, return correctly")
   void updateCategorySuccessfully() {
     Category savedCategory = createCategory(Optional.empty());
+    CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
 
     categoryRepository.save(savedCategory);
-
-    CategoryUpdateDTORequest categoryUpdateDTORequest = createCategoryUpdateDTO();
 
     Category updatedCategory = given()
       .baseUri(baseURI)
       .contentType("application/json")
-      .body(categoryUpdateDTORequest)
+      .body(categoryUpdateDtoRequest)
       .patch("/category/" + savedCategory.getCategoryId())
       .then()
       .statusCode(200)
@@ -196,7 +199,7 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
 
     assertNotNull(updatedCategory);
     assertNotEquals(savedCategory, updatedCategory);
-    assertEquals(categoryUpdateDTORequest.categoryName(), updatedCategory.getCategoryName());
+    assertEquals(categoryUpdateDtoRequest.categoryName(), updatedCategory.getCategoryName());
     assertNotNull(updatedCategory.getUpdatedAt());
   }
 
@@ -204,26 +207,25 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   @DisplayName(value = "When category is updated and is not found, throws exception correctly")
   void updateCategoryNotFound() {
     UUID categoryId = UUID.randomUUID();
+    CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
 
-    CategoryUpdateDTORequest categoryUpdateDTORequest = createCategoryUpdateDTO();
-
-    ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
+    ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(404),
       Optional.of("CategoryNotFoundException"),
       Optional.of("Category not found with id " + categoryId)
     );
 
-    ExceptionDTOResponse actualExceptionDTOResponse = given()
+    ExceptionDtoResponse actualExceptionDtoResponse = given()
       .baseUri(baseURI)
       .contentType("application/json")
-      .body(categoryUpdateDTORequest)
+      .body(categoryUpdateDtoRequest)
       .patch("/category/" + categoryId)
       .then()
       .statusCode(404)
       .extract()
-      .as(ExceptionDTOResponse.class);
+      .as(ExceptionDtoResponse.class);
 
-    assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+    assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
   }
 
   @Test
@@ -251,21 +253,21 @@ public class CategoryE2ETest extends PostgresTestContainersBase {
   void deleteCategoryNotFound() {
     UUID categoryId = UUID.randomUUID();
 
-    ExceptionDTOResponse expectedExceptionDTOResponse = createExceptionDTOResponse(
+    ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(404),
       Optional.of("CategoryNotFoundException"),
       Optional.of("Category not found with id " + categoryId)
     );
 
-    ExceptionDTOResponse actualExceptionDTOResponse = given()
+    ExceptionDtoResponse actualExceptionDtoResponse = given()
       .baseUri(baseURI)
       .delete("/category/" + categoryId)
       .then()
       .statusCode(404)
       .extract()
-      .as(ExceptionDTOResponse.class);
+      .as(ExceptionDtoResponse.class);
 
-    assertEquals(expectedExceptionDTOResponse, actualExceptionDTOResponse);
+    assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
   }
 
 }

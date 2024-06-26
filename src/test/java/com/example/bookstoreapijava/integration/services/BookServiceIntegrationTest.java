@@ -3,7 +3,7 @@ package com.example.bookstoreapijava.integration.services;
 import static com.example.bookstoreapijava.providers.BookCreatedVoProvider.createBookCreatedVo;
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
 import static com.example.bookstoreapijava.providers.BookProvider.createBookList;
-import static com.example.bookstoreapijava.providers.BookUpdateDTORequestProvider.createBookUpdateDTORequest;
+import static com.example.bookstoreapijava.providers.BookUpdateDtoRequestProvider.createBookUpdateDtoRequest;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDtoRequest;
 import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
 import com.example.bookstoreapijava.main.data.vo.BookCreatedVo;
 import com.example.bookstoreapijava.main.entities.Book;
@@ -193,8 +193,8 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     bookInfo.put("isbn", Optional.empty());
 
 
-    BookUpdateDTORequest bookUpdateDtoRequest =
-      createBookUpdateDTORequest(bookInfo, Optional.empty());
+    BookUpdateDtoRequest bookUpdateDtoRequest =
+      createBookUpdateDtoRequest(bookInfo, Optional.empty());
 
     BookNotFoundException bookNotFoundException = assertThrows(
       BookNotFoundException.class,
@@ -216,8 +216,8 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     bookInfo.put("isbn", Optional.empty());
     Book book = createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
-    BookUpdateDTORequest bookUpdateDtoRequest =
-      createBookUpdateDTORequest(bookInfo, Optional.empty());
+    BookUpdateDtoRequest bookUpdateDtoRequest =
+      createBookUpdateDtoRequest(bookInfo, Optional.empty());
 
     categoryRepository.save(book.getCategory());
     bookRepository.save(book);
@@ -240,8 +240,8 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     bookInfo.put("isbn", Optional.empty());
     Book book = createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
-    BookUpdateDTORequest bookUpdateDtoRequest =
-      createBookUpdateDTORequest(bookInfo, Optional.empty());
+    BookUpdateDtoRequest bookUpdateDtoRequest =
+      createBookUpdateDtoRequest(bookInfo, Optional.empty());
 
     categoryRepository.save(book.getCategory());
     bookRepository.save(book);
@@ -265,8 +265,8 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
 
     bookInfo.put("isbn", Optional.of(newBookIsbn));
 
-    BookUpdateDTORequest bookUpdateDtoRequest =
-      createBookUpdateDTORequest(bookInfo, Optional.empty());
+    BookUpdateDtoRequest bookUpdateDtoRequest =
+      createBookUpdateDtoRequest(bookInfo, Optional.empty());
 
     categoryRepository.save(book.getCategory());
     bookRepository.save(book);
@@ -293,8 +293,8 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     categoryRepository.save(newCategory);
     bookRepository.save(book);
 
-    BookUpdateDTORequest bookUpdateDtoRequest =
-      createBookUpdateDTORequest(bookInfo, Optional.of(newCategory.getCategoryId()));
+    BookUpdateDtoRequest bookUpdateDtoRequest =
+      createBookUpdateDtoRequest(bookInfo, Optional.of(newCategory.getCategoryId()));
 
     Book updatedBook = bookService.updateBook(book.getBookId(), bookUpdateDtoRequest);
 
@@ -315,8 +315,8 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     bookInfo.put("isbn", Optional.of("9876543210"));
     Book book = createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
-    BookUpdateDTORequest bookUpdateDtoRequest =
-      createBookUpdateDTORequest(bookInfo, Optional.of(newCategory.getCategoryId()));
+    BookUpdateDtoRequest bookUpdateDtoRequest =
+      createBookUpdateDtoRequest(bookInfo, Optional.of(newCategory.getCategoryId()));
 
     categoryRepository.save(book.getCategory());
     bookRepository.save(book);
@@ -344,8 +344,8 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     categoryRepository.save(book.getCategory());
     bookRepository.save(book);
 
-    BookUpdateDTORequest bookUpdateDtoRequest =
-      createBookUpdateDTORequest(bookInfo, Optional.empty());
+    BookUpdateDtoRequest bookUpdateDtoRequest =
+      createBookUpdateDtoRequest(bookInfo, Optional.empty());
 
     Book updatedBook = bookService.updateBook(book.getBookId(), bookUpdateDtoRequest);
 

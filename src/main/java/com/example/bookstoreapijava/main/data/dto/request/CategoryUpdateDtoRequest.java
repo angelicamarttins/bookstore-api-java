@@ -1,4 +1,4 @@
 package com.example.bookstoreapijava.main.data.dto.request;
 
-public record CategoryUpdateDTORequest(String categoryName) {
+public record CategoryUpdateDtoRequest(String categoryName) {
 }

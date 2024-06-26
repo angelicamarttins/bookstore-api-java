@@ -1,6 +1,6 @@
 package com.example.bookstoreapijava.main.exceptions;
 
-import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
+import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDtoResponse;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -13,17 +13,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public ResponseEntity<List<ExceptionDTOResponse>> handleValidationExceptions(
+  public ResponseEntity<List<ExceptionDtoResponse>> handleValidationExceptions(
     MethodArgumentNotValidException methodArgumentNotValidException
   ) {
     HttpStatus badRequest = HttpStatus.BAD_REQUEST;
-    List<ExceptionDTOResponse> invalidArguments = new ArrayList<>();
+    List<ExceptionDtoResponse> invalidArguments = new ArrayList<>();
 
     methodArgumentNotValidException
       .getBindingResult()
       .getAllErrors()
       .forEach(error -> {
-        ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+        ExceptionDtoResponse exceptionResponse = new ExceptionDtoResponse(
           badRequest.value(),
           MethodArgumentNotValidException.class.getSimpleName(),
           error.getDefaultMessage()
@@ -38,13 +38,13 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(RuntimeException.class)
-  public ResponseEntity<ExceptionDTOResponse> handleRuntimeException(
+  public ResponseEntity<ExceptionDtoResponse> handleRuntimeException(
     RuntimeException runtimeException
   ) {
     HttpStatus internalServerError = HttpStatus.INTERNAL_SERVER_ERROR;
 
-    ExceptionDTOResponse exceptionResponse =
-      new ExceptionDTOResponse(
+    ExceptionDtoResponse exceptionResponse =
+      new ExceptionDtoResponse(
         internalServerError.value(),
         RuntimeException.class.getSimpleName(),
         runtimeException.getMessage());
@@ -55,12 +55,12 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(BookNotFoundException.class)
-  public ResponseEntity<ExceptionDTOResponse> handleBookNotFoundException(
+  public ResponseEntity<ExceptionDtoResponse> handleBookNotFoundException(
     BookNotFoundException bookNotFoundException
   ) {
     HttpStatus notFound = HttpStatus.NOT_FOUND;
 
-    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+    ExceptionDtoResponse exceptionResponse = new ExceptionDtoResponse(
       notFound.value(),
       BookNotFoundException.class.getSimpleName(),
       bookNotFoundException.getMessage()
@@ -72,12 +72,12 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(BookAlreadyExistsException.class)
-  public ResponseEntity<ExceptionDTOResponse> handleBookAlreadyExistsException(
+  public ResponseEntity<ExceptionDtoResponse> handleBookAlreadyExistsException(
     BookAlreadyExistsException bookAlreadyExistsException
   ) {
     HttpStatus conflict = HttpStatus.CONFLICT;
 
-    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+    ExceptionDtoResponse exceptionResponse = new ExceptionDtoResponse(
       conflict.value(),
       BookAlreadyExistsException.class.getSimpleName(),
       bookAlreadyExistsException.getMessage()
@@ -89,12 +89,12 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(BookIsInactiveException.class)
-  public ResponseEntity<ExceptionDTOResponse> handleBookIsInactiveException(
+  public ResponseEntity<ExceptionDtoResponse> handleBookIsInactiveException(
     BookIsInactiveException bookIsInactiveException
   ) {
     HttpStatus conflict = HttpStatus.CONFLICT;
 
-    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+    ExceptionDtoResponse exceptionResponse = new ExceptionDtoResponse(
       conflict.value(),
       BookIsInactiveException.class.getSimpleName(),
       bookIsInactiveException.getMessage()
@@ -106,12 +106,12 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(CategoryNotFoundException.class)
-  public ResponseEntity<ExceptionDTOResponse> handleCategoryNotFoundException(
+  public ResponseEntity<ExceptionDtoResponse> handleCategoryNotFoundException(
     CategoryNotFoundException categoryNotFoundException
   ) {
     HttpStatus notFound = HttpStatus.NOT_FOUND;
 
-    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+    ExceptionDtoResponse exceptionResponse = new ExceptionDtoResponse(
       notFound.value(),
       CategoryNotFoundException.class.getSimpleName(),
       categoryNotFoundException.getMessage()
@@ -123,12 +123,12 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(CategoryAlreadyExistsException.class)
-  public ResponseEntity<ExceptionDTOResponse> handleCategoryAlreadyExistsException(
+  public ResponseEntity<ExceptionDtoResponse> handleCategoryAlreadyExistsException(
     CategoryAlreadyExistsException categoryAlreadyExistsException
   ) {
     HttpStatus conflict = HttpStatus.CONFLICT;
 
-    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+    ExceptionDtoResponse exceptionResponse = new ExceptionDtoResponse(
       conflict.value(),
       CategoryAlreadyExistsException.class.getSimpleName(),
       categoryAlreadyExistsException.getMessage()
@@ -140,12 +140,12 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(CategoryIsInactiveException.class)
-  public ResponseEntity<ExceptionDTOResponse> handleCategoryIsInactiveException(
+  public ResponseEntity<ExceptionDtoResponse> handleCategoryIsInactiveException(
     CategoryIsInactiveException categoryIsInactiveException
   ) {
     HttpStatus conflict = HttpStatus.CONFLICT;
 
-    ExceptionDTOResponse exceptionResponse = new ExceptionDTOResponse(
+    ExceptionDtoResponse exceptionResponse = new ExceptionDtoResponse(
       conflict.value(),
       CategoryIsInactiveException.class.getSimpleName(),
       categoryIsInactiveException.getMessage()

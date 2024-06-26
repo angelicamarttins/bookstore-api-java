@@ -1,8 +1,8 @@
 package com.example.bookstoreapijava.main.controllers;
 
-import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDtoRequest;
 import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
-import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
+import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVo;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.services.CategoryService;
 import jakarta.validation.Valid;
@@ -55,7 +55,7 @@ public class CategoryController {
     throws URISyntaxException {
     log.info("Creating category. CategoryName: {}", category.getCategoryName());
 
-    CategoryCreatedVO savedCategory = categoryService.insertCategory(category);
+    CategoryCreatedVo savedCategory = categoryService.insertCategory(category);
 
     Category response = savedCategory.category();
     URI uri = savedCategory.uri();
@@ -66,11 +66,11 @@ public class CategoryController {
   @PatchMapping("/{categoryId}")
   public ResponseEntity<Category> updateCategory(
     @PathVariable UUID categoryId,
-    @RequestBody @Valid CategoryUpdateDTORequest categoryUpdateDTORequest
+    @RequestBody @Valid CategoryUpdateDtoRequest categoryUpdateDtoRequest
   ) {
     log.info("Updating category. CategoryId: {}", categoryId);
 
-    Category updatedCategory = categoryService.updateCategory(categoryUpdateDTORequest, categoryId);
+    Category updatedCategory = categoryService.updateCategory(categoryUpdateDtoRequest, categoryId);
 
     return ResponseEntity.ok(updatedCategory);
   }

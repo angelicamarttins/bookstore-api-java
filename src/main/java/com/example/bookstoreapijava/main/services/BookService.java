@@ -1,6 +1,6 @@
 package com.example.bookstoreapijava.main.services;
 
-import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDtoRequest;
 import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
 import com.example.bookstoreapijava.main.data.vo.BookCreatedVo;
 import com.example.bookstoreapijava.main.entities.Book;
@@ -65,7 +65,7 @@ public class BookService {
     return createBook(book, bookIsbn);
   }
 
-  public Book updateBook(UUID bookId, BookUpdateDTORequest updatedBook) throws URISyntaxException {
+  public Book updateBook(UUID bookId, BookUpdateDtoRequest updatedBook) throws URISyntaxException {
     Book savedBook = bookValidator.checkIfBookIsFound(bookId);
 
     if (updatedBook.author() != null) {

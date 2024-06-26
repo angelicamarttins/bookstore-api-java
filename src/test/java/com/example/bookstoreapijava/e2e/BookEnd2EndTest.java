@@ -2,9 +2,9 @@ package com.example.bookstoreapijava.e2e;
 
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
 import static com.example.bookstoreapijava.providers.BookProvider.createBookList;
-import static com.example.bookstoreapijava.providers.BookUpdateDTORequestProvider.createBookUpdateDTORequest;
+import static com.example.bookstoreapijava.providers.BookUpdateDtoRequestProvider.createBookUpdateDtoRequest;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
-import static com.example.bookstoreapijava.providers.ExceptionDTOResponseProvider.createExceptionDTOResponse;
+import static com.example.bookstoreapijava.providers.ExceptionDtoResponseProvider.createExceptionDtoResponse;
 import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
-import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDtoRequest;
 import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.entities.Category;
-import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDTOResponse;
+import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDtoResponse;
 import com.example.bookstoreapijava.main.repositories.BookRepository;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import io.restassured.path.json.JsonPath;
@@ -83,19 +83,19 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   void getBookByIdNotFound() {
     UUID bookId = UUID.randomUUID();
 
-    ExceptionDTOResponse expectedExceptionDtoResponse = createExceptionDTOResponse(
+    ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(404),
       Optional.of("BookNotFoundException"),
       Optional.of("Book not found with id " + bookId)
     );
 
-    ExceptionDTOResponse actualExceptionDtoResponse = given()
+    ExceptionDtoResponse actualExceptionDtoResponse = given()
       .baseUri(baseURI)
       .get("/bookstore/" + bookId)
       .then()
       .statusCode(404)
       .extract()
-      .as(ExceptionDTOResponse.class);
+      .as(ExceptionDtoResponse.class);
 
     assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
   }
@@ -202,13 +202,13 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     categoryRepository.save(category);
     bookRepository.save(book);
 
-    ExceptionDTOResponse expectedExceptionDtoResponse = createExceptionDTOResponse(
+    ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(409),
       Optional.of("BookAlreadyExistsException"),
       Optional.of("Book already exists with isbn " + book.getIsbn())
     );
 
-    ExceptionDTOResponse actualExceptionDtoResponse = given()
+    ExceptionDtoResponse actualExceptionDtoResponse = given()
       .contentType("application/json")
       .baseUri(baseURI)
       .body(book)
@@ -216,7 +216,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
       .then()
       .statusCode(409)
       .extract()
-      .as(ExceptionDTOResponse.class);
+      .as(ExceptionDtoResponse.class);
 
     assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
   }
@@ -269,8 +269,8 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     bookInfo.put("author", Optional.of("New Author"));
     bookInfo.put("isbn", Optional.of("0000000000"));
 
-    BookUpdateDTORequest bookUpdateDtoRequest =
-      createBookUpdateDTORequest(bookInfo, Optional.of(newCategory.getCategoryId()));
+    BookUpdateDtoRequest bookUpdateDtoRequest =
+      createBookUpdateDtoRequest(bookInfo, Optional.of(newCategory.getCategoryId()));
 
     Book updatedBook = given()
       .baseUri(baseURI)
@@ -300,16 +300,16 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     bookInfo.put("author", Optional.of("New Author"));
     bookInfo.put("isbn", Optional.of("0000000000"));
 
-    BookUpdateDTORequest bookUpdateDtoRequest =
-      createBookUpdateDTORequest(bookInfo, Optional.empty());
+    BookUpdateDtoRequest bookUpdateDtoRequest =
+      createBookUpdateDtoRequest(bookInfo, Optional.empty());
 
-    ExceptionDTOResponse expectedExceptionDtoResponse = createExceptionDTOResponse(
+    ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(404),
       Optional.of("BookNotFoundException"),
       Optional.of("Book not found with id " + bookId)
     );
 
-    ExceptionDTOResponse actualExceptionDtoResponse = given()
+    ExceptionDtoResponse actualExceptionDtoResponse = given()
       .contentType("application/json")
       .baseUri(baseURI)
       .body(bookUpdateDtoRequest)
@@ -317,7 +317,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
       .then()
       .statusCode(404)
       .extract()
-      .as(ExceptionDTOResponse.class);
+      .as(ExceptionDtoResponse.class);
 
     assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
   }
@@ -349,19 +349,19 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   void deleteBookNotFound() {
     UUID bookId = UUID.randomUUID();
 
-    ExceptionDTOResponse expectedExceptionDtoResponse = createExceptionDTOResponse(
+    ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(404),
       Optional.of("BookNotFoundException"),
       Optional.of("Book not found with id " + bookId)
     );
 
-    ExceptionDTOResponse actualExceptionDtoResponse = given()
+    ExceptionDtoResponse actualExceptionDtoResponse = given()
       .baseUri(baseURI)
       .delete("/bookstore/" + bookId)
       .then()
       .statusCode(404)
       .extract()
-      .as(ExceptionDTOResponse.class);
+      .as(ExceptionDtoResponse.class);
 
     assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
   }

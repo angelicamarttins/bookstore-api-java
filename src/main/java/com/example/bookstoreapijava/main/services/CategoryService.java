@@ -1,8 +1,8 @@
 package com.example.bookstoreapijava.main.services;
 
-import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDTORequest;
+import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDtoRequest;
 import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
-import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVO;
+import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVo;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.factories.PageResponseFactory;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
@@ -49,7 +49,7 @@ public class CategoryService {
   }
 
   @Transactional
-  public CategoryCreatedVO insertCategory(Category category) throws URISyntaxException {
+  public CategoryCreatedVo insertCategory(Category category) throws URISyntaxException {
     String sanitizedCategoryName = Utils.sanitizeStringField(category.getCategoryName());
     Optional<Category> maybeCategory =
       categoryRepository.getBySanitizedCategoryName(sanitizedCategoryName);
@@ -68,7 +68,7 @@ public class CategoryService {
   }
 
   @Transactional
-  public Category updateCategory(CategoryUpdateDTORequest updateCategory, UUID categoryId) {
+  public Category updateCategory(CategoryUpdateDtoRequest updateCategory, UUID categoryId) {
     Category savedCategory = categoryValidator.checkIfCategoryIsFound(categoryId);
 
     if (savedCategory.getInactivatedAt() != null) {
@@ -94,7 +94,7 @@ public class CategoryService {
     log.info("Category deleted successfully. CategoryId: {}", categoryId);
   }
 
-  private CategoryCreatedVO createCategory(Category category, boolean shouldSaveCategory)
+  private CategoryCreatedVo createCategory(Category category, boolean shouldSaveCategory)
     throws URISyntaxException {
     Category newCategory = category;
 
@@ -105,7 +105,7 @@ public class CategoryService {
     URI uri =
       new URI(baseUrl + "/category/" + newCategory.getCategoryId().toString());
 
-    return new CategoryCreatedVO(newCategory, uri);
+    return new CategoryCreatedVo(newCategory, uri);
   }
 
   private Category saveCategory(Category category) {
