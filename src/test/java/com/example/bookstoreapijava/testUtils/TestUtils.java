@@ -1,4 +1,4 @@
-package com.example.bookstoreapijava.utils;
+package com.example.bookstoreapijava.testUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
