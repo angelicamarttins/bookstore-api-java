@@ -1,6 +1,6 @@
 package com.example.bookstoreapijava.providers;
 
-import static com.example.bookstoreapijava.utils.TestUtils.localDateTimeFormat;
+import static com.example.bookstoreapijava.testUtils.TestUtils.localDateTimeFormat;
 
 import com.example.bookstoreapijava.main.entities.Category;
 import java.time.LocalDateTime;
@@ -19,6 +19,17 @@ public class CategoryProvider {
       localDateTimeFormat(LocalDateTime.now()),
       null,
       null
+    );
+  }
+
+  public static Category createInactiveCategory(Optional<String> categoryName) {
+    return new Category(
+      UUID.randomUUID(),
+      categoryName.orElse(UUID.randomUUID().toString().replace("-", "")),
+      categoryName.orElse(UUID.randomUUID().toString().replace("-", "")).toUpperCase(),
+      localDateTimeFormat(LocalDateTime.now()),
+      null,
+      localDateTimeFormat(LocalDateTime.now())
     );
   }
 
