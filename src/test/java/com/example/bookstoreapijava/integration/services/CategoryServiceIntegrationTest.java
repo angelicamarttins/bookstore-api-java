@@ -81,14 +81,14 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When a category list is searched, should return correctly")
   void should_returnEquals_when_categoryListIsSearched() {
-    List<Category> categoryList = createCategoryList();
+    List<Category> categoryList = createCategoryList(5);
 
     categoryRepository.saveAll(categoryList);
 
     PageResponse<Category> savedCategoryList = categoryService.findAllCategories(0, 10);
 
     assertNotNull(savedCategoryList);
-    assertEquals(categoryList, savedCategoryList);
+    assertEquals(categoryList, savedCategoryList.content());
   }
 
   @Test

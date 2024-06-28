@@ -33,10 +33,10 @@ public class CategoryProvider {
     );
   }
 
-  public static List<Category> createCategoryList() {
+  public static List<Category> createCategoryList(int howMany) {
     List<Category> categoryList = new ArrayList<>();
 
-    for (int i = 0; i <= 5; i++) {
+    for (int i = 0; i < howMany; i++) {
       categoryList.add(createCategory(Optional.empty()));
     }
 

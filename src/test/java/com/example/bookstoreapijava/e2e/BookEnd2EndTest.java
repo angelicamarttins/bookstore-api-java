@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +35,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-@Slf4j
 public class BookEnd2EndTest extends PostgresTestContainersBase {
 
   @Value("${app.baseUrl}")
@@ -145,8 +143,8 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book list is searched and there is active and inactive categories, "
-    + "returns only categories correctly")
+  @DisplayName(value = "When book list is searched and there is active and inactive books, "
+    + "returns only active books correctly")
   void getBookListSuccessfullyWithOnlyActiveBooks() {
     Category category = createCategory(Optional.empty());
     List<Book> expectedBookList = createBookList(Optional.of(category));
