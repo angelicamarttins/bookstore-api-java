@@ -1,7 +1,9 @@
 package com.example.bookstoreapijava.e2e;
 
+import static com.example.bookstoreapijava.providers.CategoryCreationRequestProvider.createCategoryCreationRequest;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
+import static com.example.bookstoreapijava.providers.CategoryProvider.createInactiveCategory;
 import static com.example.bookstoreapijava.providers.CategoryUpdateDtoProvider.createCategoryUpdateDto;
 import static com.example.bookstoreapijava.providers.ExceptionDtoResponseProvider.createExceptionDtoResponse;
 import static io.restassured.RestAssured.baseURI;
@@ -10,9 +12,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.example.bookstoreapijava.config.PostgresTestContainersBase;
+import com.example.bookstoreapijava.main.data.dto.request.CategoryCreationRequest;
 import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDtoRequest;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDtoResponse;
@@ -134,7 +138,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is inserted, return correctly")
+  @DisplayName(value = "When category is inserted and does not exist, return correctly")
   void postCategorySuccessfully() {
     Category expectedCategory = createCategory(Optional.of("Category name"));
     //TODO: Ajustar para que nomes compostos, ambos os nomes permaneçam com letra maiúscula
@@ -154,7 +158,34 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is inserted and already exists, throws exception correctly")
+  @DisplayName(value = "When category is inserted, already exist but is inactivate, "
+    + "reactivate category and returns correctly")
+  void postReactivateCategorySuccessfully() {
+    CategoryCreationRequest categoryCreationRequest =
+      createCategoryCreationRequest(Optional.of("Category Name"));
+    Category expectedCategory = createInactiveCategory(Optional.of("Category Name"));
+
+    categoryRepository.save(expectedCategory);
+
+    Category actualCategory = given()
+      .baseUri(baseURI)
+      .contentType("application/json")
+      .body(categoryCreationRequest)
+      .post("/category")
+      .then()
+      .header("Location", baseUrl + "/category/" + expectedCategory.getCategoryId())
+      .statusCode(201)
+      .extract()
+      .as(Category.class);
+
+    assertNotEquals(expectedCategory, actualCategory);
+    assertNull(actualCategory.getInactivatedAt());
+    assertNotNull(actualCategory.getUpdatedAt());
+  }
+
+  @Test
+  @DisplayName(value = "When category is inserted, already exist and is active, "
+    + "throws exception correctly")
   void postCategoryAlreadyExists() {
     Category category = createCategory(Optional.of("Category name"));
 
