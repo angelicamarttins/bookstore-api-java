@@ -1,5 +1,8 @@
 package com.example.bookstoreapijava.main.controllers;
 
+import static com.example.bookstoreapijava.main.data.dto.request.CategoryCreationRequest.toDomain;
+
+import com.example.bookstoreapijava.main.data.dto.request.CategoryCreationRequest;
 import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDtoRequest;
 import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
 import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVo;
@@ -51,11 +54,13 @@ public class CategoryController {
   }
 
   @PostMapping()
-  public ResponseEntity<Category> insertCategory(@RequestBody @Valid Category category)
-    throws URISyntaxException {
-    log.info("Creating category. CategoryName: {}", category.getCategoryName());
+  public ResponseEntity<Category> insertCategory(
+    @RequestBody @Valid CategoryCreationRequest categoryCreationRequest
+  ) throws URISyntaxException {
+    log.info("Creating category. CategoryName: {}", categoryCreationRequest.categoryName());
 
-    CategoryCreatedVo savedCategory = categoryService.insertCategory(category);
+    CategoryCreatedVo savedCategory =
+      categoryService.insertCategory(toDomain(categoryCreationRequest.categoryName()));
 
     Category response = savedCategory.category();
     URI uri = savedCategory.uri();

@@ -107,6 +107,9 @@ public class NovuClass {
 
       NotificationsResponse notifications = novu.getNotifications(notificationRequest);
       System.out.println("NOTIFICATIONS = " + notifications);
+      System.out.println("NOTIFICATIONS ID = " + notifications.getData().getFirst().getId());
+      System.out.println(
+        "NOTIFICATIONS TRANSACTION ID = " + notifications.getData().getFirst().getTransactionId());
       return triggerEventResponse;
     } catch (Exception e) {
       System.out.println("Error Creating Subscriber" + e);

@@ -26,6 +26,10 @@ import lombok.NonNull;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Category {
 
+  public Category(String categoryName) {
+    this.categoryName = categoryName;
+  }
+
   @Column(name = "category_id")
   @Id
   private UUID categoryId;

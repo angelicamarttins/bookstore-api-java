@@ -49,8 +49,10 @@ public class CategoryService {
   }
 
   @Transactional
-  public CategoryCreatedVo insertCategory(Category category) throws URISyntaxException {
-    String sanitizedCategoryName = Utils.sanitizeStringField(category.getCategoryName());
+  public CategoryCreatedVo insertCategory(Category category)
+    throws URISyntaxException {
+    String sanitizedCategoryName =
+      Utils.sanitizeStringField(category.getCategoryName());
     Optional<Category> maybeCategory =
       categoryRepository.getBySanitizedCategoryName(sanitizedCategoryName);
 
@@ -94,8 +96,8 @@ public class CategoryService {
     log.info("Category deleted successfully. CategoryId: {}", categoryId);
   }
 
-  private CategoryCreatedVo createCategory(Category category, boolean shouldSaveCategory)
-    throws URISyntaxException {
+  private CategoryCreatedVo createCategory(Category category, boolean shouldSaveCategory
+  ) throws URISyntaxException {
     Category newCategory = category;
 
     if (shouldSaveCategory) {
