@@ -22,6 +22,7 @@ import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDtoResponse;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import io.restassured.path.json.JsonPath;
+import io.restassured.response.ValidatableResponse;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -140,21 +141,23 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When category is inserted and does not exist, return correctly")
   void postCategorySuccessfully() {
-    Category expectedCategory = createCategory(Optional.of("Category name"));
-    //TODO: Ajustar para que nomes compostos, ambos os nomes permaneçam com letra maiúscula
+    CategoryCreationRequest expectedCategory =
+      createCategoryCreationRequest(Optional.of("Category Name"));
 
-    Category actualCategory = given()
+    ValidatableResponse response = given()
       .baseUri(baseURI)
       .contentType("application/json")
       .body(expectedCategory)
       .post("/category")
       .then()
-      .header("Location", baseUrl + "/category/" + expectedCategory.getCategoryId())
-      .statusCode(201)
+      .statusCode(201);
+
+    Category actualCategory = response
       .extract()
       .as(Category.class);
 
-    assertEquals(expectedCategory, actualCategory);
+    response.header("Location", baseUrl + "/category/" + actualCategory.getCategoryId());
+    assertEquals(expectedCategory.categoryName(), actualCategory.getCategoryName());
   }
 
   @Test
@@ -187,7 +190,9 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName(value = "When category is inserted, already exist and is active, "
     + "throws exception correctly")
   void postCategoryAlreadyExists() {
-    Category category = createCategory(Optional.of("Category name"));
+    CategoryCreationRequest categoryCreationRequest =
+      createCategoryCreationRequest(Optional.empty());
+    Category category = createCategory(Optional.of(categoryCreationRequest.categoryName()));
 
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(409),
