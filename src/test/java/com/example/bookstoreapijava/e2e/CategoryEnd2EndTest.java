@@ -97,7 +97,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   @Test
   @DisplayName(value = "When category list is searched and there is categories, returns correctly")
   void getCategoryListSuccessfully() {
-    List<Category> expectedCategories = createCategoryList();
+    List<Category> expectedCategories = createCategoryList(5);
 
     categoryRepository.saveAll(expectedCategories);
 
@@ -136,6 +136,31 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
 
     assertTrue(actualActiveCategoriesContent.isEmpty());
     assertFalse(hasNextPage);
+  }
+
+  @Test
+  @DisplayName(value = "When category list is searched and there is active and inactive categories,"
+    + " returns only active categories correctly")
+  void getCategoryListSuccessfullyWithOnlyActiveCategories() {
+    List<Category> expectedCategoryList = createCategoryList(5);
+    Category inactiveCategory = createInactiveCategory(Optional.empty());
+    expectedCategoryList.add(inactiveCategory);
+
+    categoryRepository.saveAll(expectedCategoryList);
+
+    List<Category> actualCategoryList = given()
+      .baseUri(baseURI)
+      .get("/category")
+      .then()
+      .statusCode(200)
+      .extract()
+      .jsonPath()
+      .getList("content", Category.class);
+
+    expectedCategoryList.remove(inactiveCategory);
+
+    assertEquals(expectedCategoryList, actualCategoryList);
+    assertEquals(expectedCategoryList.size(), actualCategoryList.size());
   }
 
   @Test
