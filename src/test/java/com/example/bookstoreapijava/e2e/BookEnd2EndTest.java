@@ -164,8 +164,10 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
       .jsonPath()
       .getList("content", Book.class);
 
-    assertNotEquals(expectedBookList, activeBooks);
-    assertTrue(expectedBookList.size() - 1 == activeBooks.size());
+    expectedBookList.remove(inactiveBook);
+
+    assertEquals(expectedBookList, activeBooks);
+    assertEquals(expectedBookList.size(), activeBooks.size());
   }
 
   @Test
