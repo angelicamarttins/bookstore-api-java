@@ -82,7 +82,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
       () -> bookService.insertBook(book)
     );
 
-    String expectedExceptionMessage = "Book already exists with isbn " + book.getIsbn();
+    String expectedExceptionMessage = "Book already exists. Isbn: " + book.getIsbn();
 
     assertTrue(bookAlreadyExistsException.getMessage().contains(expectedExceptionMessage));
   }
@@ -99,7 +99,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     );
 
     String expectedExceptionMessage =
-      "Category not found with id " + book.getCategory().getCategoryId();
+      "Category not found. CategoryId: " + book.getCategory().getCategoryId();
 
     assertTrue(categoryNotFoundException.getMessage().contains(expectedExceptionMessage));
   }
@@ -177,7 +177,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
       () -> bookService.findBook(bookId)
     );
 
-    String expectedExceptionMessage = "Book not found with id " + bookId;
+    String expectedExceptionMessage = "Book not found. BookId: " + bookId;
 
     assertTrue(bookNotFoundException.getMessage().contains(expectedExceptionMessage));
   }
@@ -201,7 +201,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
       () -> bookService.updateBook(book.getBookId(), bookUpdateDtoRequest)
     );
 
-    String expectedExceptionMessage = "Book not found with id " + book.getBookId();
+    String expectedExceptionMessage = "Book not found. BookId: " + book.getBookId();
 
     assertTrue(bookNotFoundException.getMessage().contains(expectedExceptionMessage));
   }
@@ -327,7 +327,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
     );
 
     String expectedExceptionMessage =
-      "Category not found with id " + newCategory.getCategoryId();
+      "Category not found. CategoryId: " + newCategory.getCategoryId();
 
     assertTrue(categoryNotFoundException.getMessage().contains(expectedExceptionMessage));
   }
@@ -382,7 +382,7 @@ public class BookServiceIntegrationTest extends PostgresTestContainersBase {
       () -> bookService.inactiveBook(bookId)
     );
 
-    String expectedExceptionMessage = "Book not found with id " + bookId;
+    String expectedExceptionMessage = "Book not found. BookId: " + bookId;
 
     assertTrue(bookNotFoundException.getMessage().contains(expectedExceptionMessage));
   }

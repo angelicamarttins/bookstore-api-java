@@ -84,7 +84,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(404),
       Optional.of("BookNotFoundException"),
-      Optional.of("Book not found with id " + bookId)
+      Optional.of("Book not found. BookId: " + bookId)
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
@@ -205,7 +205,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(409),
       Optional.of("BookAlreadyExistsException"),
-      Optional.of("Book already exists with isbn " + book.getIsbn())
+      Optional.of("Book already exists. Isbn: " + book.getIsbn())
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
@@ -306,7 +306,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(404),
       Optional.of("BookNotFoundException"),
-      Optional.of("Book not found with id " + bookId)
+      Optional.of("Book not found. BookId: " + bookId)
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
@@ -352,7 +352,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(404),
       Optional.of("BookNotFoundException"),
-      Optional.of("Book not found with id " + bookId)
+      Optional.of("Book not found. BookId: " + bookId)
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()

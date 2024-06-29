@@ -80,7 +80,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
       createExceptionDtoResponse(
         Optional.of(404),
         Optional.of("CategoryNotFoundException"),
-        Optional.of("Category not found with id " + categoryId)
+        Optional.of("Category not found. CategoryId: " + categoryId)
       );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
@@ -223,7 +223,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(409),
       Optional.of("CategoryAlreadyExistsException"),
-      Optional.of("Category already exists with name " + category.getCategoryName())
+      Optional.of("Category already exists. CategoryName: " + category.getCategoryName())
     );
 
     categoryRepository.save(category);
@@ -274,7 +274,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(404),
       Optional.of("CategoryNotFoundException"),
-      Optional.of("Category not found with id " + categoryId)
+      Optional.of("Category not found. CategoryId: " + categoryId)
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
@@ -342,7 +342,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
       Optional.of(404),
       Optional.of("CategoryNotFoundException"),
-      Optional.of("Category not found with id " + categoryId)
+      Optional.of("Category not found. CategoryId: " + categoryId)
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
