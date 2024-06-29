@@ -164,7 +164,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is inserted and does not exist, return correctly")
+  @DisplayName(value = "When category is inserted and does not exist, returns correctly")
   void postCategorySuccessfully() {
     CategoryCreationRequest expectedCategory =
       createCategoryCreationRequest(Optional.of("Category Name"));
@@ -191,7 +191,8 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   void postReactivateCategorySuccessfully() {
     CategoryCreationRequest categoryCreationRequest =
       createCategoryCreationRequest(Optional.of("Category Name"));
-    Category expectedCategory = createInactiveCategory(Optional.of("Category Name"));
+    Category expectedCategory =
+      createInactiveCategory(Optional.of(categoryCreationRequest.categoryName()));
 
     categoryRepository.save(expectedCategory);
 
@@ -241,7 +242,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is updated, return correctly")
+  @DisplayName(value = "When category is updated, returns correctly")
   void updateCategorySuccessfully() {
     Category savedCategory = createCategory(Optional.empty());
     CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
@@ -287,6 +288,30 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
       .as(ExceptionDtoResponse.class);
 
     assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
+  }
+
+  @Test
+  @DisplayName(value = "When category is updated and is inactive, "
+    + "reactivate category and returns correctly")
+  void updateInactiveCategory() {
+    Category expectedCategory = createInactiveCategory(Optional.empty());
+    CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
+
+    categoryRepository.save(expectedCategory);
+
+    Category actualCategory = given()
+      .baseUri(baseURI)
+      .contentType("application/json")
+      .body(categoryUpdateDtoRequest)
+      .patch("/category/" + expectedCategory.getCategoryId())
+      .then()
+      .statusCode(200)
+      .extract()
+      .as(Category.class);
+
+    assertNotEquals(expectedCategory, actualCategory);
+    assertNull(actualCategory.getInactivatedAt());
+    assertNotNull(actualCategory.getUpdatedAt());
   }
 
   @Test
