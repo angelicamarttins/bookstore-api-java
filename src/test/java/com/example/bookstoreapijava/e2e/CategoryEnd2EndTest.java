@@ -315,8 +315,8 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is deleted, returns correctly")
-  void deleteCategorySuccessfully() {
+  @DisplayName(value = "When category is inactivated, returns correctly")
+  void inactiveCategorySuccessfully() {
     Category savedCategory = createCategory(Optional.empty());
 
     categoryRepository.save(savedCategory);
@@ -335,8 +335,8 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is deleted and is not found, throws exception correctly")
-  void deleteCategoryNotFound() {
+  @DisplayName(value = "When category is inactive and is not found, throws exception correctly")
+  void inactiveCategoryNotFound() {
     UUID categoryId = UUID.randomUUID();
 
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
@@ -350,6 +350,30 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
       .delete("/category/" + categoryId)
       .then()
       .statusCode(404)
+      .extract()
+      .as(ExceptionDtoResponse.class);
+
+    assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
+  }
+
+  @Test
+  @DisplayName(value = "When category is already inactive, throws exception correctly")
+  void inactiveCategoryAlreadyInactive() {
+    Category deletedCategory = createInactiveCategory(Optional.empty());
+
+    categoryRepository.save(deletedCategory);
+
+    ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
+      Optional.of(409),
+      Optional.of("CategoryIsInactiveException"),
+      Optional.of("Category is inactive. CategoryId: " + deletedCategory.getCategoryId())
+    );
+
+    ExceptionDtoResponse actualExceptionDtoResponse = given()
+      .baseUri(baseURI)
+      .delete("/category/" + deletedCategory.getCategoryId())
+      .then()
+      .statusCode(409)
       .extract()
       .as(ExceptionDtoResponse.class);
 
