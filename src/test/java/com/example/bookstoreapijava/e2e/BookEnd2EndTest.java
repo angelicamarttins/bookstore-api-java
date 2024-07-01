@@ -58,7 +58,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is searched by id, returns correctly")
+  @DisplayName("When book is searched by id, returns correctly")
   void getBookByIdSuccessfully() {
     Book expectedBook = createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
@@ -77,7 +77,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is searched by id and is not found, returns correctly")
+  @DisplayName("When book is searched by id and is not found, returns correctly")
   void getBookByIdNotFound() {
     UUID bookId = UUID.randomUUID();
 
@@ -99,7 +99,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book list is searched and there is no books, returns correctly")
+  @DisplayName("When book list is searched and there is no books, returns correctly")
   void getBookEmptyListSuccessfully() {
     JsonPath response = given()
       .baseUri(baseURI)
@@ -117,7 +117,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book list is searched and there is categories, returns correctly")
+  @DisplayName("When book list is searched and there is categories, returns correctly")
   void getBookListSuccessfully() {
     Category category = createCategory(Optional.empty());
     List<Book> expectedBookList = createBookList(Optional.of(category));
@@ -143,7 +143,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book list is searched and there is active and inactive books, "
+  @DisplayName("When book list is searched and there is active and inactive books, "
     + "returns only active books correctly")
   void getBookListSuccessfullyWithOnlyActiveBooks() {
     Category category = createCategory(Optional.empty());
@@ -171,10 +171,11 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is inserted and does not exist, returns correctly")
+  @DisplayName("When book is inserted and does not exist, returns correctly")
   void postBookSuccessfully() {
     Category category = createCategory(Optional.empty());
-    Book expectedBook = createBook(Optional.empty(), Optional.of(category), Optional.empty());
+    Book expectedBook =
+      createBook(Optional.empty(), Optional.of(category), Optional.empty());
 
     categoryRepository.save(category);
 
@@ -193,11 +194,11 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is inserted, already exists and is active, "
-    + "throws exception correctly")
+  @DisplayName("When book is inserted, already exists and is active, throws exception correctly")
   void postBookAlreadyExists() {
     Category category = createCategory(Optional.empty());
-    Book book = createBook(Optional.empty(), Optional.of(category), Optional.empty());
+    Book book =
+      createBook(Optional.empty(), Optional.of(category), Optional.empty());
 
     categoryRepository.save(category);
     bookRepository.save(book);
@@ -222,12 +223,13 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is inserted, already exist but is inactivated, "
+  @DisplayName("When book is inserted, already exist but is inactivated, "
     + "reactivate book and returns correctly")
   void postReactivateBookSuccessfully() {
     Category category = createCategory(Optional.empty());
     LocalDateTime postTime = LocalDateTime.now();
-    Book expectedBook = createBook(Optional.empty(), Optional.of(category), Optional.empty());
+    Book expectedBook =
+      createBook(Optional.empty(), Optional.of(category), Optional.empty());
 
     expectedBook.setInactivatedAt(postTime);
     expectedBook.setUpdatedAt(postTime);
@@ -253,12 +255,13 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is updated, returns correctly")
+  @DisplayName("When book is updated, returns correctly")
   void updateBookSuccessfully() {
     String bookIsbn = "1313131313133";
     Category oldCategory = createCategory(Optional.of("Old Category"));
     Category newCategory = createCategory(Optional.of("New Category"));
-    Book savedBook = createBook(Optional.of(bookIsbn), Optional.of(oldCategory), Optional.empty());
+    Book savedBook =
+      createBook(Optional.of(bookIsbn), Optional.of(oldCategory), Optional.empty());
 
     categoryRepository.save(oldCategory);
     categoryRepository.save(newCategory);
@@ -291,7 +294,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is updated and is not found, throws exception correctly")
+  @DisplayName("When book is updated and is not found, throws exception correctly")
   void updateBookNotFound() {
     UUID bookId = UUID.randomUUID();
 
@@ -323,10 +326,11 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is deleted, returns correctly")
+  @DisplayName("When book is deleted, returns correctly")
   void deleteBookSuccessfully() {
     Category category = createCategory(Optional.empty());
-    Book savedBook = createBook(Optional.empty(), Optional.of(category), Optional.empty());
+    Book savedBook =
+      createBook(Optional.empty(), Optional.of(category), Optional.empty());
 
     categoryRepository.save(category);
     bookRepository.save(savedBook);
@@ -345,7 +349,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When book is deleted and is not found, throws exception correctly")
+  @DisplayName("When book is deleted and is not found, throws exception correctly")
   void deleteBookNotFound() {
     UUID bookId = UUID.randomUUID();
 

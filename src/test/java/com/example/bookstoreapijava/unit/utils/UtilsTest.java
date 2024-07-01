@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class UtilsTest {
 
   @Test
-  @DisplayName(value = "Should return the same string when field has no accents and blank spaces")
+  @DisplayName("Should return the same string when field has no accents and blank spaces")
   public void should_returnEquals_when_thereIsNoAccentAndBlankSpaces() {
     String field = "Filosofia";
 
@@ -21,7 +21,7 @@ public class UtilsTest {
   }
 
   @Test
-  @DisplayName(value = "Should return the sanitized string when field has accents and blank spaces")
+  @DisplayName("Should return the sanitized string when field has accents and blank spaces")
   public void should_returnEquals_when_thereIsAccentAndBlankSpaces() {
     String field = "   Filosofiá   ";
     String expectedField = "Filosofia";
@@ -32,7 +32,7 @@ public class UtilsTest {
   }
 
   @Test
-  @DisplayName(value = "Should return the capitalized when field is lower case")
+  @DisplayName("Should return the capitalized when field is lower case")
   public void should_returnEquals_when_isLowerCase() {
     String field = "filosofia";
     String expectedField = "Filosofia";
@@ -43,7 +43,7 @@ public class UtilsTest {
   }
 
   @Test
-  @DisplayName(value = "Should return the capitalized when field is upper case")
+  @DisplayName("Should return the capitalized when field is upper case")
   public void should_returnEquals_when_isUppercase() {
     String field = "FILOSOFIA";
     String expectedField = "Filosofia";
@@ -54,7 +54,7 @@ public class UtilsTest {
   }
 
   @Test
-  @DisplayName(value = "Should remove accents when field has accents")
+  @DisplayName("Should remove accents when field has accents")
   public void should_returnEquals_whenHasAccents() {
     String field = "Fìlõsôfíä";
     String expectedField = "Filosofia";

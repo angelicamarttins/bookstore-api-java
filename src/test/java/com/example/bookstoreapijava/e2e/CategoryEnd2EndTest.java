@@ -52,7 +52,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is searched by id, returns correctly")
+  @DisplayName("When category is searched by id, returns correctly")
   void getCategoryByIdSuccessfully() {
     String categoryName = "Test Category Name";
     Category expectedCategory = createCategory(Optional.of(categoryName));
@@ -71,8 +71,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is searched and is not found, "
-    + "should throws exception correctly")
+  @DisplayName("When category is searched and is not found, should throws exception correctly")
   void getCategoryByIdNotFound() {
     UUID categoryId = UUID.randomUUID();
 
@@ -95,7 +94,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category list is searched and there is categories, returns correctly")
+  @DisplayName("When category list is searched and there is categories, returns correctly")
   void getCategoryListSuccessfully() {
     List<Category> expectedCategories = createCategoryList(5);
 
@@ -120,8 +119,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category list is searched and there is no categories, "
-    + "returns correctly")
+  @DisplayName("When category list is searched and there is no categories, returns correctly")
   void getCategoryEmptyListSuccessfully() {
     JsonPath response = given()
       .baseUri(baseURI)
@@ -139,7 +137,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category list is searched and there is active and inactive categories,"
+  @DisplayName("When category list is searched and there is active and inactive categories,"
     + " returns only active categories correctly")
   void getCategoryListSuccessfullyWithOnlyActiveCategories() {
     List<Category> expectedCategoryList = createCategoryList(5);
@@ -164,7 +162,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is inserted and does not exist, returns correctly")
+  @DisplayName("When category is inserted and does not exist, returns correctly")
   void postCategorySuccessfully() {
     CategoryCreationRequest expectedCategory =
       createCategoryCreationRequest(Optional.of("Category Name"));
@@ -186,7 +184,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is inserted, already exist but is inactivate, "
+  @DisplayName("When category is inserted, already exist but is inactivate, "
     + "reactivate category and returns correctly")
   void postReactivateCategorySuccessfully() {
     CategoryCreationRequest categoryCreationRequest =
@@ -213,8 +211,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is inserted, already exist and is active, "
-    + "throws exception correctly")
+  @DisplayName("When category is inserted, already exist and is active, throws exception correctly")
   void postCategoryAlreadyExists() {
     CategoryCreationRequest categoryCreationRequest =
       createCategoryCreationRequest(Optional.empty());
@@ -242,7 +239,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is updated, returns correctly")
+  @DisplayName("When category is updated, returns correctly")
   void updateCategorySuccessfully() {
     Category savedCategory = createCategory(Optional.empty());
     CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
@@ -266,7 +263,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is updated and is not found, throws exception correctly")
+  @DisplayName("When category is updated and is not found, throws exception correctly")
   void updateCategoryNotFound() {
     UUID categoryId = UUID.randomUUID();
     CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
@@ -291,7 +288,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is updated and is inactive, "
+  @DisplayName("When category is updated and is inactive, "
     + "reactivate category and returns correctly")
   void updateInactiveCategory() {
     Category expectedCategory = createInactiveCategory(Optional.empty());
@@ -315,7 +312,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is inactivated, returns correctly")
+  @DisplayName("When category is inactivated, returns correctly")
   void inactiveCategorySuccessfully() {
     Category savedCategory = createCategory(Optional.empty());
 
@@ -335,7 +332,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is inactive and is not found, throws exception correctly")
+  @DisplayName("When category is inactive and is not found, throws exception correctly")
   void inactiveCategoryNotFound() {
     UUID categoryId = UUID.randomUUID();
 
@@ -357,7 +354,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is already inactive, throws exception correctly")
+  @DisplayName("When category is already inactive, throws exception correctly")
   void inactiveCategoryAlreadyInactive() {
     Category deletedCategory = createInactiveCategory(Optional.empty());
 

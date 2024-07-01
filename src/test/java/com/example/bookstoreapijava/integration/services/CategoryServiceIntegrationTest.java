@@ -46,7 +46,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is inserted, should return correctly")
+  @DisplayName("When category is inserted, should return correctly")
   void should_returnEquals_when_categoryIsInsertedCorrectly() throws URISyntaxException {
     Category category = createCategory(Optional.empty());
     CategoryCreatedVo categoryCreatedVo = createCategoryCreatedVo(category);
@@ -59,7 +59,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When a category already exists and try to insert again, "
+  @DisplayName("When a category already exists and try to insert again, "
     + "should throw exception correctly")
   void should_throwException_when_categoryAlreadyExistsAndIsInsertAgain() {
     Category firstCategory = createCategory(Optional.of("Test"));
@@ -79,7 +79,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When a category list is searched, should return correctly")
+  @DisplayName("When a category list is searched, should return correctly")
   void should_returnEquals_when_categoryListIsSearched() {
     List<Category> categoryList = createCategoryList(5);
 
@@ -92,7 +92,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When a category is searched, should return correctly")
+  @DisplayName("When a category is searched, should return correctly")
   void should_returnEquals_when_categoryIsSearched() {
     Category category = createCategory(Optional.empty());
 
@@ -105,8 +105,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is searched and is not found, "
-    + "should throw exception correctly")
+  @DisplayName("When category is searched and is not found, should throw exception correctly")
   void should_throwException_when_isSearchedAndCategoryIsNotFound() {
     UUID categoryId = UUID.randomUUID();
 
@@ -121,7 +120,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When a category is updated, should return correctly")
+  @DisplayName("When a category is updated, should return correctly")
   void should_returnEquals_when_categoryIsUpdated() {
     Category category = createCategory(Optional.empty());
     CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
@@ -138,8 +137,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is updated and is not found, "
-    + "should throw exception correctly")
+  @DisplayName("When category is updated and is not found, should throw exception correctly")
   void should_throwException_when_isUpdatedAndCategoryIsNotFound() {
     UUID categoryId = UUID.randomUUID();
     CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
@@ -154,7 +152,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When a category is deleted, should soft delete correctly")
+  @DisplayName("When a category is deleted, should soft delete correctly")
   void should_deleteCorrectly_when_categoryIsSoftDeleted() {
     Category category = createCategory(Optional.empty());
     UUID categoryId = category.getCategoryId();
@@ -172,8 +170,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName(value = "When category is deleted and is not found, "
-    + "should throw exception correctly")
+  @DisplayName("When category is deleted and is not found, should throw exception correctly")
   void should_throwException_when_isDeletedAndCategoryIsNotFound() {
     UUID categoryId = UUID.randomUUID();
     String expectedExceptionMessage = "Category not found. CategoryId: " + categoryId;
