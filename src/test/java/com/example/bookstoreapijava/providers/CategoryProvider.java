@@ -1,6 +1,6 @@
 package com.example.bookstoreapijava.providers;
 
-import static com.example.bookstoreapijava.testUtils.TestUtils.localDateTimeFormat;
+import static com.example.bookstoreapijava.utils.TestUtils.localDateTimeFormat;
 
 import com.example.bookstoreapijava.main.entities.Category;
 import java.time.LocalDateTime;
