@@ -2,6 +2,7 @@ package com.example.bookstoreapijava.e2e;
 
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
 import static com.example.bookstoreapijava.providers.BookProvider.createBookList;
+import static com.example.bookstoreapijava.providers.BookProvider.createInactiveBook;
 import static com.example.bookstoreapijava.providers.BookUpdateDtoRequestProvider.createBookUpdateDtoRequest;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.ExceptionDtoResponseProvider.createExceptionDtoResponse;
@@ -60,7 +61,8 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When book is searched by id, returns correctly")
   void getBookByIdSuccessfully() {
-    Book expectedBook = createBook(Optional.empty(), Optional.empty(), Optional.empty());
+    Book expectedBook =
+      createBook(Optional.empty(), Optional.empty(), Optional.empty());
 
     categoryRepository.save(expectedBook.getCategory());
     bookRepository.save(expectedBook);
@@ -117,7 +119,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName("When book list is searched and there is categories, returns correctly")
+  @DisplayName("When book list is searched and there is books, returns correctly")
   void getBookListSuccessfully() {
     Category category = createCategory(Optional.empty());
     List<Book> expectedBookList = createBookList(Optional.of(category));
@@ -364,6 +366,38 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
       .delete("/bookstore/" + bookId)
       .then()
       .statusCode(404)
+      .extract()
+      .as(ExceptionDtoResponse.class);
+
+    assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
+  }
+
+  @Test
+  @DisplayName("When book is already inactive and is deleted, throws exception correctly")
+  void deleteBookAlreadyInactive() {
+    Category category = createCategory(Optional.empty());
+    Book inactiveBook = createInactiveBook(
+      Optional.empty(),
+      Optional.of(category),
+      Optional.of(LocalDateTime.now()),
+      Optional.of(LocalDateTime.now())
+    );
+    UUID bookId = inactiveBook.getBookId();
+
+    categoryRepository.save(category);
+    bookRepository.save(inactiveBook);
+
+    ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
+      Optional.of(409),
+      Optional.of("BookIsInactiveException"),
+      Optional.of("Book is inactive. BookId: " + bookId)
+    );
+
+    ExceptionDtoResponse actualExceptionDtoResponse = given()
+      .baseUri(baseURI)
+      .delete("/bookstore/" + bookId)
+      .then()
+      .statusCode(409)
       .extract()
       .as(ExceptionDtoResponse.class);
 

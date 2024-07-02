@@ -45,4 +45,22 @@ public class BookProvider {
     return bookList;
   }
 
+  public static Book createInactiveBook(
+    Optional<String> isbn,
+    Optional<Category> category,
+    Optional<LocalDateTime> inactivatedAt,
+    Optional<LocalDateTime> updatedAt
+  ) {
+    return new Book(
+      UUID.randomUUID(),
+      UUID.randomUUID().toString().replace("-", ""),
+      UUID.randomUUID().toString().replace("-", ""),
+      isbn.orElse("0123456789"),
+      localDateTimeFormat(LocalDateTime.now()),
+      updatedAt.orElse(null),
+      inactivatedAt.orElse(null),
+      category.orElse(createCategory(Optional.empty()))
+    );
+  }
+
 }
