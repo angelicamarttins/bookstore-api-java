@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 
 public class BookProvider {
@@ -26,9 +25,9 @@ public class BookProvider {
       UUID.randomUUID().toString().replace("-", ""),
       Objects.requireNonNullElse(isbn, "0123456789"),
       localDateTimeFormat(LocalDateTime.now()),
-      updatedAt,
-      inactivatedAt,
-      Objects.requireNonNullElse(category, createCategory(Optional.empty()))
+      localDateTimeFormat(updatedAt),
+      localDateTimeFormat(inactivatedAt),
+      Objects.requireNonNullElse(category, createCategory(null, null, null))
     );
   }
 
@@ -39,7 +38,7 @@ public class BookProvider {
       bookList.add(
         createBook(
           "0123456789" + i,
-          Objects.requireNonNullElse(category, createCategory(Optional.empty())),
+          Objects.requireNonNullElse(category, createCategory(null, null, null)),
           null,
           null
         )

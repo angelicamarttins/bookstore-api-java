@@ -11,8 +11,14 @@ public class BookCreatedVoProvider {
   @Value("${app.baseUrl}")
   private static String baseUrl;
 
-  public static BookCreatedVo createBookCreatedVo(Book book) throws URISyntaxException {
-    URI uri = new URI(baseUrl + "/bookstore/" + book.getBookId());
+  public static BookCreatedVo createBookCreatedVo(Book book) {
+    URI uri = null;
+
+    try {
+      uri = new URI(baseUrl + "/bookstore/" + book.getBookId());
+    } catch (URISyntaxException uriSyntaxException) {
+      uriSyntaxException.getStackTrace();
+    }
 
     return new BookCreatedVo(book, uri);
   }

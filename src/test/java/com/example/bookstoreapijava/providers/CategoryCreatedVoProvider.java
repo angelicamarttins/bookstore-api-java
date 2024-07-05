@@ -11,9 +11,14 @@ public class CategoryCreatedVoProvider {
   @Value("${app.baseUrl}")
   private static String baseUrl;
 
-  public static CategoryCreatedVo createCategoryCreatedVo(Category category)
-    throws URISyntaxException {
-    URI uri = new URI(baseUrl + "/category/" + category.getCategoryId());
+  public static CategoryCreatedVo createCategoryCreatedVo(Category category) {
+    URI uri = null;
+
+    try {
+      uri = new URI(baseUrl + "/category/" + category.getCategoryId());
+    } catch (URISyntaxException uriSyntaxException) {
+      uriSyntaxException.getStackTrace();
+    }
 
     return new CategoryCreatedVo(category, uri);
   }
