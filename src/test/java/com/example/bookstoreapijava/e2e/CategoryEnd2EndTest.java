@@ -184,7 +184,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName("When category is inserted, already exist but is inactivate, "
+  @DisplayName("When category is inserted, already exist but is inactive, "
     + "reactivate category and returns correctly")
   void postReactivateCategorySuccessfully() {
     CategoryCreationRequest categoryCreationRequest =

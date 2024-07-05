@@ -148,13 +148,13 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   void getBookListSuccessfullyWithOnlyActiveBooks() {
     Category category = createCategory(null, null, null);
     List<Book> expectedBookList = createBookList(category);
-    Book inactiveBook = createBook(null, category, LocalDateTime.now(), null);
+    Book inactiveBook = createBook(null, category, LocalDateTime.now(), LocalDateTime.now());
     expectedBookList.add(inactiveBook);
 
     categoryRepository.save(category);
     bookRepository.saveAll(expectedBookList);
 
-    List<Book> activeBooks = given()
+    List<Book> actualBookList = given()
       .baseUri(baseURI)
       .get("/bookstore")
       .then()
@@ -165,8 +165,8 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
 
     expectedBookList.remove(inactiveBook);
 
-    assertEquals(expectedBookList, activeBooks);
-    assertEquals(expectedBookList.size(), activeBooks.size());
+    assertEquals(expectedBookList, actualBookList);
+    assertEquals(expectedBookList.size(), actualBookList.size());
   }
 
   @Test
