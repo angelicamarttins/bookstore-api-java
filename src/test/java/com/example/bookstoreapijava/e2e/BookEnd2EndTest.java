@@ -2,7 +2,6 @@ package com.example.bookstoreapijava.e2e;
 
 import static com.example.bookstoreapijava.providers.BookProvider.createBook;
 import static com.example.bookstoreapijava.providers.BookProvider.createBookList;
-import static com.example.bookstoreapijava.providers.BookProvider.createInactiveBook;
 import static com.example.bookstoreapijava.providers.BookUpdateDtoRequestProvider.createBookUpdateDtoRequest;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.ExceptionDtoResponseProvider.createExceptionDtoResponse;
@@ -62,7 +61,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName("When book is searched by id, returns correctly")
   void getBookByIdSuccessfully() {
     Book expectedBook =
-      createBook(Optional.empty(), Optional.empty(), Optional.empty());
+      createBook(null, null, null, null);
 
     categoryRepository.save(expectedBook.getCategory());
     bookRepository.save(expectedBook);
@@ -122,7 +121,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName("When book list is searched and there is books, returns correctly")
   void getBookListSuccessfully() {
     Category category = createCategory(Optional.empty());
-    List<Book> expectedBookList = createBookList(Optional.of(category));
+    List<Book> expectedBookList = createBookList(category);
 
     categoryRepository.save(category);
     bookRepository.saveAll(expectedBookList);
@@ -149,9 +148,8 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     + "returns only active books correctly")
   void getBookListSuccessfullyWithOnlyActiveBooks() {
     Category category = createCategory(Optional.empty());
-    List<Book> expectedBookList = createBookList(Optional.of(category));
-    Book inactiveBook =
-      createBook(Optional.empty(), Optional.of(category), Optional.of(LocalDateTime.now()));
+    List<Book> expectedBookList = createBookList(category);
+    Book inactiveBook = createBook(null, category, LocalDateTime.now(), null);
     expectedBookList.add(inactiveBook);
 
     categoryRepository.save(category);
@@ -176,8 +174,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName("When book is inserted and does not exist, returns correctly")
   void postBookSuccessfully() {
     Category category = createCategory(Optional.empty());
-    Book expectedBook =
-      createBook(Optional.empty(), Optional.of(category), Optional.empty());
+    Book expectedBook = createBook(null, category, null, null);
 
     categoryRepository.save(category);
 
@@ -199,8 +196,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName("When book is inserted, already exists and is active, throws exception correctly")
   void postBookAlreadyExists() {
     Category category = createCategory(Optional.empty());
-    Book book =
-      createBook(Optional.empty(), Optional.of(category), Optional.empty());
+    Book book = createBook(null, category, null, null);
 
     categoryRepository.save(category);
     bookRepository.save(book);
@@ -230,8 +226,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   void postReactivateBookSuccessfully() {
     Category category = createCategory(Optional.empty());
     LocalDateTime postTime = LocalDateTime.now();
-    Book expectedBook =
-      createBook(Optional.empty(), Optional.of(category), Optional.empty());
+    Book expectedBook = createBook(null, category, null, null);
 
     expectedBook.setInactivatedAt(postTime);
     expectedBook.setUpdatedAt(postTime);
@@ -262,8 +257,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     String bookIsbn = "1313131313133";
     Category oldCategory = createCategory(Optional.of("Old Category"));
     Category newCategory = createCategory(Optional.of("New Category"));
-    Book savedBook =
-      createBook(Optional.of(bookIsbn), Optional.of(oldCategory), Optional.empty());
+    Book savedBook = createBook(bookIsbn, oldCategory, null, null);
 
     categoryRepository.save(oldCategory);
     categoryRepository.save(newCategory);
@@ -331,8 +325,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName("When book is deleted, returns correctly")
   void deleteBookSuccessfully() {
     Category category = createCategory(Optional.empty());
-    Book savedBook =
-      createBook(Optional.empty(), Optional.of(category), Optional.empty());
+    Book savedBook = createBook(null, category, null, null);
 
     categoryRepository.save(category);
     bookRepository.save(savedBook);
@@ -376,11 +369,11 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName("When book is already inactive and is deleted, throws exception correctly")
   void deleteBookAlreadyInactive() {
     Category category = createCategory(Optional.empty());
-    Book inactiveBook = createInactiveBook(
-      Optional.empty(),
-      Optional.of(category),
-      Optional.of(LocalDateTime.now()),
-      Optional.of(LocalDateTime.now())
+    Book inactiveBook = createBook(
+      null,
+      category,
+      LocalDateTime.now(),
+      LocalDateTime.now()
     );
     UUID bookId = inactiveBook.getBookId();
 

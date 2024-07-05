@@ -8,36 +8,40 @@ import com.example.bookstoreapijava.main.entities.Category;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
 public class BookProvider {
 
   public static Book createBook(
-    Optional<String> isbn,
-    Optional<Category> category,
-    Optional<LocalDateTime> inactivatedAt
+    String isbn,
+    Category category,
+    LocalDateTime updatedAt,
+    LocalDateTime inactivatedAt
   ) {
     return new Book(
       UUID.randomUUID(),
       UUID.randomUUID().toString().replace("-", ""),
       UUID.randomUUID().toString().replace("-", ""),
-      isbn.orElse("0123456789"),
+      Objects.requireNonNullElse(isbn, "0123456789"),
       localDateTimeFormat(LocalDateTime.now()),
-      null,
-      inactivatedAt.orElse(null),
-      category.orElse(createCategory(Optional.empty()))
+      updatedAt,
+      inactivatedAt,
+      Objects.requireNonNullElse(category, createCategory(Optional.empty()))
     );
   }
 
-  public static List<Book> createBookList(Optional<Category> category) {
+  public static List<Book> createBookList(Category category) {
     List<Book> bookList = new ArrayList<>();
 
     for (int i = 0; i <= 5; i++) {
       bookList.add(
         createBook(
-          Optional.of("0123456789" + i),
-          category, Optional.empty()
+          "0123456789" + i,
+          Objects.requireNonNullElse(category, createCategory(Optional.empty())),
+          null,
+          null
         )
       );
     }
@@ -45,22 +49,22 @@ public class BookProvider {
     return bookList;
   }
 
-  public static Book createInactiveBook(
-    Optional<String> isbn,
-    Optional<Category> category,
-    Optional<LocalDateTime> inactivatedAt,
-    Optional<LocalDateTime> updatedAt
-  ) {
-    return new Book(
-      UUID.randomUUID(),
-      UUID.randomUUID().toString().replace("-", ""),
-      UUID.randomUUID().toString().replace("-", ""),
-      isbn.orElse("0123456789"),
-      localDateTimeFormat(LocalDateTime.now()),
-      updatedAt.orElse(null),
-      inactivatedAt.orElse(null),
-      category.orElse(createCategory(Optional.empty()))
-    );
-  }
+//  public static Book createInactiveBook(
+//    Optional<String> isbn,
+//    Optional<Category> category,
+//    Optional<LocalDateTime> inactivatedAt,
+//    Optional<LocalDateTime> updatedAt
+//  ) {
+//    return new Book(
+//      UUID.randomUUID(),
+//      UUID.randomUUID().toString().replace("-", ""),
+//      UUID.randomUUID().toString().replace("-", ""),
+//      isbn.orElse("0123456789"),
+//      localDateTimeFormat(LocalDateTime.now()),
+//      updatedAt,
+//      inactivatedAt,
+//      Objects.requireNonNullElse(category, createCategory(Optional.empty()))
+//    );
+//  }
 
 }
