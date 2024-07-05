@@ -22,7 +22,6 @@ import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.services.CategoryService;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -48,7 +47,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When category is inserted, should return correctly")
   void should_returnEquals_when_categoryIsInsertedCorrectly() throws URISyntaxException {
-    Category category = createCategory(Optional.empty());
+    Category category = createCategory(null, null, null);
     CategoryCreatedVo categoryCreatedVo = createCategoryCreatedVo(category);
 
     CategoryCreatedVo savedCategoryCreatedVo = categoryService.insertCategory(category);
@@ -62,8 +61,8 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @DisplayName("When a category already exists and try to insert again, "
     + "should throw exception correctly")
   void should_throwException_when_categoryAlreadyExistsAndIsInsertAgain() {
-    Category firstCategory = createCategory(Optional.of("Test"));
-    Category secondCategory = createCategory(Optional.of("Test"));
+    Category firstCategory = createCategory("Test", null, null);
+    Category secondCategory = createCategory("Test", null, null);
 
     categoryRepository.save(firstCategory);
 
@@ -94,7 +93,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When a category is searched, should return correctly")
   void should_returnEquals_when_categoryIsSearched() {
-    Category category = createCategory(Optional.empty());
+    Category category = createCategory(null, null, null);
 
     categoryRepository.save(category);
 
@@ -122,7 +121,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When a category is updated, should return correctly")
   void should_returnEquals_when_categoryIsUpdated() {
-    Category category = createCategory(Optional.empty());
+    Category category = createCategory(null, null, null);
     CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
 
     categoryRepository.save(category);
@@ -154,7 +153,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When a category is deleted, should soft delete correctly")
   void should_deleteCorrectly_when_categoryIsSoftDeleted() {
-    Category category = createCategory(Optional.empty());
+    Category category = createCategory(null, null, null);
     UUID categoryId = category.getCategoryId();
 
     categoryRepository.save(category);

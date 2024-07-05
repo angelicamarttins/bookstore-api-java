@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -83,9 +82,9 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     UUID bookId = UUID.randomUUID();
 
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
-      Optional.of(404),
-      Optional.of("BookNotFoundException"),
-      Optional.of("Book not found. BookId: " + bookId)
+      404,
+      "BookNotFoundException",
+      "Book not found. BookId: " + bookId
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
@@ -120,7 +119,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When book list is searched and there is books, returns correctly")
   void getBookListSuccessfully() {
-    Category category = createCategory(Optional.empty());
+    Category category = createCategory(null, null, null);
     List<Book> expectedBookList = createBookList(category);
 
     categoryRepository.save(category);
@@ -147,7 +146,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName("When book list is searched and there is active and inactive books, "
     + "returns only active books correctly")
   void getBookListSuccessfullyWithOnlyActiveBooks() {
-    Category category = createCategory(Optional.empty());
+    Category category = createCategory(null, null, null);
     List<Book> expectedBookList = createBookList(category);
     Book inactiveBook = createBook(null, category, LocalDateTime.now(), null);
     expectedBookList.add(inactiveBook);
@@ -173,7 +172,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When book is inserted and does not exist, returns correctly")
   void postBookSuccessfully() {
-    Category category = createCategory(Optional.empty());
+    Category category = createCategory(null, null, null);
     Book expectedBook = createBook(null, category, null, null);
 
     categoryRepository.save(category);
@@ -195,16 +194,16 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When book is inserted, already exists and is active, throws exception correctly")
   void postBookAlreadyExists() {
-    Category category = createCategory(Optional.empty());
+    Category category = createCategory(null, null, null);
     Book book = createBook(null, category, null, null);
 
     categoryRepository.save(category);
     bookRepository.save(book);
 
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
-      Optional.of(409),
-      Optional.of("BookAlreadyExistsException"),
-      Optional.of("Book already exists. Isbn: " + book.getIsbn())
+      409,
+      "BookAlreadyExistsException",
+      "Book already exists. Isbn: " + book.getIsbn()
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
@@ -224,7 +223,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName("When book is inserted, already exist but is inactivated, "
     + "reactivate book and returns correctly")
   void postReactivateBookSuccessfully() {
-    Category category = createCategory(Optional.empty());
+    Category category = createCategory(null, null, null);
     LocalDateTime postTime = LocalDateTime.now();
     Book expectedBook = createBook(null, category, null, null);
 
@@ -255,21 +254,21 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName("When book is updated, returns correctly")
   void updateBookSuccessfully() {
     String bookIsbn = "1313131313133";
-    Category oldCategory = createCategory(Optional.of("Old Category"));
-    Category newCategory = createCategory(Optional.of("New Category"));
+    Category oldCategory = createCategory("Old Category", null, null);
+    Category newCategory = createCategory("New Category", null, null);
     Book savedBook = createBook(bookIsbn, oldCategory, null, null);
 
     categoryRepository.save(oldCategory);
     categoryRepository.save(newCategory);
     bookRepository.save(savedBook);
 
-    Map<String, Optional<String>> bookInfo = new HashMap<>();
-    bookInfo.put("title", Optional.of("New Title"));
-    bookInfo.put("author", Optional.of("New Author"));
-    bookInfo.put("isbn", Optional.of("0000000000"));
+    Map<String, String> bookInfo = new HashMap<>();
+    bookInfo.put("title", "New Title");
+    bookInfo.put("author", "New Author");
+    bookInfo.put("isbn", "0000000000");
 
     BookUpdateDtoRequest bookUpdateDtoRequest =
-      createBookUpdateDtoRequest(bookInfo, Optional.of(newCategory.getCategoryId()));
+      createBookUpdateDtoRequest(bookInfo, newCategory.getCategoryId());
 
     Book updatedBook = given()
       .baseUri(baseURI)
@@ -282,9 +281,9 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
       .as(Book.class);
 
     assertNotEquals(savedBook, updatedBook);
-    assertEquals(updatedBook.getTitle(), bookInfo.get("title").get());
-    assertEquals(updatedBook.getAuthor(), bookInfo.get("author").get());
-    assertEquals(updatedBook.getIsbn(), bookInfo.get("isbn").get());
+    assertEquals(updatedBook.getTitle(), bookInfo.get("title"));
+    assertEquals(updatedBook.getAuthor(), bookInfo.get("author"));
+    assertEquals(updatedBook.getIsbn(), bookInfo.get("isbn"));
     assertEquals(updatedBook.getCategory(), newCategory);
     assertNotNull(updatedBook.getUpdatedAt());
   }
@@ -294,18 +293,18 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   void updateBookNotFound() {
     UUID bookId = UUID.randomUUID();
 
-    Map<String, Optional<String>> bookInfo = new HashMap<>();
-    bookInfo.put("title", Optional.of("New Title"));
-    bookInfo.put("author", Optional.of("New Author"));
-    bookInfo.put("isbn", Optional.of("0000000000"));
+    Map<String, String> bookInfo = new HashMap<>();
+    bookInfo.put("title", "New Title");
+    bookInfo.put("author", "New Author");
+    bookInfo.put("isbn", "0000000000");
 
     BookUpdateDtoRequest bookUpdateDtoRequest =
-      createBookUpdateDtoRequest(bookInfo, Optional.empty());
+      createBookUpdateDtoRequest(bookInfo, null);
 
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
-      Optional.of(404),
-      Optional.of("BookNotFoundException"),
-      Optional.of("Book not found. BookId: " + bookId)
+      404,
+      "BookNotFoundException",
+      "Book not found. BookId: " + bookId
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
@@ -324,7 +323,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When book is deleted, returns correctly")
   void deleteBookSuccessfully() {
-    Category category = createCategory(Optional.empty());
+    Category category = createCategory(null, null, null);
     Book savedBook = createBook(null, category, null, null);
 
     categoryRepository.save(category);
@@ -349,9 +348,9 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     UUID bookId = UUID.randomUUID();
 
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
-      Optional.of(404),
-      Optional.of("BookNotFoundException"),
-      Optional.of("Book not found. BookId: " + bookId)
+      404,
+      "BookNotFoundException",
+      "Book not found. BookId: " + bookId
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
@@ -368,7 +367,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When book is already inactive and is deleted, throws exception correctly")
   void deleteBookAlreadyInactive() {
-    Category category = createCategory(Optional.empty());
+    Category category = createCategory(null, null, null);
     Book inactiveBook = createBook(
       null,
       category,
@@ -381,9 +380,9 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     bookRepository.save(inactiveBook);
 
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
-      Optional.of(409),
-      Optional.of("BookIsInactiveException"),
-      Optional.of("Book is inactive. BookId: " + bookId)
+      409,
+      "BookIsInactiveException",
+      "Book is inactive. BookId: " + bookId
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()

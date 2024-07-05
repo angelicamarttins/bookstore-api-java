@@ -3,7 +3,6 @@ package com.example.bookstoreapijava.e2e;
 import static com.example.bookstoreapijava.providers.CategoryCreationRequestProvider.createCategoryCreationRequest;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategory;
 import static com.example.bookstoreapijava.providers.CategoryProvider.createCategoryList;
-import static com.example.bookstoreapijava.providers.CategoryProvider.createInactiveCategory;
 import static com.example.bookstoreapijava.providers.CategoryUpdateDtoProvider.createCategoryUpdateDto;
 import static com.example.bookstoreapijava.providers.ExceptionDtoResponseProvider.createExceptionDtoResponse;
 import static io.restassured.RestAssured.baseURI;
@@ -23,8 +22,8 @@ import com.example.bookstoreapijava.main.exceptions.dto.ExceptionDtoResponse;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ValidatableResponse;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -55,7 +54,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName("When category is searched by id, returns correctly")
   void getCategoryByIdSuccessfully() {
     String categoryName = "Test Category Name";
-    Category expectedCategory = createCategory(Optional.of(categoryName));
+    Category expectedCategory = createCategory(categoryName, null, null);
 
     categoryRepository.save(expectedCategory);
 
@@ -77,9 +76,9 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
 
     ExceptionDtoResponse expectedExceptionDtoResponse =
       createExceptionDtoResponse(
-        Optional.of(404),
-        Optional.of("CategoryNotFoundException"),
-        Optional.of("Category not found. CategoryId: " + categoryId)
+        404,
+        "CategoryNotFoundException",
+        "Category not found. CategoryId: " + categoryId
       );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
@@ -141,7 +140,8 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
     + " returns only active categories correctly")
   void getCategoryListSuccessfullyWithOnlyActiveCategories() {
     List<Category> expectedCategoryList = createCategoryList(5);
-    Category inactiveCategory = createInactiveCategory(Optional.empty());
+    Category inactiveCategory =
+      createCategory(null, LocalDateTime.now(), LocalDateTime.now());
     expectedCategoryList.add(inactiveCategory);
 
     categoryRepository.saveAll(expectedCategoryList);
@@ -165,7 +165,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName("When category is inserted and does not exist, returns correctly")
   void postCategorySuccessfully() {
     CategoryCreationRequest expectedCategory =
-      createCategoryCreationRequest(Optional.of("Category Name"));
+      createCategoryCreationRequest("Category Name");
 
     ValidatableResponse response = given()
       .baseUri(baseURI)
@@ -188,9 +188,12 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
     + "reactivate category and returns correctly")
   void postReactivateCategorySuccessfully() {
     CategoryCreationRequest categoryCreationRequest =
-      createCategoryCreationRequest(Optional.of("Category Name"));
-    Category expectedCategory =
-      createInactiveCategory(Optional.of(categoryCreationRequest.categoryName()));
+      createCategoryCreationRequest("Category Name");
+    Category expectedCategory = createCategory(
+      categoryCreationRequest.categoryName(),
+      LocalDateTime.now(),
+      LocalDateTime.now()
+    );
 
     categoryRepository.save(expectedCategory);
 
@@ -213,14 +216,14 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When category is inserted, already exist and is active, throws exception correctly")
   void postCategoryAlreadyExists() {
-    CategoryCreationRequest categoryCreationRequest =
-      createCategoryCreationRequest(Optional.empty());
-    Category category = createCategory(Optional.of(categoryCreationRequest.categoryName()));
+    CategoryCreationRequest categoryCreationRequest = createCategoryCreationRequest(null);
+    Category category =
+      createCategory(categoryCreationRequest.categoryName(), null, null);
 
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
-      Optional.of(409),
-      Optional.of("CategoryAlreadyExistsException"),
-      Optional.of("Category already exists. CategoryName: " + category.getCategoryName())
+      409,
+      "CategoryAlreadyExistsException",
+      "Category already exists. CategoryName: " + category.getCategoryName()
     );
 
     categoryRepository.save(category);
@@ -241,7 +244,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When category is updated, returns correctly")
   void updateCategorySuccessfully() {
-    Category savedCategory = createCategory(Optional.empty());
+    Category savedCategory = createCategory(null, null, null);
     CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
 
     categoryRepository.save(savedCategory);
@@ -269,9 +272,9 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
     CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
 
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
-      Optional.of(404),
-      Optional.of("CategoryNotFoundException"),
-      Optional.of("Category not found. CategoryId: " + categoryId)
+      404,
+      "CategoryNotFoundException",
+      "Category not found. CategoryId: " + categoryId
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
@@ -291,7 +294,8 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   @DisplayName("When category is updated and is inactive, "
     + "reactivate category and returns correctly")
   void updateInactiveCategory() {
-    Category expectedCategory = createInactiveCategory(Optional.empty());
+    Category expectedCategory =
+      createCategory(null, LocalDateTime.now(), LocalDateTime.now());
     CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
 
     categoryRepository.save(expectedCategory);
@@ -314,7 +318,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When category is inactivated, returns correctly")
   void inactiveCategorySuccessfully() {
-    Category savedCategory = createCategory(Optional.empty());
+    Category savedCategory = createCategory(null, null, null);
 
     categoryRepository.save(savedCategory);
 
@@ -337,9 +341,9 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
     UUID categoryId = UUID.randomUUID();
 
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
-      Optional.of(404),
-      Optional.of("CategoryNotFoundException"),
-      Optional.of("Category not found. CategoryId: " + categoryId)
+      404,
+      "CategoryNotFoundException",
+      "Category not found. CategoryId: " + categoryId
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
@@ -356,14 +360,15 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When category is already inactive, throws exception correctly")
   void inactiveCategoryAlreadyInactive() {
-    Category deletedCategory = createInactiveCategory(Optional.empty());
+    Category deletedCategory =
+      createCategory(null, LocalDateTime.now(), LocalDateTime.now());
 
     categoryRepository.save(deletedCategory);
 
     ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
-      Optional.of(409),
-      Optional.of("CategoryIsInactiveException"),
-      Optional.of("Category is inactive. CategoryId: " + deletedCategory.getCategoryId())
+      409,
+      "CategoryIsInactiveException",
+      "Category is inactive. CategoryId: " + deletedCategory.getCategoryId()
     );
 
     ExceptionDtoResponse actualExceptionDtoResponse = given()
