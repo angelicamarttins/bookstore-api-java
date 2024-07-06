@@ -384,6 +384,33 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
+  @DisplayName("when book is updated and is inactive, reactivate book and returns correctly")
+  void patchBookInactive() {
+    Book book = createBook(null, null, LocalDateTime.now(), LocalDateTime.now());
+    UUID categoryId = book.getCategory().getCategoryId();
+    Map<String, String> bookInfo = Map.of("title", "New title");
+    BookUpdateDtoRequest bookUpdateDtoRequest =
+      createBookUpdateDtoRequest(bookInfo, categoryId);
+
+    categoryRepository.save(book.getCategory());
+    bookRepository.save(book);
+
+    Book actualBook = given()
+      .contentType("application/json")
+      .baseUri(baseURI)
+      .body(bookUpdateDtoRequest)
+      .patch("/bookstore/" + book.getBookId())
+      .then()
+      .statusCode(200)
+      .extract()
+      .as(Book.class);
+
+    assertNotEquals(book, actualBook);
+    assertNotNull(actualBook.getUpdatedAt());
+    assertNull(actualBook.getInactivatedAt());
+  }
+
+  @Test
   @DisplayName("When book is deleted, returns correctly")
   void deleteBookSuccessfully() {
     Category category = createCategory(null, null, null);
