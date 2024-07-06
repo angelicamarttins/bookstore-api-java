@@ -252,7 +252,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName("When book is updated, returns correctly")
-  void updateBookSuccessfully() {
+  void patchBookSuccessfully() {
     String bookIsbn = "1313131313133";
     Category oldCategory = createCategory("Old Category", null, null);
     Category newCategory = createCategory("New Category", null, null);
@@ -290,7 +290,7 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName("When book is updated and is not found, throws exception correctly")
-  void updateBookNotFound() {
+  void patchBookNotFound() {
     UUID bookId = UUID.randomUUID();
 
     Map<String, String> bookInfo = new HashMap<>();
@@ -312,6 +312,38 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
       .baseUri(baseURI)
       .body(bookUpdateDtoRequest)
       .patch("/bookstore/" + bookId)
+      .then()
+      .statusCode(404)
+      .extract()
+      .as(ExceptionDtoResponse.class);
+
+    assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
+  }
+
+  @Test
+  @DisplayName("when book is updated and category is not found, throws exception correctly")
+  void patchBookCategoryNotFound() {
+    Book book = createBook(null, null, null, null);
+    UUID notFoundCategoryId = UUID.randomUUID();
+    Map<String, String> bookInfo = Map.of("title", "New title");
+    UUID categoryId = book.getCategory().getCategoryId();
+    BookUpdateDtoRequest bookUpdateDtoRequest =
+      createBookUpdateDtoRequest(bookInfo, notFoundCategoryId);
+
+    categoryRepository.save(book.getCategory());
+    bookRepository.save(book);
+
+    ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
+      404,
+      "CategoryNotFoundException",
+      "Category not found. CategoryId: " + notFoundCategoryId
+    );
+
+    ExceptionDtoResponse actualExceptionDtoResponse = given()
+      .contentType("application/json")
+      .baseUri(baseURI)
+      .body(bookUpdateDtoRequest)
+      .patch("/bookstore/" + book.getBookId())
       .then()
       .statusCode(404)
       .extract()
