@@ -326,7 +326,6 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
     Book book = createBook(null, null, null, null);
     UUID notFoundCategoryId = UUID.randomUUID();
     Map<String, String> bookInfo = Map.of("title", "New title");
-    UUID categoryId = book.getCategory().getCategoryId();
     BookUpdateDtoRequest bookUpdateDtoRequest =
       createBookUpdateDtoRequest(bookInfo, notFoundCategoryId);
 
@@ -346,6 +345,38 @@ public class BookEnd2EndTest extends PostgresTestContainersBase {
       .patch("/bookstore/" + book.getBookId())
       .then()
       .statusCode(404)
+      .extract()
+      .as(ExceptionDtoResponse.class);
+
+    assertEquals(expectedExceptionDtoResponse, actualExceptionDtoResponse);
+  }
+
+  @Test
+  @DisplayName("when book is updated and category is inactive, throws exception correctly")
+  void patchBookCategoryInactive() {
+    Category category = createCategory(null, LocalDateTime.now(), LocalDateTime.now());
+    UUID categoryId = category.getCategoryId();
+    Book book = createBook(null, category, null, null);
+    Map<String, String> bookInfo = Map.of("title", "New title");
+    BookUpdateDtoRequest bookUpdateDtoRequest =
+      createBookUpdateDtoRequest(bookInfo, categoryId);
+
+    categoryRepository.save(category);
+    bookRepository.save(book);
+
+    ExceptionDtoResponse expectedExceptionDtoResponse = createExceptionDtoResponse(
+      409,
+      "CategoryIsInactiveException",
+      "Category is inactive. CategoryId: " + categoryId
+    );
+
+    ExceptionDtoResponse actualExceptionDtoResponse = given()
+      .contentType("application/json")
+      .baseUri(baseURI)
+      .body(bookUpdateDtoRequest)
+      .patch("/bookstore/" + book.getBookId())
+      .then()
+      .statusCode(409)
       .extract()
       .as(ExceptionDtoResponse.class);
 
