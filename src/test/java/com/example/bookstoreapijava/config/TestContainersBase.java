@@ -6,16 +6,14 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class PostgresTestContainersBase {
+public class TestContainersBase {
 
-  @Container
-  protected static final PostgreSQLContainer POSTGRES_CONTAINER;
+  private static final PostgreSQLContainer POSTGRES_CONTAINER;
 
   static {
     POSTGRES_CONTAINER =
