@@ -82,7 +82,7 @@ public class CategoryController {
 
   @DeleteMapping("/{categoryId}")
   public ResponseEntity<Void> inactiveCategory(@PathVariable UUID categoryId) {
-    log.info("Deleting category. CategoryId: {}", categoryId);
+    log.info("Inactivating category. CategoryId: {}", categoryId);
 
     categoryService.inactiveCategory(categoryId);
 

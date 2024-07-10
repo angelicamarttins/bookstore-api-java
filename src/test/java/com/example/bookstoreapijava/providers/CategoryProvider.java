@@ -3,6 +3,7 @@ package com.example.bookstoreapijava.providers;
 import static com.example.bookstoreapijava.utils.TestUtils.localDateTimeFormat;
 
 import com.example.bookstoreapijava.main.entities.Category;
+import com.example.bookstoreapijava.main.utils.Utils;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +18,12 @@ public class CategoryProvider {
     LocalDateTime inactivatedAt
   ) {
     String randomString = UUID.randomUUID().toString().replace("-", "");
+    String finalCategoryName = Objects.nonNull(categoryName) ? categoryName : randomString;
 
     return new Category(
       UUID.randomUUID(),
-      Objects.requireNonNullElse(categoryName, randomString),
-      Objects.requireNonNullElse(categoryName, randomString),
+      finalCategoryName,
+      Utils.sanitizeStringField(finalCategoryName),
       localDateTimeFormat(LocalDateTime.now()),
       localDateTimeFormat(updatedAt),
       localDateTimeFormat(inactivatedAt)

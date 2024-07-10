@@ -93,7 +93,7 @@ public class CategoryService {
 
     categoryRepository.save(inactivatedCategory);
 
-    log.info("Category deleted successfully. CategoryId: {}", categoryId);
+    log.info("Category inactivated successfully. CategoryId: {}", categoryId);
   }
 
   private CategoryCreatedVo createCategory(Category category, boolean shouldSaveCategory

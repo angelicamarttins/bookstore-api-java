@@ -70,7 +70,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName("When category is searched and is not found, should throws exception correctly")
+  @DisplayName("When category is searched and is not found, throws exception correctly")
   void getCategoryByIdNotFound() {
     UUID categoryId = UUID.randomUUID();
 
@@ -181,6 +181,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
 
     response.header("Location", baseUrl + "/category/" + actualCategory.getCategoryId());
     assertEquals(expectedCategory.categoryName(), actualCategory.getCategoryName());
+    assertNull(actualCategory.getUpdatedAt());
   }
 
   @Test
@@ -188,7 +189,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
     + "reactivate category and returns correctly")
   void postReactivateCategorySuccessfully() {
     CategoryCreationRequest categoryCreationRequest =
-      createCategoryCreationRequest("Category Name");
+      createCategoryCreationRequest("Any Category Name");
     Category expectedCategory = createCategory(
       categoryCreationRequest.categoryName(),
       LocalDateTime.now(),
@@ -336,7 +337,7 @@ public class CategoryEnd2EndTest extends PostgresTestContainersBase {
   }
 
   @Test
-  @DisplayName("When category is inactive and is not found, throws exception correctly")
+  @DisplayName("When category is inactivated and is not found, throws exception correctly")
   void inactiveCategoryNotFound() {
     UUID categoryId = UUID.randomUUID();
 
