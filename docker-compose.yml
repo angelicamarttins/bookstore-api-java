@@ -1,6 +1,7 @@
-version: '3.7'
+version: '3'
 
 services:
+
   postgres:
     image: postgres:alpine
     container_name: postgres
@@ -13,6 +14,18 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
+  bookstoreapi:
+    build: .
+    container_name: bookstoreapi
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/local
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=secret
+    depends_on:
+      - postgres
+    ports:
+      - "8081:8081"
 
 volumes:
   postgres_data:
