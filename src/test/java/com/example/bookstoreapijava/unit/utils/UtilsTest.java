@@ -14,17 +14,17 @@ public class UtilsTest {
   @DisplayName("Should return the same string when field has no accents and blank spaces")
   public void should_returnEquals_when_thereIsNoAccentAndBlankSpaces() {
     String field = "Filosofia";
-
+    String expectedField = "FILOSOFIA";
     String actualField = sanitizeStringField(field);
 
-    Assertions.assertEquals(field, actualField);
+    Assertions.assertEquals(expectedField, actualField);
   }
 
   @Test
   @DisplayName("Should return the sanitized string when field has accents and blank spaces")
   public void should_returnEquals_when_thereIsAccentAndBlankSpaces() {
     String field = "   Filosofiá   ";
-    String expectedField = "Filosofia";
+    String expectedField = "FILOSOFIA";
 
     String actualField = sanitizeStringField(field);
 

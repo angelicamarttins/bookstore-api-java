@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.example.bookstoreapijava.config.PostgresTestContainersBase;
+import com.example.bookstoreapijava.config.TestContainersBase;
 import com.example.bookstoreapijava.main.data.dto.request.BookUpdateDtoRequest;
 import com.example.bookstoreapijava.main.entities.Book;
 import com.example.bookstoreapijava.main.entities.Category;
@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
-public class BookEnd2EndTest extends PostgresTestContainersBase {
+public class BookEnd2EndTest extends TestContainersBase {
 
   @Value("${app.baseUrl}")
   private static String baseUrl;

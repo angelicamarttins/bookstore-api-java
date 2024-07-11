@@ -10,14 +10,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.example.bookstoreapijava.config.PostgresTestContainersBase;
+import com.example.bookstoreapijava.config.TestContainersBase;
 import com.example.bookstoreapijava.main.data.dto.request.CategoryUpdateDtoRequest;
 import com.example.bookstoreapijava.main.data.dto.response.PageResponse;
 import com.example.bookstoreapijava.main.data.vo.CategoryCreatedVo;
 import com.example.bookstoreapijava.main.entities.Category;
 import com.example.bookstoreapijava.main.exceptions.CategoryAlreadyExistsException;
 import com.example.bookstoreapijava.main.exceptions.CategoryNotFoundException;
-import com.example.bookstoreapijava.main.repositories.BookRepository;
 import com.example.bookstoreapijava.main.repositories.CategoryRepository;
 import com.example.bookstoreapijava.main.services.CategoryService;
 import java.net.URISyntaxException;
@@ -28,16 +27,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
+public class CategoryServiceIntegrationTest extends TestContainersBase {
 
   @Autowired
   CategoryService categoryService;
 
   @Autowired
   CategoryRepository categoryRepository;
-
-  @Autowired
-  BookRepository bookRepository;
 
   @AfterEach
   public void cleanUpDb() {
@@ -46,7 +42,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName("When category is inserted, should return correctly")
-  void should_returnEquals_when_categoryIsInsertedCorrectly() throws URISyntaxException {
+  void categoryIsInsertedCorrectly() throws URISyntaxException {
     Category category = createCategory(null, null, null);
     CategoryCreatedVo categoryCreatedVo = createCategoryCreatedVo(category);
 
@@ -60,7 +56,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
   @Test
   @DisplayName("When a category already exists and try to insert again, "
     + "should throw exception correctly")
-  void should_throwException_when_categoryAlreadyExistsAndIsInsertAgain() {
+  void categoryAlreadyExistsAndIsInsertAgain() {
     Category firstCategory = createCategory("Test", null, null);
     Category secondCategory = createCategory("Test", null, null);
 
@@ -79,7 +75,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName("When a category list is searched, should return correctly")
-  void should_returnEquals_when_categoryListIsSearched() {
+  void categoryListIsSearched() {
     List<Category> categoryList = createCategoryList(5);
 
     categoryRepository.saveAll(categoryList);
@@ -92,7 +88,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName("When a category is searched, should return correctly")
-  void should_returnEquals_when_categoryIsSearched() {
+  void categoryIsSearched() {
     Category category = createCategory(null, null, null);
 
     categoryRepository.save(category);
@@ -105,7 +101,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName("When category is searched and is not found, should throw exception correctly")
-  void should_throwException_when_isSearchedAndCategoryIsNotFound() {
+  void categoryIsSearchedAndIsNotFound() {
     UUID categoryId = UUID.randomUUID();
 
     CategoryNotFoundException categoryNotFoundException = assertThrows(
@@ -120,7 +116,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName("When a category is updated, should return correctly")
-  void should_returnEquals_when_categoryIsUpdated() {
+  void categoryIsUpdated() {
     Category category = createCategory(null, null, null);
     CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
 
@@ -137,7 +133,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName("When category is updated and is not found, should throw exception correctly")
-  void should_throwException_when_isUpdatedAndCategoryIsNotFound() {
+  void categoryIsUpdatedAndIsNotFound() {
     UUID categoryId = UUID.randomUUID();
     CategoryUpdateDtoRequest categoryUpdateDtoRequest = createCategoryUpdateDto();
     String expectedExceptionMessage = "Category not found. CategoryId: " + categoryId;
@@ -152,7 +148,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName("When a category is deleted, should soft delete correctly")
-  void should_deleteCorrectly_when_categoryIsSoftDeleted() {
+  void categoryIsInactivated() {
     Category category = createCategory(null, null, null);
     UUID categoryId = category.getCategoryId();
 
@@ -170,7 +166,7 @@ public class CategoryServiceIntegrationTest extends PostgresTestContainersBase {
 
   @Test
   @DisplayName("When category is deleted and is not found, should throw exception correctly")
-  void should_throwException_when_isDeletedAndCategoryIsNotFound() {
+  void categoryIsInactivatedAndIsNotFound() {
     UUID categoryId = UUID.randomUUID();
     String expectedExceptionMessage = "Category not found. CategoryId: " + categoryId;
 
