@@ -6,7 +6,7 @@ services:
     image: postgres:alpine
     container_name: postgres
     environment:
-      - POSTGRES_DB=local
+      - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=secret
       - TZ=GMT
@@ -19,8 +19,7 @@ services:
     build: .
     container_name: bookstoreapi
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/postgres
-      - SPRING_DATASOURCE_NAME=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/postgres
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=secret
     depends_on:
