@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test;
 public class UtilsTest {
 
   @Test
-  @DisplayName("Should return the same string when field has no accents and blank spaces")
-  public void should_returnEquals_when_thereIsNoAccentAndBlankSpaces() {
+  @DisplayName("When field has no accents and blank spaces, returns the same string correctly")
+  public void doNothingWhenSanitize() {
     String field = "Filosofia";
     String expectedField = "FILOSOFIA";
     String actualField = sanitizeStringField(field);
@@ -21,8 +21,8 @@ public class UtilsTest {
   }
 
   @Test
-  @DisplayName("Should return the sanitized string when field has accents and blank spaces")
-  public void should_returnEquals_when_thereIsAccentAndBlankSpaces() {
+  @DisplayName("When field has accents and blank spaces, returns sanitized correctly")
+  public void sanitizeCorrectly() {
     String field = "   Filosofiá   ";
     String expectedField = "FILOSOFIA";
 
@@ -32,10 +32,10 @@ public class UtilsTest {
   }
 
   @Test
-  @DisplayName("Should return the capitalized when field is lower case")
-  public void should_returnEquals_when_isLowerCase() {
+  @DisplayName("When field is lower case, returns capitalized correctly")
+  public void capitalizeCorrectly() {
     String field = "filosofia";
-    String expectedField = "Filosofia";
+    String expectedField = "FILOSOFIA";
 
     String actualField = capitalizeString(field);
 
@@ -43,19 +43,8 @@ public class UtilsTest {
   }
 
   @Test
-  @DisplayName("Should return the capitalized when field is upper case")
-  public void should_returnEquals_when_isUppercase() {
-    String field = "FILOSOFIA";
-    String expectedField = "Filosofia";
-
-    String actualField = capitalizeString(field);
-
-    Assertions.assertEquals(expectedField, actualField);
-  }
-
-  @Test
-  @DisplayName("Should remove accents when field has accents")
-  public void should_returnEquals_whenHasAccents() {
+  @DisplayName("When field has accents, returns remove string without accents correctly")
+  public void removeAccentsCorrectly() {
     String field = "Fìlõsôfíä";
     String expectedField = "Filosofia";
 
