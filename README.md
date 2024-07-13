@@ -10,7 +10,16 @@
 
 ## Description
 
-- What does the project do?
+  This project is a bookstore API which aims to organize easily your books by categorizing them.
+
+  Initially, the purpose to build it was for studying and implement an API with Java, Spring Boot
+  and Spring MVC using Postgres as database and JUnit for tests.
+
+  In the future, my intent is to deploy and distribute a fullstack application freely to public
+  schools in São Paulo. As a former teacher, I saw school libraries closed with a lot of books
+  available, but never used by students because wasn't any free and easy software in school to
+  organize and lend books.
+
 - How was it built?
 - Why was it built?
 
