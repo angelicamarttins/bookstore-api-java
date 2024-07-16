@@ -20,9 +20,6 @@
   available, but never used by students because wasn't any free and easy software in school to
   organize and lend books.
 
-- How was it built?
-- Why was it built?
-
 ## SETUP
 
 - What is necessary to run this project
